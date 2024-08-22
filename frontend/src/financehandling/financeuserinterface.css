@@ -1,0 +1,49 @@
+.inventory-management {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 50px;
+    background-color: #f9f9f9;
+  }
+  
+  .content {
+    max-width: 50%;
+  }
+  
+  .title {
+    font-size: 3em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .description {
+    font-size: 1.2em;
+    color: #666;
+    margin-bottom: 30px;
+  }
+  
+  .cta-button {
+    padding: 15px 30px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #6A4C93; /* Adjust the color to match the button in the image */
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cta-button:hover {
+    background-color: #503276; /* Adjust hover color */
+  }
+  
+  .illustration {
+    max-width: 50%;
+  }
+  
+  .illustration-image {
+    width: 100%;
+    height: auto;
+  }
+  
