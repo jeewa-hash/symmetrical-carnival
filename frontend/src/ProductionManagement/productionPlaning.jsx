@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import './productionplaning.css';
 
 const ProductionManagementSystem = () => {
   const [productions, setProductions] = useState([]);
-  const [newProduction, setNewProduction] = useState({ id: 0, name: '', status: '', quantity: 0 });
+  const [newProduction, setNewProduction] = useState({ id: 0, name: '', status: '', quantity: 0, productionDate: '' });
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [updatedStatus, setUpdatedStatus] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const initialProductions = [
-      { id: 1, name: 'Product A', status: 'In Progress', quantity: 100 },
-      { id: 2, name: 'Product B', status: 'Done', quantity: 50 },
-      { id: 3, name: 'Product C', status: 'On Hold', quantity: 200 },
+      { id: 1, name: 'Product A', status: 'In Progress', quantity: 100, productionDate: '2024-08-01' },
+      { id: 2, name: 'Product B', status: 'Done', quantity: 50, productionDate: '2024-08-05' },
+      { id: 3, name: 'Product C', status: 'On Hold', quantity: 200, productionDate: '2024-08-10' },
     ];
     setProductions(initialProductions);
   }, []);
@@ -21,18 +23,19 @@ const ProductionManagementSystem = () => {
   };
 
   const handleSaveProduction = () => {
-    setProductions([...productions, newProduction]);
+    setProductions([...productions, { ...newProduction, id: productions.length + 1 }]);
     setIsAdding(false);
-    setNewProduction({ id: 0, name: '', status: '', quantity: 0 });
+    setNewProduction({ id: 0, name: '', status: '', quantity: 0, productionDate: '' });
   };
 
   const handleCancel = () => {
     setIsAdding(false);
-    setNewProduction({ id: 0, name: '', status: '', quantity: 0 });
+    setNewProduction({ id: 0, name: '', status: '', quantity: 0, productionDate: '' });
   };
 
   const handleDeleteProduction = (id) => {
     setProductions(productions.filter((production) => production.id !== id));
+    setEditingId(null); // Reset editing ID after delete
   };
 
   const handleEditStatus = (id, currentStatus) => {
@@ -50,39 +53,44 @@ const ProductionManagementSystem = () => {
     setUpdatedStatus('');
   };
 
+  const filteredProductions = productions.filter((production) =>
+    production.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    production.status.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="max-w-7xl mx-auto p-4 sm:p-6 md:p-8">
-      <h1 className="text-3xl font-bold leading-tight text-gray-900">Production Management System</h1>
-      <div className="flex justify-end mt-4">
+    <div className="production-management-container">
+      <h1 className="title">Production Management System</h1>
+      <div className="actions">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="add-production-button"
           onClick={handleAddProduction}
         >
           Add Production
         </button>
       </div>
       {isAdding && (
-        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-4">
-          <h2 className="text-lg font-bold leading-tight text-gray-900">Add New Production</h2>
+        <div className="form-container">
+          <h2 className="form-title">Add New Production</h2>
           <form>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+            <div className="form-group">
+              <label className="form-label" htmlFor="name">
                 Name:
               </label>
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="form-input"
                 id="name"
                 type="text"
                 value={newProduction.name}
                 onChange={(e) => setNewProduction({ ...newProduction, name: e.target.value })}
               />
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="status">
+            <div className="form-group">
+              <label className="form-label" htmlFor="status">
                 Status:
               </label>
               <select
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="form-select"
                 id="status"
                 value={newProduction.status}
                 onChange={(e) => setNewProduction({ ...newProduction, status: e.target.value })}
@@ -93,28 +101,40 @@ const ProductionManagementSystem = () => {
                 <option value="On Hold">On Hold</option>
               </select>
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="quantity">
+            <div className="form-group">
+              <label className="form-label" htmlFor="quantity">
                 Quantity:
               </label>
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="form-input"
                 id="quantity"
                 type="number"
                 value={newProduction.quantity}
                 onChange={(e) => setNewProduction({ ...newProduction, quantity: parseInt(e.target.value, 10) })}
               />
             </div>
-            <div className="flex justify-end">
+            <div className="form-group">
+              <label className="form-label" htmlFor="productionDate">
+                Production Date:
+              </label>
+              <input
+                className="form-input"
+                id="productionDate"
+                type="date"
+                value={newProduction.productionDate}
+                onChange={(e) => setNewProduction({ ...newProduction, productionDate: e.target.value })}
+              />
+            </div>
+            <div className="form-actions">
               <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                className="save-button"
                 type="button"
                 onClick={handleSaveProduction}
               >
                 Save
               </button>
               <button
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+                className="cancel-button"
                 type="button"
                 onClick={handleCancel}
               >
@@ -124,28 +144,38 @@ const ProductionManagementSystem = () => {
           </form>
         </div>
       )}
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <h2 className="text-lg font-bold leading-tight text-gray-900">Productions</h2>
-        <table className="w-full">
+      <div className="table-container">
+        <h2 className="table-title">Productions</h2>
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Search by name or status..."
+            className="search-input"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <table className="production-table">
           <thead>
             <tr>
-              <th className="px-4 py-2">ID</th>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Quantity</th>
-              <th className="px-4 py-2">Actions</th>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Quantity</th>
+              <th>Production Date</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {productions.map((production) => (
+            {filteredProductions.map((production) => (
               <tr key={production.id}>
-                <td className="px-4 py-2">{production.id}</td>
-                <td className="px-4 py-2">{production.name}</td>
-                <td className="px-4 py-2">
+                <td>{production.id}</td>
+                <td>{production.name}</td>
+                <td>
                   {editingId === production.id ? (
                     <div>
                       <select
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="form-select"
                         value={updatedStatus}
                         onChange={(e) => setUpdatedStatus(e.target.value)}
                       >
@@ -154,35 +184,38 @@ const ProductionManagementSystem = () => {
                         <option value="On Hold">On Hold</option>
                       </select>
                       <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2"
+                        className="save-button"
                         onClick={() => handleSaveStatus(production.id)}
                       >
                         Save
                       </button>
                       <button
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2 mt-2"
+                        className="cancel-button"
                         onClick={() => setEditingId(null)}
                       >
                         Cancel
                       </button>
                     </div>
                   ) : (
-                    production.status
+                    <div>
+                      {production.status}
+                    </div>
                   )}
                 </td>
-                <td className="px-4 py-2">{production.quantity}</td>
-                <td className="px-4 py-2">
+                <td>{production.quantity}</td>
+                <td>{production.productionDate}</td>
+                <td>
                   <button
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    className="edit-button"
+                    onClick={() => handleEditStatus(production.id, production.status)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="delete-button"
                     onClick={() => handleDeleteProduction(production.id)}
                   >
                     Delete
-                  </button>
-                  <button
-                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-2"
-                    onClick={() => handleEditStatus(production.id, production.status)}
-                  >
-                    Edit Status
                   </button>
                 </td>
               </tr>

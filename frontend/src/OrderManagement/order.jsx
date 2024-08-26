@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './order.css'; // Import the CSS file
 
 const initialOrder = {
-  orderTotal: 0,
   orderItems: [{ name: '', quantity: 0 }],
-  status: '', // Order status
-  shopName: '', // New field for shop name
-  orderDate: '', // New field for order date
+  status: '',
+  shopName: '',
+  orderDate: '',
 };
 
 const OrderCreation = () => {
   const [order, setOrder] = useState(initialOrder);
-  const [orders, setOrders] = useState([]); // State to hold the list of all orders
-  const [editIndex, setEditIndex] = useState(null); // Index of the order being edited
+  const [orders, setOrders] = useState([]);
+  const [editIndex, setEditIndex] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   const handleStatusChange = (event) => {
     setOrder({ ...order, status: event.target.value });
@@ -46,10 +52,10 @@ const OrderCreation = () => {
 
   const handleUpdateOrder = (index) => {
     const updatedOrders = [...orders];
-    updatedOrders[index] = order; // Update the order at the specified index
+    updatedOrders[index] = order;
     setOrders(updatedOrders);
-    setOrder(initialOrder); // Reset the form
-    setEditIndex(null); // Clear the edit index
+    setOrder(initialOrder);
+    setEditIndex(null);
   };
 
   const handleDeleteOrder = (index) => {
@@ -57,61 +63,87 @@ const OrderCreation = () => {
     setOrders(updatedOrders);
   };
 
-  const calculateOrderTotal = () => {
-    const total = order.orderItems.reduce((acc, item) => acc + item.quantity * 0, 0); // Removed price multiplication
-    setOrder({ ...order, orderTotal: total });
+  const calculateTotalQuantity = (orderItems) => {
+    return orderItems.reduce((acc, item) => acc + item.quantity, 0);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    calculateOrderTotal();
     if (editIndex !== null) {
       handleUpdateOrder(editIndex);
     } else {
-      setOrders([...orders, order]); // Add the current order to the list of orders
-      setOrder(initialOrder); // Reset the form
+      setOrders([...orders, order]);
+      setOrder(initialOrder);
     }
   };
 
   const handleEdit = (index) => {
-    setOrder(orders[index]); // Set the form to the order being edited
-    setEditIndex(index); // Set the edit index
+    setOrder(orders[index]);
+    setEditIndex(index);
   };
 
+  const handleViewOrder = (order) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedOrder(null);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredOrders = orders.filter((order) =>
+    order.shopName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-6 lg:p-8 bg-white rounded shadow-md">
-      <h2 className="text-lg font-bold mb-4">{editIndex !== null ? 'Edit Order' : 'Order Creation'}</h2>
+    <div className="order-creation-container">
+      {/* Side Button at the Top */}
+      <button
+        className="navigate-button"
+        onClick={() => navigate('/another-page')} // Navigate to another page
+      >
+        Go to Another Page
+      </button>
+
+      <h2 className="title">
+        {editIndex !== null ? 'Edit Order' : 'Order Creation'}
+      </h2>
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="shopName">
+        <div className="form-group">
+          <label className="form-label" htmlFor="shopName">
             Shop Name
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="form-input"
             id="shopName"
             type="text"
             value={order.shopName}
             onChange={handleShopNameChange}
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="orderDate">
+        <div className="form-group">
+          <label className="form-label" htmlFor="orderDate">
             Order Date
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="form-input"
             id="orderDate"
             type="date"
             value={order.orderDate}
             onChange={handleOrderDateChange}
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="status">
+        <div className="form-group">
+          <label className="form-label" htmlFor="status">
             Order Status
           </label>
           <select
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="form-select"
             id="status"
             value={order.status}
             onChange={handleStatusChange}
@@ -125,27 +157,27 @@ const OrderCreation = () => {
           </select>
         </div>
         {order.orderItems.map((item, index) => (
-          <div key={index} className="mb-4">
-            <div className="flex justify-between">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={`itemName${index}`}>
+          <div key={index} className="form-group">
+            <div className="form-label-group">
+              <label className="form-label" htmlFor={`itemName${index}`}>
                 Item {index + 1} Name
               </label>
             </div>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="form-input"
               id={`itemName${index}`}
               type="text"
               value={item.name}
               onChange={(event) => handleItemNameChange(event, index)}
             />
-            <div className="flex justify-between mt-2">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={`itemQuantity${index}`}>
+            <div className="form-label-group mt-2">
+              <label className="form-label" htmlFor={`itemQuantity${index}`}>
                 Quantity
               </label>
             </div>
-            <div className="flex justify-between">
+            <div className="form-label-group">
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="form-input"
                 id={`itemQuantity${index}`}
                 type="number"
                 value={item.quantity}
@@ -155,60 +187,83 @@ const OrderCreation = () => {
           </div>
         ))}
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="add-item-button"
           type="button"
           onClick={handleAddItem}
         >
           Add Item
         </button>
-        <div className="mt-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="orderTotal">
-            Order Total
+        <div className="total-quantity-group mt-4">
+          <label className="form-label" htmlFor="totalQuantity">
+            Total Quantity
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="orderTotal"
+            className="form-input"
+            id="totalQuantity"
             type="number"
-            step="0.01"
-            value={order.orderTotal}
+            value={calculateTotalQuantity(order.orderItems)}
             readOnly
           />
         </div>
         <button
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="submit-button mt-4"
           type="submit"
         >
           {editIndex !== null ? 'Update Order' : 'Create Order'}
         </button>
       </form>
 
-      {/* Display all created orders */}
-      {orders.length > 0 && (
-        <div className="mt-8 p-4 bg-gray-100 rounded shadow-md">
-          <h3 className="text-xl font-bold mb-4">All Orders</h3>
-          {orders.map((order, index) => (
-            <div key={index} className="mb-4">
-              <h4 className="text-lg font-bold mb-2">Order {index + 1}</h4>
-              <p className="text-sm text-gray-700">Shop: {order.shopName}</p>
-              <p className="text-sm text-gray-700">Date: {order.orderDate}</p>
-              <p className="text-sm text-gray-700">Status: {order.status}</p>
-              <h5 className="text-md font-bold mb-2">Order Items:</h5>
-              <ul>
-                {order.orderItems.map((item, itemIndex) => (
-                  <li key={itemIndex} className="mb-1">
-                    {item.name} - {item.quantity}
-                  </li>
-                ))}
-              </ul>
-              <div className="flex space-x-2 mt-2">
+      <div className="search-group mt-8">
+        <input
+          className="form-input"
+          type="text"
+          placeholder="Search by Shop Name"
+          value={searchQuery}
+          onChange={handleSearchChange}
+        />
+      </div>
+
+      {filteredOrders.length > 0 && (
+        <div className="orders-list mt-8 p-4 bg-gray-100 rounded shadow-md">
+          <h3 className="orders-title text-xl font-bold mb-4">
+            All Orders
+          </h3>
+          {filteredOrders.map((order, index) => (
+            <div key={index} className="order-item mb-4 p-4 bg-white rounded shadow-sm">
+              <div className="order-header flex justify-between items-center">
+                <h4 className="order-title text-lg font-bold">
+                  Order {index + 1}
+                </h4>
                 <button
-                  className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="view-button bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline"
+                  onClick={() => handleViewOrder(order)}
+                >
+                  View
+                </button>
+              </div>
+              <div className="order-details mt-4">
+                <p className="order-detail text-sm text-gray-700">
+                  Shop: {order.shopName}
+                </p>
+                <p className="order-detail text-sm text-gray-700">
+                  Date: {order.orderDate}
+                </p>
+                <p className="order-detail text-sm text-gray-700">
+                  Status: {order.status}
+                </p>
+                <p className="order-detail text-sm text-gray-700 font-bold mt-2">
+                  Total Quantity: {calculateTotalQuantity(order.orderItems)}
+                </p>
+              </div>
+              <div className="order-actions mt-4">
+                <button
+                  className="edit-button bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline"
                   onClick={() => handleEdit(index)}
                 >
                   Edit
                 </button>
                 <button
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="delete-button bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline ml-2"
                   onClick={() => handleDeleteOrder(index)}
                 >
                   Delete
@@ -216,6 +271,44 @@ const OrderCreation = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {isModalOpen && selectedOrder && (
+        <div className="modal-overlay fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="modal-content bg-white rounded p-4 w-3/4 md:w-1/2 lg:w-1/3 shadow-md">
+            <h3 className="modal-title text-xl font-bold mb-4">
+              Order Details
+            </h3>
+            <p className="modal-detail text-sm text-gray-700">
+              Shop: {selectedOrder.shopName}
+            </p>
+            <p className="modal-detail text-sm text-gray-700">
+              Date: {selectedOrder.orderDate}
+            </p>
+            <p className="modal-detail text-sm text-gray-700">
+              Status: {selectedOrder.status}
+            </p>
+            <p className="modal-detail text-sm text-gray-700 font-bold mt-2">
+              Total Quantity: {calculateTotalQuantity(selectedOrder.orderItems)}
+            </p>
+            <h5 className="modal-items-title text-md font-bold mb-2">
+              Order Items:
+            </h5>
+            <ul>
+              {selectedOrder.orderItems.map((item, index) => (
+                <li key={index} className="modal-item text-sm text-gray-700">
+                  {item.name} - Quantity: {item.quantity}
+                </li>
+              ))}
+            </ul>
+            <button
+              className="close-button bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
+              onClick={handleCloseModal}
+            >
+              Close
+            </button>
+          </div>
         </div>
       )}
     </div>
