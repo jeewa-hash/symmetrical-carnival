@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './productionplaning.css';
+import Header from '../Shared/Header';
+import Footer from '../Shared/Footer';
 
 const ProductionManagementSystem = () => {
   const [productions, setProductions] = useState([]);
@@ -59,7 +61,11 @@ const ProductionManagementSystem = () => {
   );
 
   return (
-    <div className="production-management-container">
+    
+    <div >
+        <Header />
+      <div className="production-management-container">
+    
       <h1 className="title">Production Management System</h1>
       <div className="actions">
         <button
@@ -223,6 +229,10 @@ const ProductionManagementSystem = () => {
           </tbody>
         </table>
       </div>
+
+     
+      </div>
+      <Footer />
     </div>
   );
 };

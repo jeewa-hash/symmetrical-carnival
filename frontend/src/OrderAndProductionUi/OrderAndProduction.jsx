@@ -3,6 +3,8 @@ import Header from "../Shared/Header";
 import Footer from "../Shared/Footer";
 import { Link } from "react-router-dom";
 import "./OrderandProduction.css"; // Import the CSS file
+import ui from '../image/1.png'; // Import the image
+
 
 
 function OrderAndProduction() {
@@ -31,14 +33,17 @@ function OrderAndProduction() {
             </Link>
             <Link to="resources">
               <button className="ctaButton">Resource plan</button>
+              <br></br>
+              <br></br>
             </Link>
             <Link to="report">
               <button className="ctaButton">Report</button>
             </Link>
+            
           </div>
           <div className="illustration">
             <img
-              src="path_to_your_image.jpg"
+            src={ui}
               alt="Finance Illustration"
               className="illustrationImage"
             />

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, XAxis, YAxis, Line, CartesianGrid, Tooltip, Legend } from 'recharts';
 import './orderandproductionreport.css';// Correct import
-
+import Header from '../Shared/Header';
+import Footer from '../Shared/Footer';
 const data = [
   { name: 'Jan', orders: 100, production: 50 },
   { name: 'Feb', orders: 120, production: 60 },
@@ -35,7 +36,10 @@ const OrderAndProductionReport = () => {
   }, []);
 
   return (
+   <div> 
+    <Header/>
     <div className="report-container">
+        
       <h1 className="report-title">Order and Production Management Report</h1>
       <div className="charts-container">
         <div className="chart-wrapper">
@@ -79,6 +83,8 @@ const OrderAndProductionReport = () => {
           ))}
         </tbody>
       </table>
+      </div>
+      <Footer/>
     </div>
   );
 };
