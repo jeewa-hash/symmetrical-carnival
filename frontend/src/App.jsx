@@ -8,28 +8,21 @@ import SalaryRet from './SalaryDetailsRet/SalaryRet';
 import HRManagementReport from './HRreport/HRreport';
 import ARet from './ATrackingRet/ARet'
 import LeaveRet from './LeaveRetrive/LeaveRet'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+
+// Importing components
+import OrderManagementSystem from './OrderManagement/order';
+import ProductionManagementSystem from './ProductionManagement/productionPlaning';
+import ResourcePlanningSystem from './ProductionManagement/ResourcesPlaning';
+import OrderAndProduction from './OrderAndProductionUi/OrderAndProduction';
+import OrderAndProductionReport from './OrderandProductionReport/OrderandProductionReport';
 
 const App = () => {
   return (
-    <Router>
-      <div>
-        <SalaryRet/>
-        <ARet/>
-        <LeaveRet/>
-        <Routes>
-          <Route path="/" element={<HRManagementInterface />} />
-          <Route path="/leaveform" element={<LeaveRequestForm />} />
-          <Route path="/salarymang" element={<SalaryMang />}/>
-               <Route path="/attendancetrack" element={<AttendanceTrackingForm />} />
-               <Route path="/" element={<HRManagementInterface />} />
-               <Route path="/hr-report" element={<HRManagementReport />} />   
-               <Route path="/" element={<HRManagementReport />} />   
-               
-
-        
-        </Routes>
-      </div>
-    </Router>
+    <div>
+      hiiiiiiiiiiii
+    </div>
   );
 };
 
