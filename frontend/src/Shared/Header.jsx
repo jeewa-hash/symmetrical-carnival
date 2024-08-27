@@ -1,6 +1,7 @@
 // src/components/Header.js
 import React from 'react';
 import './Header.css';
+import logo from '../image/logo..png';
 
 
 const Header = () => {
@@ -8,7 +9,7 @@ const Header = () => {
     <header className="header">
       <div className="header-container">
         <div className="logo">
-          <img src="path/to/logo.png" alt="Bear Works Lanka Logo" />
+          <img src={logo} alt="Bear Works Lanka Logo" />
           <h1>Bear Works Lanka</h1>
         </div>
         <nav className="navigation">

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ResourcesPlaning.css';
+import Header from '../Shared/Header';
+import Footer from '../Shared/Footer';
 
 const ResourcePlanningSystem = () => {
   const [resources, setResources] = useState([]);
@@ -50,6 +52,8 @@ const ResourcePlanningSystem = () => {
   };
 
   return (
+    <div>
+      <Header/>
     <div className="container">
       <h1 className="title">Resource Planning System</h1>
       <div className="button-container">
@@ -140,7 +144,7 @@ const ResourcePlanningSystem = () => {
                 <td>{resource.quantity}</td>
                 <td>
                   <button className="btn btn-danger" onClick={() => handleDeleteResource(resource.id)}>
-                    Delete
+                   Delete
                   </button>
                 </td>
               </tr>
@@ -148,6 +152,8 @@ const ResourcePlanningSystem = () => {
           </tbody>
         </table>
       </div>
+    </div>
+    <Footer />
     </div>
   );
 };

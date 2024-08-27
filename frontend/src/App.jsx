@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+
 // Importing components
 import OrderManagementSystem from './OrderManagement/order';
 import ProductionManagementSystem from './ProductionManagement/productionPlaning';
@@ -13,6 +14,7 @@ const App = () => {
     <Router>
       <div>
         <Routes>
+          
           <Route path="/" element={<OrderAndProduction />} />
           <Route path="/order" element={<OrderManagementSystem />} />
           <Route path="/production" element={<ProductionManagementSystem />} />

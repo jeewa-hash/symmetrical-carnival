@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './order.css'; // Import the CSS file
+import Header from '../Shared/Header';
+import Footer from '../Shared/Footer';
 
 const initialOrder = {
   orderItems: [{ name: '', quantity: 0 }],
@@ -101,13 +103,16 @@ const OrderCreation = () => {
   );
 
   return (
+
+    <div>
+      <Header/>
     <div className="order-creation-container">
       {/* Side Button at the Top */}
       <button
         className="navigate-button"
         onClick={() => navigate('/another-page')} // Navigate to another page
       >
-        Go to Another Page
+        View Orders
       </button>
 
       <h2 className="title">
@@ -312,6 +317,8 @@ const OrderCreation = () => {
         </div>
       )}
     </div>
+    <Footer/>
+    </div> 
   );
 };
 
