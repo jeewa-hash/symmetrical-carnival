@@ -1,49 +1,62 @@
-.inventory-management {
+.financeInterface {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    background-color: #fef6f3;
+  }
+  
+  .scrollableBody {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 50px;
-    background-color: #f9f9f9;
+    background-color: #ffffff; /* White background for content area */
+    border-radius: 15px; /* Rounded corners for a soft look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
   .content {
     max-width: 50%;
+    text-align: left;
   }
   
   .title {
-    font-size: 3em;
-    font-weight: bold;
-    color: #333;
+    font-size: 42px; /* Slightly smaller, playful font size */
+    font-weight: 700;
+    color: #ff6f61; /* Use the vibrant color from the theme */
     margin-bottom: 20px;
   }
   
   .description {
-    font-size: 1.2em;
-    color: #666;
+    font-size: 18px;
+    color: #777;
     margin-bottom: 30px;
   }
   
-  .cta-button {
+  .ctaButton {
     padding: 15px 30px;
-    font-size: 1em;
-    color: #fff;
-    background-color: #6A4C93; /* Adjust the color to match the button in the image */
+    font-size: 18px;
+    color: #ffffff;
+    background-color: #ff6f61;
     border: none;
-    border-radius: 25px;
+    border-radius: 25px; 
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
   
-  .cta-button:hover {
-    background-color: #503276; /* Adjust hover color */
+  .ctaButton:hover {
+    background-color: #e45b4c;
   }
   
   .illustration {
-    max-width: 50%;
+    max-width: 45%;
   }
   
-  .illustration-image {
+  .illustrationImage {
     width: 100%;
     height: auto;
+    border-radius: 15px; /* Rounded corners for images */
   }
-  

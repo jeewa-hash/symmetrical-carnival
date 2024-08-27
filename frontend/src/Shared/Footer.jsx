@@ -1,12 +1,14 @@
 // src/components/Footer.js
 import React from 'react';
+import './Footer.css';
+import logo from '../image/logo.png';
 
 const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-section">
-          <img src="path/to/logo.png" alt="Bear Works Lanka Logo" className="footer-logo" />
+          <img src={logo} alt="Bear Works Lanka Logo" className="footer-logo" />
           <address>
             15 Schofield Pl, Colombo 09892 <br />
             bearworkslanka@gmail.com
