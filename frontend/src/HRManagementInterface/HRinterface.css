@@ -38,13 +38,14 @@
   
   .ctaButton {
     padding: 8px 12px;
-    font-size: 15px;
+    font-size: 12px;
     color: #ffffff;
     background-color: #ff6f61;
     border: none;
     border-radius: 25px; 
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 150px;
   }
   
   .ctaButton:hover {

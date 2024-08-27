@@ -4,6 +4,7 @@ import Header from "../Shared/Header";
 import Footer from "../Shared/Footer";
 import { Link } from "react-router-dom";
 import "./HRinterface.css";
+import Hr from '../image/hr.png';
 
 function HRinterface() {
   return (
@@ -49,7 +50,7 @@ function HRinterface() {
           </div>
           <div className="illustration">
             <img
-              src="path_to_your_image.jpg"
+              src={Hr}
               alt="Finance Illustration"
               className="illustrationImage"
             />
