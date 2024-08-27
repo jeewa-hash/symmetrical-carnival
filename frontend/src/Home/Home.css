@@ -1,0 +1,97 @@
+.homepage-container {
+    position: relative; /* Ensure that the overlay is positioned correctly */
+    background-image: url('../image/home.png'); /* Background image path */
+    background-size: cover; /* Cover the entire container */
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh; /* Ensure the container covers the full viewport height */
+}
+
+.main-content-container {
+    position: relative; /* Ensure the content is positioned above the background */
+    padding: 3rem; /* Add padding around the content */
+    background-color: rgba(238, 221, 225, 0.8); /* Semi-transparent background color */
+    backdrop-filter: blur(1px); /* Blur effect for the background */
+    width: 100%; /* Ensure the width fits the container */
+    max-width: 1200px; /* Maximum width of the container */
+    margin: 0 auto; /* Center the content horizontally */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    z-index: 1; /* Ensure content is above background */
+}
+
+.features-section {
+    padding: 2rem; /* Add padding around the feature section */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem; /* Add space between cards */
+    margin-top: 3rem; /* Space above the feature cards */
+    z-index: 10; /* Ensure the cards are above other elements */
+    position: relative; /* Relative positioning to ensure it's not covered */
+}
+
+.features-section h2 {
+    margin-bottom: 2rem; /* Space below the section title */
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust grid columns */
+    gap: 1.5rem; /* Add space between cards */
+    width: 100%; /* Ensure it takes full width */
+    max-width: 1200px; /* Limit the width of the grid */
+}
+
+.feature-card {
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 1rem; /* Adjust padding for smaller cards */
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.feature-card h3 {
+    font-size: 1.25rem; /* Adjust font size for headings */
+    color: #333; /* Heading text color */
+    margin-bottom: 0.5rem; /* Space below the heading */
+}
+
+.feature-card p {
+    font-size: 1rem; /* Adjust font size for text */
+    color: #666; /* Text color */
+    line-height: 1.4; /* Line height for readability */
+}
+
+.get-started-button {
+    background-color: #ec4899; /* Pink color */
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.get-started-button:hover {
+    background-color: #be185d; /* Darker pink */
+    transform: scale(1.05);
+}
+
+.footer-image {
+    width: 8rem;
+    height: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .main-content-container {
+        max-width: 1000px; /* Adjust max-width for smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content-container {
+        padding: 1rem; /* Reduce padding for smaller screens */
+    }
+}

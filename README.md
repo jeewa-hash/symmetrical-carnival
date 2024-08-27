@@ -1,1 +1,1 @@
-# BearWorksLanka-MERN
+# JayasingheStoreline-MERN

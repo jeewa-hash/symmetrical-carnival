@@ -1,0 +1,45 @@
+.registration-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url('../image/registratinback.png') no-repeat center center fixed;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Black shade with 50% opacity */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .form-container {
+    max-width: 600px;
+    width: 100%;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .flex {
+    display: flex;
+    gap: 1rem; /* Space between first and last name fields */
+  }
+  
+  .pr-2 {
+    padding-right: 0.5rem;
+  }
+  
+  .pl-2 {
+    padding-left: 0.5rem;
+  }
