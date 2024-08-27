@@ -1,0 +1,32 @@
+.header {
+    background-color: #333;
+    padding: 10px;
+    width: 100%;
+    position: fixed;  /* Fixes the header to the top of the page */
+    top: 0;  /* Aligns the header to the top */
+    left: 0;
+    z-index: 1000; /* Ensures the header is on top of other elements */
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav-links {
+    list-style-type: none;
+    display: flex;
+    gap: 15px;
+  }
+  
+  .nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+  }
+  
+  .nav-links a:hover {
+    text-decoration: underline;
+  }
+  
