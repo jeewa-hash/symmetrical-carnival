@@ -1,0 +1,223 @@
+:root {
+    /* Color Variables */
+    --primary-bg: #ffffff;
+    --secondary-bg: #f0f4f8;
+    --primary-text: #333333;
+    --secondary-text: #555555;
+    --border-color: #d0d5db;
+    --button-bg-primary: #4f46e5;
+    --button-bg-primary-hover: #3730a3;
+    --button-bg-secondary: #10b981;
+    --button-bg-secondary-hover: #059669;
+    --button-bg-edit: #f59e0b;
+    --button-bg-edit-hover: #eab308;
+    --button-bg-delete: #ef4444;
+    --button-bg-delete-hover: #dc2626;
+    --button-bg-cancel: #d1d5db;
+    --button-bg-cancel-hover: #b0b9c1;
+    --modal-bg: #ffffff;
+    --modal-overlay-bg: rgba(0, 0, 0, 0.5);
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-dark: rgba(0, 0, 0, 0.3);
+}
+
+/* Container for the entire component */
+.container {
+    max-width: 7xl;
+    margin: auto;
+    padding: 1rem;
+    background-color: var(--primary-bg);
+    border-radius: 0.75rem;
+    box-shadow: 0 6px 12px var(--shadow-dark);
+    position: relative;
+    transition: box-shadow 0.3s, transform 0.3s;
+    width: 50%;
+}
+
+/* Title of the component */
+.title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: var(--primary-text);
+}
+
+/* Button container styling */
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+/* Base button styling */
+.btn {
+    padding: 0.375rem 0.75rem; /* Reduced padding */
+    border-radius: 0.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: var(--primary-bg);
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+    box-shadow: 0 3px 6px var(--shadow-light);
+    font-size: 0.75rem; /* Smaller font size */
+}
+
+/* Primary button */
+.btn-primary {
+    background: linear-gradient(135deg, var(--button-bg-primary), #3b82f6);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--button-bg-primary-hover), #3b82f6);
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px var(--shadow-dark);
+}
+
+/* Secondary button */
+.btn-secondary {
+    background: linear-gradient(135deg, var(--button-bg-secondary), var(--button-bg-secondary-hover));
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, var(--button-bg-secondary-hover), #047857);
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px var(--shadow-dark);
+}
+
+/* Edit button */
+.btn-edit {
+    background: linear-gradient(135deg, var(--button-bg-edit), var(--button-bg-edit-hover));
+}
+
+.btn-edit:hover {
+    background: linear-gradient(135deg, var(--button-bg-edit-hover), #e0a800);
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px var(--shadow-dark);
+}
+
+/* Delete button */
+.btn-delete {
+    background: linear-gradient(135deg, var(--button-bg-delete), var(--button-bg-delete-hover));
+}
+
+.btn-delete:hover {
+    background: linear-gradient(135deg, var(--button-bg-delete-hover), #b21f2d);
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px var(--shadow-dark);
+}
+
+/* Cancel button */
+.btn-cancel {
+    background: linear-gradient(135deg, var(--button-bg-cancel), var(--button-bg-cancel-hover));
+    color: var(--primary-text);
+}
+
+.btn-cancel:hover {
+    background: linear-gradient(135deg, var(--button-bg-cancel-hover), #9ea3a5);
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px var(--shadow-dark);
+}
+
+/* Form container styling */
+.form-container {
+    background-color: var(--primary-bg);
+    box-shadow: 0 4px 8px var(--shadow-light);
+    border-radius: 0.75rem;
+    padding: 0.75rem; /* Reduced padding */
+    margin: 1rem 0;
+    width: 100%; /* Ensures full width within the container */
+}
+
+/* Title inside form */
+.form-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem; /* Reduced margin */
+    color: var(--primary-text);
+}
+
+/* Form group styling */
+.form-group {
+    margin-bottom: 0.5rem; /* Reduced margin */
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.75rem; /* Smaller font size */
+    font-weight: bold;
+    color: var(--secondary-text);
+    margin-bottom: 0.25rem; /* Reduced margin */
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.375rem; /* Reduced padding */
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    color: var(--primary-text);
+    box-shadow: inset 0 2px 4px var(--shadow-light);
+    font-size: 0.75rem; /* Smaller font size */
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus {
+    border-color: var(--button-bg-primary);
+    box-shadow: 0 0 0 2px rgba(79, 114, 229, 0.3);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Table container styling */
+.table-container {
+    background-color: var(--primary-bg);
+    box-shadow: 0 4px 8px var(--shadow-light);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.table-title {
+    font-size: 1.125rem;
+    font-weight: bold;
+    color: var(--primary-text);
+}
+
+.search-container {
+    margin-bottom: 1rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.375rem; /* Reduced padding */
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    color: var(--primary-text);
+    box-shadow: inset 0 2px 4px var(--shadow-light);
+    font-size: 0.75rem; /* Smaller font size */
+}
+
+.resource-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.resource-table th,
+.resource-table td {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    text-align: left;
+    font-size: 0.75rem; /* Smaller font size */
+}
+
+.resource-table th {
+    background-color: var(--secondary-bg);
+    font-weight: bold;
+}
+
+.resource-table tr:nth-child(even) {
+    background-color: var(--secondary-bg);
+}
