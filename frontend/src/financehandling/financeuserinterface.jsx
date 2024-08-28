@@ -26,6 +26,18 @@ function FinanceUserInterface() {
             </Link>
             <Link to="orderbillinterface">
               <button className="ctaButton">Order Bill Calculate</button>
+              <br></br>
+              <br></br>
+            </Link>
+            <Link to="financereport">
+              <button className="ctaButton">Finance Report</button>
+              <br></br>
+              <br></br>
+            </Link>
+            <Link to="salaryret">
+              <button className="ctaButton">Salary Report</button>
+              <br></br>
+              <br></br>
             </Link>
           </div>
           <div className="illustration">

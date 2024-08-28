@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from "../Shared/Header";
 import Footer from '../Shared/Footer';
 
 const SalaryCalculator = () => {
+  const [employeeName, setEmployeeName] = useState('');
+  const [employeeId, setEmployeeId] = useState('');
+  const [department, setDepartment] = useState('');
   const [basicSalary, setBasicSalary] = useState(0);
   const [allowances, setAllowances] = useState(0);
   const [deductions, setDeductions] = useState(0);
@@ -12,16 +15,18 @@ const SalaryCalculator = () => {
 
   const navigate = useNavigate();
 
-  const handleCalculateGrossSalary = () => {
+  useEffect(() => {
+    // Recalculate gross salary whenever basicSalary or allowances change
     setGrossSalary(basicSalary + allowances);
-  };
+  }, [basicSalary, allowances]);
 
-  const handleCalculateNetSalary = () => {
+  useEffect(() => {
+    // Recalculate net salary whenever grossSalary or deductions change
     setNetSalary(grossSalary - deductions);
-  };
+  }, [grossSalary, deductions]);
 
   const handleNext = () => {
-    navigate('/nextsalarycalculateinterface'); // Replace '/next-container' with your desired path
+    navigate('/nextsalarycalculateinterface'); // Replace with your desired path
   };
 
   return (
@@ -30,6 +35,41 @@ const SalaryCalculator = () => {
       <main className="flex-1 p-4">
         <div className="flex justify-center mb-4">
           <div className="w-1/2 bg-gray-100 p-4 rounded-md shadow-md mr-4">
+            <h2 className="text-xl font-bold mb-4">Employee Details</h2>
+            <form>
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="employeeName">
+                Employee Name
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="employeeName"
+                type="text"
+                value={employeeName}
+                onChange={(e) => setEmployeeName(e.target.value)}
+              />
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="employeeId">
+                Employee ID
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="employeeId"
+                type="text"
+                value={employeeId}
+                onChange={(e) => setEmployeeId(e.target.value)}
+              />
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="department">
+                Designation
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="department"
+                type="text"
+                value={department}
+                onChange={(e) => setDepartment(e.target.value)}
+              />
+            </form>
+          </div>
+          <div className="w-1/2 bg-gray-100 p-4 rounded-md shadow-md">
             <h2 className="text-xl font-bold mb-4">Salary Details</h2>
             <form>
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="basicSalary">
@@ -63,22 +103,7 @@ const SalaryCalculator = () => {
                 onChange={(e) => setDeductions(Number(e.target.value))}
               />
             </form>
-          </div>
-          <div className="w-1/2 bg-gray-100 p-4 rounded-md shadow-md">
-            <h2 className="text-xl font-bold mb-4">Salary Calculation</h2>
-            <button
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4"
-              onClick={handleCalculateGrossSalary}
-            >
-              Calculate Gross Salary
-            </button>
             <p className="text-2xl font-bold mb-4">Gross Salary: ${grossSalary}</p>
-            <button
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4"
-              onClick={handleCalculateNetSalary}
-            >
-              Calculate Net Salary
-            </button>
             <p className="text-2xl font-bold mb-4">Net Salary: ${netSalary}</p>
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -89,8 +114,7 @@ const SalaryCalculator = () => {
           </div>
         </div>
       </main>
-      
-      <Footer/>
+      <Footer />
     </div>
   );
 };
