@@ -8,6 +8,9 @@ import ProductionManagementSystem from './ProductionManagement/productionPlaning
 import ResourcePlanningSystem from './ProductionManagement/ResourcesPlaning';
 import OrderAndProduction from './OrderAndProductionUi/OrderAndProduction';
 import OrderAndProductionReport from './OrderandProductionReport/OrderandProductionReport';
+import ProductionCostCalculator from './ProductionManagement/productionCost';
+import OrderRet from './OrderManagement/orderRet';
+import ProductionRet from './ProductionManagement/ProductionRet';
 
 const App = () => {
   return (
@@ -20,6 +23,9 @@ const App = () => {
           <Route path="/production" element={<ProductionManagementSystem />} />
           <Route path="/resources" element={<ResourcePlanningSystem />} />
           <Route path="/report" element={<OrderAndProductionReport />} /> {/* Add this route */}
+          <Route path="/cost" element={<ProductionCostCalculator/>} />
+          <Route path="/orderret" element={<OrderRet/>} />
+          <Route path="/productret" element={<ProductionRet/>} />
         </Routes>
       </div>
     </Router>

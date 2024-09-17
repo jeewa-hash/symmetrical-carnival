@@ -1,11 +1,7 @@
-
-
-
 import OrderModel from "../models/OrderModel.js";
+import { v4 as uuidv4 } from 'uuid';
 
-
-//fetch all orders 
-
+// Fetch all orders
 export const fetchAllOrders = async (req, res) => {
     try {
         const { status } = req.query; // Example: filter by status if passed as a query parameter
@@ -14,11 +10,7 @@ export const fetchAllOrders = async (req, res) => {
     } catch (error) {
         res.status(400).json({ msg: "No order record found", error });
     }
-
 };
-
-
-
 
 // Add a new order
 export const addOrder = async (req, res) => {
@@ -34,8 +26,14 @@ export const addOrder = async (req, res) => {
             return res.status(400).json({ error: "At least one order item is required" });
         }
 
-        // Create a new Order document
-        const order = new OrderModel({ shopName, orderDate, status, orderItems });
+        // Create a new Order document with a unique ID
+        const order = new OrderModel({ 
+            _id: uuidv4(), // Generate a unique ID
+            shopName, 
+            orderDate, 
+            status, 
+            orderItems 
+        });
 
         // Save the order record to the database
         await order.save();
@@ -46,5 +44,46 @@ export const addOrder = async (req, res) => {
         // Log the error and respond with a failure message
         console.error(error);
         res.status(400).json({ msg: "Failed to add order", error });
+    }
+};
+
+// Update an existing order
+export const updateOrder = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const { shopName, orderDate, status, orderItems } = req.body;
+
+        // Find the order by ID and update it
+        const updatedOrder = await OrderModel.findByIdAndUpdate(
+            orderId,
+            { shopName, orderDate, status, orderItems },
+            { new: true, runValidators: true } // Return the updated document and run validation
+        );
+
+        if (!updatedOrder) {
+            return res.status(404).json({ error: "Order not found" });
+        }
+
+        res.json({ msg: "Order updated successfully", updatedOrder });
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ msg: "Failed to update order", error });
+    }
+};
+
+// Delete an order
+export const deleteOrder = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const deletedOrder = await OrderModel.findByIdAndDelete(orderId);
+
+        if (!deletedOrder) {
+            return res.status(404).json({ error: "Order not found" });
+        }
+
+        res.json({ msg: "Order deleted successfully", deletedOrder });
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ msg: "Failed to delete order", error });
     }
 };

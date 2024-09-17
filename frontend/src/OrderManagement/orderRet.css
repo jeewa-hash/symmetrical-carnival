@@ -1,0 +1,113 @@
+/* Modal styling */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6); /* Darker background overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background-color: #fff; /* Clean white background */
+    padding: 30px; /* Increased padding for readability */
+    border-radius: 12px; /* Softer edges */
+    max-width: 600px; /* Wider modal for more space */
+    width: 90%; /* Responsive width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  }
+  
+  .close-button {
+    color: #888; /* Softer color for close button */
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  
+  .close-button:hover {
+    color: #555; /* Darken on hover */
+  }
+  
+  h2 {
+    margin-top: 0; /* Remove default margin for cleaner look */
+    font-size: 24px; /* Larger heading */
+    color: #333; /* Darker text for better readability */
+  }
+  
+  p {
+    font-size: 16px; /* Make paragraphs more readable */
+    color: #555; /* Softer text color */
+    margin: 10px 0; /* Add some margin between paragraphs */
+  }
+  
+  ul {
+    padding-left: 20px; /* Indent list */
+  }
+  
+  ul li {
+    font-size: 16px; /* Same size as paragraphs */
+    margin-bottom: 8px; /* Space between list items */
+    color: #333; /* Darker text for better readability */
+  }
+  
+  strong {
+    color: #000; /* Highlight key information */
+  }
+  
+  .modal-content h3 {
+    margin-top: 20px; /* Add space before heading */
+    font-size: 20px; /* Slightly smaller than h2 */
+    color: #444; /* Softer than h2 */
+  }
+  /* Styling for the modal */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .close-button {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+  }
+  
+  .order-items-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .order-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .order-item strong {
+    font-weight: bold;
+  }
+  

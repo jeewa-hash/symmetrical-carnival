@@ -39,7 +39,23 @@ function OrderAndProduction() {
             <Link to="report">
               <button className="ctaButton">Report</button>
             </Link>
-            
+            <br />
+            <br />
+            <Link to="cost">
+              <button className="ctaButton">Cost</button>
+            </Link>
+            <Link to="orderret">
+              <button className="ctaButton">Order Ret</button>
+              <br></br>
+              <br></br>
+            </Link>
+            <Link to="productret">
+              <button className="ctaButton">production Ret</button>
+              <br></br>
+              <br></br>
+            </Link>
+           
+          
           </div>
           <div className="illustration">
             <img

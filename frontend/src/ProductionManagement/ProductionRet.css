@@ -1,0 +1,146 @@
+/* General Container */
+.production-list-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Title */
+  .production-list-container h2 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  /* Search Container */
+  .search-container {
+    margin-bottom: 20px;
+  }
+  
+  .search-container input {
+    padding: 10px;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  /* Batch Section */
+  .batch-section {
+    margin-bottom: 20px;
+  }
+  
+  .batch-section h3 {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    color: #007bff;
+    margin: 0;
+  }
+  
+  /* Production List Table */
+  .production-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .production-list-table thead {
+    background-color: #f5f5f5;
+  }
+  
+  .production-list-table th,
+  .production-list-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .production-list-table th {
+    color: #333;
+  }
+  
+  .production-list-table td {
+    color: #555;
+  }
+  
+  /* Action Buttons */
+  .production-list-table button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .production-list-table button:hover {
+    opacity: 0.8;
+  }
+  
+  .production-list-table button:first-child {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .production-list-table button:nth-child(2) {
+    background-color: #ffc107;
+    color: white;
+  }
+  
+  .production-list-table button:last-child {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  /* Loading and Error Messages */
+  .production-list-container p {
+    color: #ff4d4d; /* Error color */
+    font-size: 16px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  /* Detail View Modal */
+  .detail-view-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .modal-content h3 {
+    margin-top: 0;
+  }
+  
+  .modal-content p {
+    margin: 5px 0;
+  }
+  
+  .modal-content button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .modal-content button:hover {
+    opacity: 0.8;
+  }
+  
