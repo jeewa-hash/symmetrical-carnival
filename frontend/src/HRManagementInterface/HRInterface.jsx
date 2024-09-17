@@ -45,7 +45,11 @@ function HRinterface() {
               <button className="ctaButton">Report</button>
               <br></br>
               <br></br></Link>
-             
+               
+              <Link to="addemp">
+              <button className="ctaButton">Add emp</button>
+              <br></br>
+              <br></br></Link>
            
           </div>
           <div className="illustration">
