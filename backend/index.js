@@ -2,16 +2,14 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-import path from 'path';
-import cors from 'cors';
+import path from "path";
 
-// Utils
-import connectDB from './config/db.js';
-import productRoutes from './routes/ProductRoutes.js';
-import categoryRoutes from './routes/CategoryRoutes.js';
+// utils (correct the spelling from "utiles" to "utils")
+import connectDB from "./config/db.js";
+import productRoutes from "./routes/ProductRoutes.js";
+import categoryRoutes from "./routes/CategoryRoutes.js";
 import uploadRoutes from './routes/UploadRoutes.js';
-import leaveReqRoutes from './routes/LeaveReqRoutes.js';  // Consistent naming
-import AddEmployeeRoutes from './routes/AddEmployeeRoutes.js'; 
+import LeaveReqRoutes from './routes/LeaveReqRoutes.js';
 
 // Load the .env file
 dotenv.config();
@@ -29,15 +27,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Define routes
-app.use('/api/category', categoryRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/upload', uploadRoutes);
-app.use('/api/leave', leaveReqRoutes); 
-app.use('/api/employee', AddEmployeeRoutes);
-// Leave request routes
- // New leave routes
+app.use("/api/category", categoryRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/leave", LeaveReqRoutes);  // Ensure route path matches case sensitivity
 
-// Serve static files from the uploads directory
 const __dirname = path.resolve();
 app.use('/uploads/products', express.static(path.join(__dirname, '/uploads/products')));
 
