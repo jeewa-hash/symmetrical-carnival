@@ -8,6 +8,7 @@ import Home from './Home/Home';
 //import Registration from './Registration/Registration';
 import Salaryret from './financehandling/salaryret';
 import Financereport from './financehandling/financereport';
+import FIMainTable from './financehandling/fiMainTable';
 
 
 
@@ -15,7 +16,7 @@ const App = () => {
   return (
     <Router>
       <Home />
-       
+       <FIMainTable />
        <Financereport/>
         <Salaryret />
         
