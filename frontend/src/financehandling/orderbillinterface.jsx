@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './order.css'; // Import the CSS file
-import Header from '../Shared/Header';
-import Footer from '../Shared/Footer';
+import './oderbillcal.css';
+import Header from "../Shared/Header";
+import Footer from "../Shared/Footer";
 
 const initialOrder = {
-  orderItems: [{ name: '', quantity: 0 }],
+  orderItems: [{ name: '', quantity: 0, price: 0 }],
   status: '',
   shopName: '',
   orderDate: '',
+  totalAmount: 0,
 };
 
 const OrderCreation = () => {
@@ -45,11 +46,33 @@ const OrderCreation = () => {
     setOrder({ ...order, orderItems: newOrderItems });
   };
 
+  const handleItemPriceChange = (event, index) => {
+    const newOrderItems = [...order.orderItems];
+    newOrderItems[index].price = parseFloat(event.target.value) || 0;
+    setOrder({ ...order, orderItems: newOrderItems });
+  };
+
   const handleAddItem = () => {
     setOrder({
       ...order,
-      orderItems: [...order.orderItems, { name: '', quantity: 0 }],
+      orderItems: [...order.orderItems, { name: '', quantity: 0, price: 0 }],
     });
+  };
+
+  const calculateTotalAmount = (orderItems) => {
+    return orderItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const totalAmount = calculateTotalAmount(order.orderItems);
+    const updatedOrder = { ...order, totalAmount };
+    if (editIndex !== null) {
+      handleUpdateOrder(editIndex);
+    } else {
+      setOrders([...orders, updatedOrder]);
+      setOrder(initialOrder);
+    }
   };
 
   const handleUpdateOrder = (index) => {
@@ -63,20 +86,6 @@ const OrderCreation = () => {
   const handleDeleteOrder = (index) => {
     const updatedOrders = orders.filter((_, i) => i !== index);
     setOrders(updatedOrders);
-  };
-
-  const calculateTotalQuantity = (orderItems) => {
-    return orderItems.reduce((acc, item) => acc + item.quantity, 0);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (editIndex !== null) {
-      handleUpdateOrder(editIndex);
-    } else {
-      setOrders([...orders, order]);
-      setOrder(initialOrder);
-    }
   };
 
   const handleEdit = (index) => {
@@ -103,20 +112,12 @@ const OrderCreation = () => {
   );
 
   return (
-
     <div>
       <Header/>
     <div className="order-creation-container">
-      {/* Side Button at the Top */}
-      <button
-        className="navigate-button"
-        onClick={() => navigate('/another-page')} // Navigate to another page
-      >
-        View Orders
-      </button>
-
-      <h2 className="title">
-        {editIndex !== null ? 'Edit Order' : 'Order Creation'}
+      
+     <h2 className="title">
+        {editIndex !== null ? 'Edit Order Bill' : 'Order Bill Creation'}
       </h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -143,50 +144,43 @@ const OrderCreation = () => {
             onChange={handleOrderDateChange}
           />
         </div>
-        <div className="form-group">
-          <label className="form-label" htmlFor="status">
-            Order Status
-          </label>
-          <select
-            className="form-select"
-            id="status"
-            value={order.status}
-            onChange={handleStatusChange}
-          >
-            <option value="">Select Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Processing">Processing</option>
-            <option value="Shipped">Shipped</option>
-            <option value="Delivered">Delivered</option>
-            <option value="Cancelled">Cancelled</option>
-          </select>
-        </div>
         {order.orderItems.map((item, index) => (
           <div key={index} className="form-group">
             <div className="form-label-group">
               <label className="form-label" htmlFor={`itemName${index}`}>
                 Item {index + 1} Name
               </label>
+              <input
+                className="form-input"
+                id={`itemName${index}`}
+                type="text"
+                value={item.name}
+                onChange={(event) => handleItemNameChange(event, index)}
+              />
             </div>
-            <input
-              className="form-input"
-              id={`itemName${index}`}
-              type="text"
-              value={item.name}
-              onChange={(event) => handleItemNameChange(event, index)}
-            />
             <div className="form-label-group mt-2">
               <label className="form-label" htmlFor={`itemQuantity${index}`}>
                 Quantity
               </label>
-            </div>
-            <div className="form-label-group">
               <input
                 className="form-input"
                 id={`itemQuantity${index}`}
                 type="number"
                 value={item.quantity}
                 onChange={(event) => handleItemQuantityChange(event, index)}
+              />
+            </div>
+            <div className="form-label-group mt-2">
+              <label className="form-label" htmlFor={`itemPrice${index}`}>
+                Price
+              </label>
+              <input
+                className="form-input"
+                id={`itemPrice${index}`}
+                type="number"
+                step="0.01"
+                value={item.price}
+                onChange={(event) => handleItemPriceChange(event, index)}
               />
             </div>
           </div>
@@ -198,15 +192,16 @@ const OrderCreation = () => {
         >
           Add Item
         </button>
-        <div className="total-quantity-group mt-4">
-          <label className="form-label" htmlFor="totalQuantity">
-            Total Quantity
+        <div className="total-amount-group mt-4">
+          <label className="form-label" htmlFor="totalAmount">
+            Total Amount
           </label>
           <input
             className="form-input"
-            id="totalQuantity"
+            id="totalAmount"
             type="number"
-            value={calculateTotalQuantity(order.orderItems)}
+            step="0.01"
+            value={calculateTotalAmount(order.orderItems)}
             readOnly
           />
         </div>
@@ -214,7 +209,7 @@ const OrderCreation = () => {
           className="submit-button mt-4"
           type="submit"
         >
-          {editIndex !== null ? 'Update Order' : 'Create Order'}
+          {editIndex !== null ? 'Update Order Bill' : 'Create Order Bill'}
         </button>
       </form>
 
@@ -257,7 +252,7 @@ const OrderCreation = () => {
                   Status: {order.status}
                 </p>
                 <p className="order-detail text-sm text-gray-700 font-bold mt-2">
-                  Total Quantity: {calculateTotalQuantity(order.orderItems)}
+                  Total Amount: ${order.totalAmount.toFixed(2)}
                 </p>
               </div>
               <div className="order-actions mt-4">
@@ -280,8 +275,9 @@ const OrderCreation = () => {
       )}
 
       {isModalOpen && selectedOrder && (
-        <div className="modal-overlay fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="modal-content bg-white rounded p-4 w-3/4 md:w-1/2 lg:w-1/3 shadow-md">
+        <div className="modal fixed inset-0 flex items-center justify-center z-50">
+          <div className="modal-overlay fixed inset-0 bg-black opacity-50"></div>
+          <div className="modal-content bg-white p-8 rounded shadow-lg">
             <h3 className="modal-title text-xl font-bold mb-4">
               Order Details
             </h3>
@@ -294,21 +290,21 @@ const OrderCreation = () => {
             <p className="modal-detail text-sm text-gray-700">
               Status: {selectedOrder.status}
             </p>
-            <p className="modal-detail text-sm text-gray-700 font-bold mt-2">
-              Total Quantity: {calculateTotalQuantity(selectedOrder.orderItems)}
-            </p>
-            <h5 className="modal-items-title text-md font-bold mb-2">
-              Order Items:
-            </h5>
-            <ul>
+            <div className="modal-items mt-4">
+              <h4 className="modal-items-title text-lg font-bold mb-2">
+                Items:
+              </h4>
               {selectedOrder.orderItems.map((item, index) => (
-                <li key={index} className="modal-item text-sm text-gray-700">
-                  {item.name} - Quantity: {item.quantity}
-                </li>
+                <div key={index} className="modal-item text-sm text-gray-700">
+                  {index + 1}. {item.name} - Quantity: {item.quantity} - Price: ${item.price.toFixed(2)} - Total: ${item.quantity * item.price.toFixed(2)}
+                </div>
               ))}
-            </ul>
+            </div>
+            <p className="modal-detail text-sm text-gray-700 font-bold mt-4">
+              Total Amount: ${selectedOrder.totalAmount.toFixed(2)}
+            </p>
             <button
-              className="close-button bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
+              className="close-button bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
               onClick={handleCloseModal}
             >
               Close
@@ -318,7 +314,7 @@ const OrderCreation = () => {
       )}
     </div>
     <Footer/>
-    </div> 
+    </div>
   );
 };
 
