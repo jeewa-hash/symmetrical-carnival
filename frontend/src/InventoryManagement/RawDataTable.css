@@ -1,0 +1,72 @@
+/* StoreDataTable.css */
+
+.table-container {
+  margin-top: 20px;
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 15px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background-color: #f4f4f4;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #e2e2e2;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+  
+  th {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  
+  tr {
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    display: block;
+    padding: 10px;
+  }
+  
+  td {
+    border: none;
+    position: relative;
+    padding-left: 50%;
+    text-align: left;
+  }
+  
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    font-weight: bold;
+  }
+}

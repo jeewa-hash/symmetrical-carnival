@@ -1,0 +1,32 @@
+.inventory-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-heading {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.finished-goods-form .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.finished-goods-table {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.finished-goods-table th {
+  background: #f0f0f0;
+  text-align: center;
+}
+
+.finished-goods-table td {
+  text-align: center;
+}

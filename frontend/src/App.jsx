@@ -12,6 +12,12 @@ import Salaryret from './financehandling/salaryret';
 import OrderAndProduction from './OrderAndProductionUi/OrderAndProduction';
 import HRInterface from './HRManagementInterface/HRInterface';
 import Financereport from './financehandling/financereport';
+import IMInterface from './InventoryManagement/Interface';
+import Inventory from './InventoryManagement/Inventory';
+import FinishGoods from './InventoryManagement/FinishGoods';
+import RawDataTable from './InventoryManagement/RawDataTable';
+import RawMaterialRequest from './InventoryManagement/RawMaterialRequest';
+import MonthlyEvaluation from './InventoryManagement/MonthlyEvalution';
 
 const App = () => {
   return (
@@ -25,11 +31,16 @@ const App = () => {
           <Route path="orderbillinterface" element={<Orderbillinterface />} />
           <Route path="/salaryret" element={<Salaryret />} />
           <Route path="/financereport" element={<Financereport />} />
-            
-            
-    
           <Route path="/Hrui" element={<HRInterface />} />
           <Route path="/salarycalculateinterface" element={<Salarycalculateinterface />} />
+
+          
+        <Route path="/inventoryui" element={<IMInterface />} />
+        <Route path='/inventory' element={<Inventory />} />
+         <Route path="/finishgoods" element={<FinishGoods />} />
+         <Route path="/rawdatatable" element={<RawDataTable />} />
+         <Route path="/rawmaterialrequest" element={<RawMaterialRequest />} />
+         <Route path="/monthlyevaluation" element={<MonthlyEvaluation />} />
         </Routes>
       </div>
     </Router>
