@@ -1,22 +1,23 @@
-// packages
 import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import cors from 'cors';
+import path from 'path';
+import cors from 'cors';
 
-// utiles
-import connectDB from './config/db.js';
-import productRoutes from './routes/ProductRoutes.js';
-import categoryRoutes from './routes/CategoryRoutes.js';
+import connectDB from "./config/db.js";
+import productRoutes from "./routes/ProductRoutes.js";
+import categoryRoutes from "./routes/CategoryRoutes.js";
 import uploadRoutes from './routes/UploadRoutes.js';
-import salarycalculatorrouter from './routes/salarycalculatorrouter.js';
-import billOrderRouter from './routes/billOrderRouter.js';
+import OrderRoute from './routes/OrderRoute.js';
+import ResourceRoute from './routes/ResourceRoute.js';
+import productionCostRoute from './routes/productionCostRoute.js';
 
-// Load the .env file
 dotenv.config();
 const port = process.env.PORT || 5000;
 
+connectDB();
 connectDB();
 
 const app = express();
@@ -26,12 +27,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Define routes
-app.use('/api/category', categoryRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/upload', uploadRoutes);
-app.use('/api/salarycalculates', salarycalculatorrouter);
-app.use('/api/billorder', billOrderRouter);
+app.use("/api/category", categoryRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/order", OrderRoute);
+app.use("/api/resource", ResourceRoute);
+app.use("/api/productionCost", productionCostRoute);
+
+
 
 const __dirname = path.resolve();
 app.use("/uploads/products", express.static(path.join(__dirname, '/uploads/products')));
