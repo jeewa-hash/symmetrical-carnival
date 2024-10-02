@@ -1,1 +1,1 @@
-# JayasingheStoreline-MERN
+# JayasingheStorelin-MERN

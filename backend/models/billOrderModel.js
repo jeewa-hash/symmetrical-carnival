@@ -1,41 +1,56 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const orderBillSchema = new Schema({
-  orderItems: [{
-    name: {
-      type: String,
-      required: true
-    },
-    quantity: {
-      type: Number,
-      required: true,
-      min: 1
-    },
-    price: {
-      type: Number,
-      required: true,
-      min: 0
-    }
-  }],
-  status: {
-    type: String,
-    required: true,
-    enum: ['Pending', 'Completed', 'Cancelled'], // Example statuses
-    default: 'Pending'
-  },
+// Define the schema for orders with embedded order items
+const orderSchema = new mongoose.Schema({
   shopName: {
     type: String,
-    required: true
+    required: true,
+  },
+  shopAddress: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (v) {
+        // Allow only letters, numbers, spaces, and '/' characters
+        return /^[a-zA-Z0-9/, ]*$/.test(v);
+      },
+    },
   },
   orderDate: {
     type: Date,
-    required: true
+    default: Date.now,
   },
   totalAmount: {
     type: Number,
     required: true,
-    min: 0
-  }
+    min: 0,
+  },
+  orderItems: [
+    {
+      name: {
+        type: String,
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+        min: 0,
+      },
+      price: {
+        type: Number,
+        required: true,
+        min: 0,
+      },
+      totalPrice: {
+        type: Number,
+        required: true,
+        min: 0,
+      },
+    },
+  ],
 }, { timestamps: true });
 
-export default mongoose.model('Orderbill', orderBillSchema);
+// Create the Order model based on the schema
+const BillOrder = mongoose.model('BillOrder', orderSchema);
+
+export default BillOrder;

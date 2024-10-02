@@ -1,115 +1,137 @@
-/* General Styles */
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f5f7fa;
-  margin: 0;
-  padding: 20px;
-}
-
-/* Form Container */
-.salary-form-container {
+/* Container for the entire form */
+.employee-salary-form-container {
+  max-width: 900px; /* Increased width */
+  margin: 40px auto; /* Increased margin */
+  padding: 30px; /* Increased padding */
+  border-radius: 12px; /* Slightly rounded corners */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); /* More prominent shadow */
   background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  max-width: 600px;
-  margin: auto;
 }
 
-/* Form Heading */
-.salary-form h2 {
-  color: #333;
-  margin-bottom: 20px;
+/* General styles for the form */
+.employee-salary-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main heading style */
+h2 {
   text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px; /* Increased bottom margin */
+  font-size: 28px; /* Increased font size */
+  font-family: 'Arial', sans-serif; /* Different font */
 }
 
-/* Form Section */
-.form-section {
-  margin-bottom: 20px;
+/* Sections for different parts of the form */
+.employee-details-section,
+.earnings-section,
+.deductions-section,
+.salary-summary-section {
+  margin-bottom: 30px; /* Increased margin */
+  padding: 25px; /* Increased padding */
+  border: 1px solid #dcdcdc;
+  border-radius: 10px; /* More rounded corners */
+  background-color: #f8f9fa;
 }
 
-/* Labels */
-label {
-  display: block;
-  margin-bottom: 8px;
-  color: #555;
+/* Style for individual input groups */
+.input-group {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px; /* Increased margin */
 }
 
-/* Inputs and Selects */
-input[type="text"],
-input[type="number"],
-input[type="month"],
-select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  transition: border-color 0.3s ease;
+/* Label styles */
+.input-group label {
+  flex: 1;
+  margin-right: 15px; /* Increased margin */
+  font-weight: bold;
+  color: #34495e;
+  font-size: 16px; /* Increased font size */
 }
 
-input[type="text"]:focus,
-input[type="number"]:focus,
-input[type="month"]:focus,
-select:focus {
-  border-color: #007bff;
+/* Input and select field styles */
+.input-group input,
+.input-group select {
+  flex: 2;
+  padding: 14px; /* Increased padding */
+  border: 1px solid #bdc3c7;
+  border-radius: 6px; /* More rounded corners */
+  font-size: 16px; /* Increased font size */
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-/* Buttons (if any) */
-button {
-  background-color: #007bff;
-  color: #ffffff;
+/* Focus effect for input and select fields */
+.input-group input:focus,
+.input-group select:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 8px rgba(52, 152, 219, 0.5); /* Enhanced focus shadow */
+  outline: none;
+}
+
+/* Button styles */
+/* Button styles */
+.button-primary {
+  background-color: #3498db; /* Primary color */
+  color: white; /* Text color */
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+  padding: 14px 30px; /* Padding for a larger button */
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 18px; /* Font size */
+  font-weight: bold; /* Bold text */
+  transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+  margin-top: 15px; /* Margin above */
 }
 
-button:hover {
-  background-color: #0056b3;
+/* Hover effect for primary button */
+.button-primary:hover {
+  background-color: #2980b9; /* Darker shade for hover */
 }
 
-/* Salary Details Container */
-.salary-details-container {
-  margin-top: 20px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #f9f9f9;
+/* Active state for primary button */
+.button-primary:active {
+  transform: translateY(1px); /* Slightly pressed effect */
 }
 
-/* Earnings and Deductions Sections */
-.earnings-container,
-.deductions-container,
-.net-salary-container {
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #007bff;
-  border-radius: 5px;
-  background-color: #ffffff;
+/* Secondary button styles */
+.button-secondary {
+  background-color: #e67e22; /* Secondary color */
+  color: white; /* Text color */
+  border: none;
+  padding: 14px 30px; /* Padding for a larger button */
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 18px; /* Font size */
+  font-weight: bold; /* Bold text */
+  transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+  margin-top: 15px; /* Margin above */
 }
 
-/* Headings in Salary Details */
-.salary-details-container h3 {
-  margin: 0;
-  color: #007bff;
+/* Hover effect for secondary button */
+.button-secondary:hover {
+  background-color: #d35400; /* Darker shade for hover */
 }
 
-/* Paragraphs for displaying data */
-.salary-details-container p {
-  margin: 5px 0;
-  color: #333;
-  font-size: 16px;
+/* Active state for secondary button */
+.button-secondary:active {
+  transform: translateY(1px); /* Slightly pressed effect */
 }
 
-/* Responsive Design */
+
+/* Media query for responsive design */
 @media (max-width: 600px) {
-  .salary-form-container {
-    padding: 15px;
+  .input-group {
+    flex-direction: column;
   }
 
-  button {
+  .input-group label {
+    margin-bottom: 5px;
+  }
+
+  .input-group input,
+  .input-group select {
     width: 100%;
   }
 }

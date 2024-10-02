@@ -1,18 +1,19 @@
 import express from 'express';
-import {
-  addSalary,
-  fetchAllSalaries,
-  fetchSalaryById,
-  updateSalary,
-  deleteSalary,
+import { 
+  createEmployeeSalary, 
+  getEmployeeSalaries, 
+  getEmployeeSalaryById, 
+  updateEmployeeSalary, 
+  deleteEmployeeSalary 
 } from '../controllers/salarycalculatecontroller.js';
 
-const SalaryRoute = express.Router();
+const router = express.Router();
 
-SalaryRoute.get("/", fetchAllSalaries);
-SalaryRoute.post("/", express.json(), addSalary);
-SalaryRoute.get("/:id", fetchSalaryById);
-SalaryRoute.put("/:id", express.json(), updateSalary);
-SalaryRoute.delete("/:id", deleteSalary);
+// Define your routes
+router.post('/', express.json(), createEmployeeSalary);  // Create a new employee salary record
+router.get('/', getEmployeeSalaries);                    // Get all employee salary records
+router.get('/:id', getEmployeeSalaryById);               // Get a single employee salary record by ID
+router.put('/:id', updateEmployeeSalary);                // Update an employee salary record by ID
+router.delete('/:id', deleteEmployeeSalary);             // Delete an employee salary record by ID
 
-export default SalaryRoute;
+export default router;
