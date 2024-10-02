@@ -46,6 +46,6 @@ const App = () => {
       </Router>
     </NotificationProvider>
   );
-};
+}
 
 export default App;
