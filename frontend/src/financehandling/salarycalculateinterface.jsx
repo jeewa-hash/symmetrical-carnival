@@ -3,16 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import './salarycalculateui.css';
 
-const SalaryCalculator = () => {
-  const [employeeName, setEmployeeName] = useState('');
-  const [employeeId, setEmployeeId] = useState('');
-  const [department, setDepartment] = useState('');
-  const [basicSalary, setBasicSalary] = useState(0);
-  const [allowances, setAllowances] = useState(0);
-  const [deductions, setDeductions] = useState(0);
-  const [grossSalary, setGrossSalary] = useState(0);
-  const [netSalary, setNetSalary] = useState(0);
-
 const EmployeeSalaryForm = () => {
   const currentMonth = new Date().toISOString().slice(0, 7);
   const navigate = useNavigate();
