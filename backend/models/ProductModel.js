@@ -15,7 +15,7 @@ const ProductSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['In Progress', 'On Hold', 'Done'],
+    enum: ['In Progress', 'On Hold', 'Completed', ],
     default: 'In Progress',
   },
   batch: {

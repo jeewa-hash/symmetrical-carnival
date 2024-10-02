@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './productionplaning.css';
+import { useNavigate } from 'react-router-dom';
 import Header from '../Shared/Header';
 import Footer from '../Shared/Footer';
 
-// Utility function to get today's date in yyyy-MM-dd format
+// Utility function to get today's date in YYYY-MM-DD format
 const getTodayDate = () => {
   const today = new Date();
   const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const month = String(today.getMonth() + 1).padStart(2, '0');
   const day = String(today.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
 
-// Component for Batch Selection
+// Batch selection component
 const BatchSelection = ({ selectedBatch, onBatchSelect }) => (
-  <div className="batch-selection-form">
-    <div className="batch-buttons">
-      {['Batch 1', 'Batch 2', 'Batch 3'].map((batch) => (
+  <div className="mb-6">
+    <div className="flex space-x-4 justify-center">
+      {['Filling', 'Cutting', 'Production'].map((batch) => (
         <button
           key={batch}
-          className={`batch-button ${selectedBatch === batch ? 'active' : ''}`}
           onClick={() => onBatchSelect(batch)}
+          className={`px-4 py-2 rounded-lg text-white ${selectedBatch === batch ? 'bg-purple-600' : 'bg-gray-400 hover:bg-gray-500'}`}
         >
           {batch}
         </button>
@@ -30,181 +30,108 @@ const BatchSelection = ({ selectedBatch, onBatchSelect }) => (
   </div>
 );
 
-// Component for Production Planning Form
-const ProductionPlanningForm = ({
-  isEditing,
-  newProduction,
-  products,
-  onInputChange,
-  onStatusChange,
-  onAddProduct,
-  onSubmit,
-}) => (
-  <div className="production-planning-form">
-    <h3>{isEditing ? 'Edit Production' : 'Plan Production'}</h3>
-    <form onSubmit={onSubmit}>
-      {products.map((product, index) => (
-        <div key={index} className="form-group">
-          <label>Product Name:</label>
+// Production planning form component
+const ProductionPlanningForm = ({ isEditing, newProduction, products, onInputChange, onStatusChange, onSubmit }) => {
+  const productNames = ['Bear', 'Bear With Heart', 'Dog', '5 Feet', 'Dalmation'];
+
+  return (
+    <div className="max-w-xl mx-auto p-10 bg-pink-100 border border-gray-200 rounded-lg shadow-xl space-y-6">
+      <h3 className="text-4xl font-bold text-purple-600 text-center mb-4">
+        
+      </h3>
+      <form onSubmit={onSubmit}>
+        {products.map((product, index) => (
+          <div key={index} className="mb-4">
+            <label className="block text-lg font-semibold text-gray-700">Product Name:</label>
+            <select
+              name="name"
+              value={product.name}
+              onChange={(e) => onInputChange(e, index)}
+              className="w-full h-10 px-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              required
+            >
+              <option value="">Select Product</option>
+              {productNames.map((productName) => (
+                <option key={productName} value={productName}>
+                  {productName}
+                </option>
+              ))}
+            </select>
+            <label className="block text-lg font-semibold text-gray-700 mt-2">Quantity:</label>
+            <input
+              type="text"
+              name="quantity"
+              value={product.quantity}
+              onChange={(e) => onInputChange(e, index)}
+              className="w-full h-10 px-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              required
+            />
+          </div>
+        ))}
+        <div className="mb-4">
+          <label className="block text-lg font-semibold text-gray-700">Production Date:</label>
           <input
-            type="text"
-            name="name"
-            value={product.name}
-            onChange={(e) => onInputChange(e, index)}
+            type="date"
+            name="productionDate"
+            value={newProduction.productionDate}
+            readOnly
+            className="w-full h-10 px-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none"
             required
           />
-          <label>Quantity:</label>
-          <input
-            type="number"
-            name="quantity"
-            value={product.quantity}
-            onChange={(e) => onInputChange(e, index)}
-            required
-          />
-          <label>Status:</label>
+        </div>
+        <div className="mb-4">
+          <label className="block text-lg font-semibold text-gray-700">Status:</label>
           <select
+            className="w-full h-10 px-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
             name="status"
-            value={product.status}
-            onChange={(e) => onInputChange(e, index)}
+            value={newProduction.status}
+            onChange={onStatusChange}
             required
           >
-            <option value="">Select Status</option>
             <option value="In Progress">In Progress</option>
-            <option value="Done">Done</option>
             <option value="On Hold">On Hold</option>
+            <option value="Done">Done</option>
           </select>
         </div>
-      ))}
-      <button type="button" className="add-product-button" onClick={onAddProduct}>
-        Add Product
-      </button>
-      <div className="form-group">
-        <label>Production Date:</label>
-        <input
-          type="date"
-          name="productionDate"
-          value={newProduction.productionDate}
-          readOnly
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label>Status:</label>
-        <select
-          className="form-select"
-          name="status"
-          value={newProduction.status}
-          onChange={onStatusChange}
-          required
-        >
-          <option value="In Progress">In Progress</option>
-          <option value="On Hold">On Hold</option>
-          <option value="Done">Done</option>
-        </select>
-      </div>
-      <button type="submit" className="submit-button">
-        {isEditing ? 'Update Production' : 'Plan Production'}
-      </button>
-    </form>
-  </div>
-);
+        <button type="submit" className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-200">
+          {isEditing ? 'Update Production' : 'Plan Production'}
+        </button>
+      </form>
+    </div>
+  );
+};
 
-// Component for Production Table
-const ProductionTable = ({ productions, onEdit, onView, onDelete }) => (
-  <div className="table-container">
-    <h2 className="table-title">Productions</h2>
-    <table className="production-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Status</th>
-          <th>Quantity</th>
-          <th>Production Date</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {productions.map((production) => (
-          <tr key={production.id}>
-            <td>{production.id}</td>
-            <td>{production.name}</td>
-            <td>{production.status}</td>
-            <td>{production.quantity}</td>
-            <td>{production.productionDate}</td>
-            <td>
-              <button className="edit-button" onClick={() => onEdit(production.id)}>
-                Edit
-              </button>
-              <button className="view-button" onClick={() => onView(production.id)}>
-                View
-              </button>
-              <button className="delete-button" onClick={() => onDelete(production.id)}>
-                Delete
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-);
-
-// Component for View Production Modal
-const ViewProductionModal = ({ production, onClose }) => (
-  <div className="view-production-modal">
-    <h2>Production Details</h2>
-    <p><strong>ID:</strong> {production.id}</p>
-    <p><strong>Name:</strong> {production.name}</p>
-    <p><strong>Status:</strong> {production.status}</p>
-    <p><strong>Quantity:</strong> {production.quantity}</p>
-    <p><strong>Production Date:</strong> {production.productionDate}</p>
-    <p><strong>Batch:</strong> {production.batch}</p>
-    <h3>Products</h3>
-    <ul>
-      {production.products.map((product, index) => (
-        <li key={index}>{product.name} - {product.quantity} - {product.status}</li>
-      ))}
-    </ul>
-    <button onClick={onClose}>Close</button>
-  </div>
-);
-
+// Main production management system component
 const ProductionManagementSystem = () => {
   const [productions, setProductions] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedBatch, setSelectedBatch] = useState('Batch 1'); // Default batch
+  const [selectedBatch, setSelectedBatch] = useState('Filling');
   const [newProduction, setNewProduction] = useState({
     name: '',
     quantity: '',
-    productionDate: getTodayDate(), // Default date to today's date
-    status: 'In Progress', // Default status
+    productionDate: getTodayDate(),
+    status: 'In Progress',
   });
-  const [products, setProducts] = useState([{ name: '', quantity: '', status: '' }]); // Array of product objects
+  const [products, setProducts] = useState([{ name: '', quantity: '' }]);
   const [isEditing, setIsEditing] = useState(false);
-  const [editProductionId, setEditProductionId] = useState(null);
-  const [viewProductionId, setViewProductionId] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
+
+  const navigate = useNavigate(); // Using navigate function from react-router-dom
 
   useEffect(() => {
     const fetchProductions = async () => {
       try {
-        const response = await axios.get('/api/products'); // Fixed endpoint to fetch production data
-        setProductions(response.data);
+        const response = await axios.get('/api/products');
+        const filteredProductions = response.data.filter(
+          (production) => production.batch === selectedBatch
+        );
+        setProductions(filteredProductions);
       } catch (error) {
-        console.error('There was an error fetching the production data!', error);
+        console.error('Error fetching production data!', error);
       }
     };
 
     fetchProductions();
-  }, []);
-
-  const filteredProductions = productions.filter(
-    (production) =>
-      production.batch === selectedBatch &&
-      (production.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        production.status.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  }, [selectedBatch]);
 
   const handleBatchSelect = (batch) => {
     setSelectedBatch(batch);
@@ -212,31 +139,30 @@ const ProductionManagementSystem = () => {
 
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
+    if (name === 'quantity') {
+      const isValidQuantity = /^[1-9][0-9]*$/.test(value) || value === '';
+      if (!isValidQuantity) {
+        return;
+      }
+    }
     const updatedProducts = [...products];
     updatedProducts[index][name] = value;
     setProducts(updatedProducts);
   };
 
   const handleStatusChange = (e) => {
-    setNewProduction((prevProduction) => ({
-      ...prevProduction,
+    setNewProduction((prev) => ({
+      ...prev,
       status: e.target.value,
     }));
   };
 
-  const handleAddProduct = () => {
-    setProducts([...products, { name: '', quantity: '', status: '' }]);
-  };
-
   const handleProductionSubmit = async (e) => {
     e.preventDefault();
-
-    console.log('Submitting production data...');
-
     if (products.length > 0) {
       try {
         const productionData = {
-          name: products.map(p => p.name).join(', '),
+          name: products.map((p) => p.name).join(', '),
           quantity: products.reduce((acc, p) => acc + Number(p.quantity), 0),
           productionDate: getTodayDate(),
           status: newProduction.status,
@@ -244,108 +170,59 @@ const ProductionManagementSystem = () => {
           products,
         };
 
-        console.log('Production Data:', productionData);
-
         if (isEditing) {
-          await axios.put(`/api/products/${editProductionId}`, productionData);
-          setProductions(prevProductions =>
-            prevProductions.map(prod =>
-              prod.id === editProductionId
-                ? { ...prod, ...productionData }
-                : prod
-            )
-          );
+          await axios.put(`/api/products/${newProduction.id}`, productionData);
         } else {
-          const response = await axios.post('/api/products', productionData);
-          setProductions([...productions, response.data]);
+          await axios.post('/api/products', productionData);
         }
 
-        setSuccessMessage('Production successfully planned!');
-        // Clear the form
-        setNewProduction({
-          name: '',
-          quantity: '',
-          productionDate: getTodayDate(),
-          status: 'In Progress',
-        });
-        setProducts([{ name: '', quantity: '', status: '' }]);
-        setIsEditing(false);
-        setEditProductionId(null);
+        setSuccessMessage('Production planned successfully!');
+        resetForm();
       } catch (error) {
-        console.error('Error submitting production data:', error);
+        console.error('Error submitting production data!', error);
       }
     } else {
-      alert('Please add at least one product.');
+      setSuccessMessage('Please add at least one product to the production plan.');
     }
   };
 
-  const handleEdit = (id) => {
-    const productionToEdit = productions.find((prod) => prod.id === id);
-    setNewProduction({
-      name: productionToEdit.name,
-      quantity: productionToEdit.quantity,
-      productionDate: productionToEdit.productionDate,
-      status: productionToEdit.status,
-    });
-    setProducts(productionToEdit.products);
-    setIsEditing(true);
-    setEditProductionId(id);
+  const resetForm = () => {
+    setNewProduction({ name: '', quantity: '', productionDate: getTodayDate(), status: 'In Progress' });
+    setProducts([{ name: '', quantity: '' }]);
+    setIsEditing(false);
   };
 
-  const handleView = (id) => {
-    setViewProductionId(id);
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`/api/products/${id}`);
-      setProductions(productions.filter((prod) => prod.id !== id));
-    } catch (error) {
-      console.error('Error deleting production:', error);
-    }
-  };
-
-  const handleCloseModal = () => {
-    setViewProductionId(null);
+  const handleViewProductions = () => {
+    navigate('/productret'); // Navigate to the /productret page
   };
 
   return (
-    <div>
-      <Header />
-      <div className="production-management-container">
-        <BatchSelection selectedBatch={selectedBatch} onBatchSelect={handleBatchSelect} />
-        <ProductionPlanningForm
-          isEditing={isEditing}
-          newProduction={newProduction}
-          products={products}
-          onInputChange={handleInputChange}
-          onStatusChange={handleStatusChange}
-          onAddProduct={handleAddProduct}
-          onSubmit={handleProductionSubmit}
-        />
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search by name or status..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+    <div className="flex flex-col min-h-screen bg-gray-100">
+      <Header /> {/* Header Component */}
+      <div className="flex-1 flex justify-center items-center">
+        <div className="w-full max-w-3xl p-10 bg-white border border-gray-200 rounded-lg shadow-xl space-y-6">
+          <h1 className="text-4xl font-bold text-center text-purple-600">Production Planning System</h1>
+          <div className="flex justify-center mb-6">
+            <button
+              onClick={handleViewProductions}
+              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200"
+            >
+              View Productions
+            </button>
+          </div>
+          <BatchSelection selectedBatch={selectedBatch} onBatchSelect={handleBatchSelect} />
+          <ProductionPlanningForm
+            isEditing={isEditing}
+            newProduction={newProduction}
+            products={products}
+            onInputChange={handleInputChange}
+            onStatusChange={handleStatusChange}
+            onSubmit={handleProductionSubmit}
           />
+          {successMessage && <div className="text-center mt-4 text-green-500">{successMessage}</div>}
         </div>
-        <ProductionTable
-          productions={filteredProductions}
-          onEdit={handleEdit}
-          onView={handleView}
-          onDelete={handleDelete}
-        />
-        {viewProductionId && (
-          <ViewProductionModal
-            production={productions.find((prod) => prod.id === viewProductionId)}
-            onClose={handleCloseModal}
-          />
-        )}
-        {successMessage && <div className="success-message">{successMessage}</div>}
       </div>
-      <Footer />
+      <Footer /> {/* Footer Component */}
     </div>
   );
 };

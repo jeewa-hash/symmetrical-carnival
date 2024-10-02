@@ -11,11 +11,15 @@ import OrderAndProductionReport from './OrderandProductionReport/OrderandProduct
 import ProductionCostCalculator from './ProductionManagement/productionCost';
 import OrderRet from './OrderManagement/orderRet';
 import ProductionRet from './ProductionManagement/ProductionRet';
+import ResourceRetriew from './ProductionManagement/ResourceRet';
+import AboutUs from './OrderAndProductionUi/AboutUs';
 
 const App = () => {
   return (
     <Router>
+      
       <div>
+        <AboutUs/>
         <Routes>
           
           <Route path="/" element={<OrderAndProduction />} />
@@ -26,8 +30,12 @@ const App = () => {
           <Route path="/cost" element={<ProductionCostCalculator/>} />
           <Route path="/orderret" element={<OrderRet/>} />
           <Route path="/productret" element={<ProductionRet/>} />
+         <Route path="/Resourcetret" element={<ResourceRetriew/>} />
+        
         </Routes>
+        
       </div>
+     
     </Router>
   );
 };

@@ -1,95 +1,87 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react';  
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid'; // Import UUID for generating unique IDs
-import './order.css';
+import { v4 as uuidv4 } from 'uuid';
 import Header from '../Shared/Header';
 import Footer from '../Shared/Footer';
+import backgroundImage from '../image/design.png'; // Adjust the path according to your folder structure
+
+// Initialize order with today's date
+const today = new Date();
+const formattedDate = today.toISOString().split('T')[0]; // Format date to YYYY-MM-DD
 
 const initialOrder = {
-  orderItems: [{ name: '', quantity: 0 }],
+  orderItems: [{ name: '', quantity: '' }],
   status: '',
   shopName: '',
-  orderDate: '',
-  _id: '', // Add ID to the initialOrder
+  orderDate: formattedDate, // Set today's date as default
+  address: '', // Add address field
+  _id: '',
 };
+
+const availableItems = ['Bear', 'Bear With Heart', 'Dog', '5 Feet', 'Dalmation'];
 
 const OrderCreation = () => {
   const [order, setOrder] = useState(initialOrder);
   const [orders, setOrders] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
-
   const navigate = useNavigate();
 
-  const today = new Date().toISOString().split('T')[0];
-
   const handleStatusChange = (event) => {
-    setOrder({ ...order, status: event.target.value });
+    setOrder((prevOrder) => ({ ...prevOrder, status: event.target.value }));
   };
 
   const handleShopNameChange = (event) => {
-    setOrder({ ...order, shopName: event.target.value });
+    setOrder((prevOrder) => ({ ...prevOrder, shopName: event.target.value }));
   };
 
-  const handleOrderDateChange = (event) => {
-    setOrder({ ...order, orderDate: event.target.value });
+  const handleAddressChange = (event) => {
+    const value = event.target.value;
+    // Allow letters, digits, numbers, `/` character, and commas
+    const regex = /^[A-Za-z0-9\/,\s]*$/; // Updated regex to allow commas
+    if (regex.test(value)) {
+      setOrder((prevOrder) => ({ ...prevOrder, address: value }));
+    }
   };
 
   const handleItemNameChange = (event, index) => {
-    const newOrderItems = [...order.orderItems];
-    newOrderItems[index].name = event.target.value;
-    setOrder({ ...order, orderItems: newOrderItems });
-  };
-
-  const handleItemQuantityChange = (event, index) => {
-    const newOrderItems = [...order.orderItems];
-    newOrderItems[index].quantity = Math.max(parseInt(event.target.value, 10) || 0, 0);
-    setOrder({ ...order, orderItems: newOrderItems });
-  };
-
-  const handleAddItem = () => {
-    setOrder({
-      ...order,
-      orderItems: [...order.orderItems, { name: '', quantity: 0 }],
+    setOrder((prevOrder) => {
+      const newOrderItems = [...prevOrder.orderItems];
+      newOrderItems[index].name = event.target.value;
+      return { ...prevOrder, orderItems: newOrderItems };
     });
   };
 
-  const handleUpdateOrder = (index) => {
-    const updatedOrders = [...orders];
-    updatedOrders[index] = order;
-    setOrders(updatedOrders);
-    setOrder(initialOrder);
-    setEditIndex(null);
+  const handleItemQuantityChange = (event, index) => {
+    const quantityValue = event.target.value;
+    setOrder((prevOrder) => {
+      const newOrderItems = [...prevOrder.orderItems];
+      if (quantityValue === '' || /^[1-9][0-9]*$/.test(quantityValue)) {
+        newOrderItems[index].quantity = quantityValue;
+      }
+      return { ...prevOrder, orderItems: newOrderItems };
+    });
   };
 
-  const calculateTotalQuantity = (orderItems) => {
-    return orderItems.reduce((acc, item) => acc + (item.quantity || 0), 0);
+  const handleAddItem = () => {
+    setOrder((prevOrder) => ({
+      ...prevOrder,
+      orderItems: [...prevOrder.orderItems, { name: '', quantity: '' }],
+    }));
   };
 
   const validateOrder = () => {
     let errors = {};
-
-    if (!order.shopName.trim()) {
-      errors.shopName = 'Shop name is required';
-    }
-
-    if (!order.orderDate) {
-      errors.orderDate = 'Order date is required';
-    }
-
-    if (!order.status) {
-      errors.status = 'Order status is required';
-    }
+    if (!order.shopName.trim()) errors.shopName = 'Shop name is required';
+    if (!order.orderDate) errors.orderDate = 'Order date is required';
+    if (!order.status) errors.status = 'Order status is required';
+    if (!order.address.trim()) errors.address = 'Address is required';
 
     const itemErrors = order.orderItems.map((item, index) => {
       let error = {};
-      if (!item.name.trim()) {
-        error.name = `Item ${index + 1} name is required`;
-      }
-      if (item.quantity <= 0) {
-        error.quantity = `Item ${index + 1} quantity must be greater than 0`;
-      }
+      if (!item.name.trim()) error.name = `Item ${index + 1} name is required`;
+      if (item.quantity === '' || item.quantity <= 0) error.quantity = `Item ${index + 1} quantity must be greater than 0`;
       return error;
     });
 
@@ -108,9 +100,13 @@ const OrderCreation = () => {
     if (Object.keys(errors).length === 0) {
       try {
         if (editIndex !== null) {
-          handleUpdateOrder(editIndex);
+          const updatedOrders = [...orders];
+          updatedOrders[editIndex] = order;
+          setOrders(updatedOrders);
+          setOrder(initialOrder);
+          setEditIndex(null);
         } else {
-          const newOrder = { ...order, _id: uuidv4() }; // Generate a unique ID
+          const newOrder = { ...order, _id: uuidv4() };
           const response = await axios.post('/api/order', newOrder);
           if (response.status === 201) {
             setOrders([...orders, response.data]);
@@ -125,141 +121,179 @@ const OrderCreation = () => {
     }
   };
 
-  return (
-    <div>
-      <Header />
-      <div className="order-creation-container">
-        <button
-          className="navigate-button"
-          onClick={() => navigate('/another-page')}
-        >
-          View Orders
-        </button>
+  const handleCancel = () => {
+    setOrder(initialOrder);
+    setValidationErrors({});
+  };
 
-        <h2 className="title">
-          {editIndex !== null ? 'Edit Order' : 'Order Creation'}
-        </h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label" htmlFor="shopName">
-              Shop Name
-            </label>
-            <input
-              className="form-input"
-              id="shopName"
-              type="text"
-              value={order.shopName}
-              onChange={handleShopNameChange}
-              required
-            />
-            {validationErrors.shopName && (
-              <span className="error-text">{validationErrors.shopName}</span>
-            )}
-          </div>
-          <div className="form-group">
-            <label className="form-label" htmlFor="orderDate">
-              Order Date
-            </label>
-            <input
-              className="form-input"
-              id="orderDate"
-              type="date"
-              value={order.orderDate}
-              onChange={handleOrderDateChange}
-              min={today}
-              required
-            />
-            {validationErrors.orderDate && (
-              <span className="error-text">{validationErrors.orderDate}</span>
-            )}
-          </div>
-          <div className="form-group">
-            <label className="form-label" htmlFor="status">
-              Order Status
-            </label>
-            <select
-              className="form-select"
-              id="status"
-              value={order.status}
-              onChange={handleStatusChange}
-              required
-            >
-              <option value="">Select Status</option>
-              <option value="Pending">Pending</option>
-              <option value="Processing">Processing</option>
-              <option value="Shipped">Shipped</option>
-              <option value="Delivered">Delivered</option>
-              <option value="Cancelled">Cancelled</option>
-            </select>
-            {validationErrors.status && (
-              <span className="error-text">{validationErrors.status}</span>
-            )}
-          </div>
-          {order.orderItems.map((item, index) => (
-            <div key={index} className="form-group">
-              <label className="form-label" htmlFor={`itemName${index}`}>
-                Item {index + 1} Name
-              </label>
+  const handleQuantityKeyDown = (event) => {
+    if (
+      event.key === 'Backspace' ||
+      event.key === 'Delete' ||
+      event.key === 'Tab' ||
+      event.key === 'Escape' ||
+      event.key === 'Enter' ||
+      event.key === 'ArrowLeft' ||
+      event.key === 'ArrowRight'
+    ) {
+      return;
+    }
+
+    if (!/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+    }
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen relative">
+
+      <Header />
+
+      <div
+        className="flex-1 flex justify-center items-center bg-cover bg-center relative"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="max-w-xl w-full bg-pink-100 bg-opacity-80 backdrop-blur-lg rounded-lg shadow-xl p-10 border border-gray-200 space-y-6 z-10">
+          <h2 className="text-4xl font-bold text-purple-600 mb-4 text-center">
+            {editIndex !== null ? 'Edit Order' : 'Order Creation'}
+          </h2>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="shopName" className="block text-lg font-semibold text-gray-700">Shop Name</label>
               <input
-                className="form-input"
-                id={`itemName${index}`}
+                id="shopName"
                 type="text"
-                value={item.name}
-                onChange={(event) => handleItemNameChange(event, index)}
+                value={order.shopName}
+                onChange={handleShopNameChange}
                 required
+                className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
-              {validationErrors.orderItems &&
-                validationErrors.orderItems[index] &&
-                validationErrors.orderItems[index].name && (
-                  <span className="error-text">
-                    {validationErrors.orderItems[index].name}
-                  </span>
-                )}
-              <label className="form-label mt-2" htmlFor={`itemQuantity${index}`}>
-                Quantity
-              </label>
-              <input
-                className="form-input"
-                id={`itemQuantity${index}`}
-                type="number"
-                value={item.quantity}
-                onChange={(event) => handleItemQuantityChange(event, index)}
-                min="1"
-                required
-              />
-              {validationErrors.orderItems &&
-                validationErrors.orderItems[index] &&
-                validationErrors.orderItems[index].quantity && (
-                  <span className="error-text">
-                    {validationErrors.orderItems[index].quantity}
-                  </span>
-                )}
+              {validationErrors.shopName && (
+                <span className="text-red-500">{validationErrors.shopName}</span>
+              )}
             </div>
-          ))}
-          <button
-            className="add-item-button"
-            type="button"
-            onClick={handleAddItem}
-          >
-            Add Item
-          </button>
-          <div className="total-quantity-group mt-4">
-            <label className="form-label" htmlFor="totalQuantity">
-              Total Quantity
-            </label>
-            <input
-              className="form-input"
-              id="totalQuantity"
-              type="number"
-              value={calculateTotalQuantity(order.orderItems)}
-              readOnly
-            />
-          </div>
-          <button className="submit-button" type="submit">
-            {editIndex !== null ? 'Update Order' : 'Create Order'}
-          </button>
-        </form>
+
+            <div>
+              <label htmlFor="orderDate" className="block text-lg font-semibold text-gray-700">Order Date</label>
+              <input
+                id="orderDate"
+                type="date"
+                value={order.orderDate}
+                readOnly
+                required
+                className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              {validationErrors.orderDate && (
+                <span className="text-red-500">{validationErrors.orderDate}</span>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="address" className="block text-lg font-semibold text-gray-700">Address</label>
+              <input
+                id="address"
+                type="text"
+                value={order.address}
+                onChange={handleAddressChange}
+                required
+                className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              {validationErrors.address && (
+                <span className="text-red-500">{validationErrors.address}</span>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="status" className="block text-lg font-semibold text-gray-700">Order Status</label>
+              <select
+                id="status"
+                value={order.status}
+                onChange={handleStatusChange}
+                required
+                className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                <option value="">Select Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Processing">Processing</option>
+                <option value="Cancelled">Cancelled</option>
+                <option value="Completed">Completed</option>
+              </select>
+              {validationErrors.status && (
+                <span className="text-red-500">{validationErrors.status}</span>
+              )}
+            </div>
+
+            {order.orderItems.map((item, index) => (
+              <div key={index} className="space-y-2">
+                <label htmlFor={`itemName${index}`} className="block text-lg font-semibold text-gray-700">Item {index + 1} Name</label>
+                <select
+                  id={`itemName${index}`}
+                  value={item.name}
+                  onChange={(event) => handleItemNameChange(event, index)}
+                  required
+                  className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option value="">Select an item</option>
+                  {availableItems.map((availableItem) => (
+                    <option key={availableItem} value={availableItem}>
+                      {availableItem}
+                    </option>
+                  ))}
+                </select>
+                {validationErrors.orderItems?.[index]?.name && (
+                  <span className="text-red-500">{validationErrors.orderItems[index].name}</span>
+                )}
+
+                <label htmlFor={`itemQuantity${index}`} className="block text-lg font-semibold text-gray-700">Item {index + 1} Quantity</label>
+                <input
+                  id={`itemQuantity${index}`}
+                  type="number"
+                  value={item.quantity}
+                  onChange={(event) => handleItemQuantityChange(event, index)}
+                  onKeyDown={handleQuantityKeyDown}
+                  required
+                  className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+                {validationErrors.orderItems?.[index]?.quantity && (
+                  <span className="text-red-500">{validationErrors.orderItems[index].quantity}</span>
+                )}
+              </div>
+            ))}
+
+            <div className="flex justify-between">
+              <button
+                type="button"
+                onClick={handleAddItem}
+                className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition duration-200"
+              >
+                Add Item
+              </button>
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="bg-gray-300 text-black rounded-lg px-4 py-2 hover:bg-gray-400 transition duration-200"
+              >
+                Cancel
+              </button>
+            </div>
+
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                className="bg-purple-600 text-white rounded-lg px-4 py-2 hover:bg-purple-700 transition duration-200"
+              >
+                {editIndex !== null ? 'Update Order' : 'Create Order'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
+
       <Footer />
     </div>
   );

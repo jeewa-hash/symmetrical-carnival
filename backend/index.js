@@ -9,6 +9,8 @@ import productRoutes from "./routes/ProductRoutes.js";
 import categoryRoutes from "./routes/CategoryRoutes.js";
 import uploadRoutes from './routes/UploadRoutes.js';
 import OrderRoute from './routes/OrderRoute.js';
+import ResourceRoute from './routes/ResourceRoute.js';
+import productionCostRoute from './routes/productionCostRoute.js';
 
 dotenv.config();
 const port = process.env.PORT || 5000;
@@ -26,6 +28,10 @@ app.use("/api/category", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/order", OrderRoute);
+app.use("/api/resource", ResourceRoute);
+app.use("/api/productionCost", productionCostRoute);
+
+
 
 const __dirname = path.resolve();
 app.use("/uploads/products", express.static(path.join(__dirname, '/uploads/products')));

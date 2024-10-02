@@ -1,305 +1,113 @@
-/* Production Management Container */
-.production-management-container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  /* Title */
-  .title {
-    text-align: center;
-    color: #333;
-    font-size: 2rem;
-    margin-bottom: 20px;
-  }
-  
-  /* Batch Selection Form */
-  .batch-selection-form {
-    margin-bottom: 20px;
-  }
-  
-  .batch-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-  }
-  
-  .batch-button {
-    padding: 12px 24px;
-    border: none;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.3s, transform 0.3s;
-    font-weight: bold;
-  }
-  
-  .batch-button.active,
-  .batch-button:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-  }
-  
-  /* Production Planning Form */
-  .production-planning-form {
-    margin: 0 auto;
-    padding: 25px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-  }
-  
-  .production-planning-form h3 {
-    margin-bottom: 20px;
-    color: #333;
-    font-size: 1.5rem;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 10px;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: #555;
-    font-size: 1rem;
-  }
-  
-  .form-group input,
-  .form-group select {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.3s;
-  }
-  
-  .form-group input:focus,
-  .form-group select:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
-  /* Buttons */
-  .add-product-button,
-  .submit-button {
-    background-color: #28a745;
-    color: #fff;
-    padding: 10px 24px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.3s;
-    margin-top: 10px;
-  }
-  
-  .add-product-button:hover,
-  .submit-button:hover {
-    background-color: #218838;
-    transform: scale(1.05);
-  }
-  
-  /* Search Bar */
-  .search-input {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 1rem;
-    transition: border-color 0.3s;
-  }
-  
-  .search-input:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
-  /* Production Table */
-  .table-container {
-    margin: 20px 0;
-  }
-  
-  .production-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .production-table th,
-  .production-table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-  }
-  
-  .production-table th {
-    background-color: #becbd8;
-    color: #fff;
-  }
-  
-  /* Action Buttons */
-  .action-button {
-    padding: 8px 16px;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-    border-radius: 8px;
-    margin-right: 10px;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.3s;
-  }
-  
-  .edit-button {
-    background-color: #ffc107;
-  }
-  
-  .edit-button:hover {
-    background-color: #e0a800;
-    transform: scale(1.05);
-  }
-  
-  .view-button {
-    background-color: #17a2b8;
-  }
-  
-  .view-button:hover {
-    background-color: #138496;
-    transform: scale(1.05);
-  }
-  
-  .delete-button {
-    background-color: #dc3545;
-  }
-  
-  .delete-button:hover {
-    background-color: #c82333;
-    transform: scale(1.05);
-  }
-  
-  /* View Production Modal */
-  .view-production-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-  
-  .view-production-modal > div {
-    background-color: #fff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    width: 100%;
-    overflow-y: auto;
-  }
-  
-  .view-production-modal h2 {
-    margin-top: 0;
-    color: #333;
-    font-size: 1.5rem;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 10px;
-  }
-  
-  .view-production-modal p {
-    margin: 10px 0;
-    font-size: 1.1rem;
-    line-height: 1.6;
-  }
-  
-  .view-production-modal ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .view-production-modal li {
-    margin-bottom: 10px;
-    font-size: 1.1rem;
-  }
-  
-  .modal-close {
-    background-color: #007bff;
-    color: #fff;
-    padding: 12px 24px;
-    border: none;
-    cursor: pointer;
-    border-radius: 8px;
-    margin-top: 15px;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.3s;
-  }
-  
-  .modal-close:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-  }
-  
-  /* Ensure table in modal is styled consistently */
-  .view-production-modal table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .view-production-modal th,
-  .view-production-modal td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-  }
-  
-  .view-production-modal th {
-    background-color: #becbd8;
-    color: #fff;
-  }
-  
-  .view-production-modal .action-button {
-    padding: 8px 16px;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-    border-radius: 8px;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.3s;
-  }
-  
-  .view-production-modal .edit-button {
-    background-color: #ffc107;
-  }
-  
-  .view-production-modal .edit-button:hover {
-    background-color: #e0a800;
-    transform: scale(1.05);
-  }
-  
-  .view-production-modal .view-button {
-    background-color: #17a2b8;
-  }
-  
-  .view-production-modal .view-button:hover {
-    background-color: #138496;
-    transform: scale(1.05);
-  }
-  
-  .view-production-modal .delete-button {
-    background-color: #dc3545;
-  }
-  
-  .view-production-modal .delete-button:hover {
-    background-color: #c82333;
-    transform: scale(1.05);
-  }
-  
+.page-title {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: rgb(233, 92, 11);
+  font-weight: bold; /* Set title color to orange */
+}
+
+
+
+
+
+.production-management-system {
+
+
+
+  padding: 20px;
+}
+
+.page-title {
+  font-size: 1.8rem; /* Adjust the font size */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.production-planning-form {
+  max-width: 600px; /* Reduce the max-width */
+  margin: 0 auto;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f7f7f7;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 12px; /* Reduce margin between form groups */
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9rem; /* Reduce the font size of the labels */
+}
+
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 8px; /* Reduce the padding */
+  font-size: 0.9rem; /* Adjust the font size */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.batch-selection-form {
+  margin-bottom: 15px;
+}
+
+.batch-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.batch-button {
+  padding: 8px 16px; /* Reduce the padding */
+  font-size: 0.9rem; /* Adjust the font size */
+  border: none;
+  border-radius: 4px;
+  background-color: #372fab; /* Set consistent color */
+  color: white;
+  cursor: pointer;
+}
+
+.batch-button.active {
+  background-color: #372fab; /* Same color for active state */
+  border: 2px solid #4f52b2; /* Optional: add a subtle border to indicate selection */
+}
+
+.batch-button:hover {
+  background-color: #533daa; /* Change color on hover */
+}
+
+.view-productions-button-container {
+  text-align:center ;
+  margin-bottom: 15px;
+  margin-left: -600px;
+}
+
+.view-productions-button {
+  padding: 8px 16px; /* Adjust padding */
+  font-size: 0.9rem; /* Adjust the font size */
+  background-color: #3c7eb3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.success-message {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 1rem;
+  color: #4caf50;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem; /* Slightly reduce button font size */
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

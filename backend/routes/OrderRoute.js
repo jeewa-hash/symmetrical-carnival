@@ -1,18 +1,27 @@
 import express from 'express';
-import { addOrder, fetchAllOrders, updateOrder, deleteOrder } from '../controllers/OrderController.js';
+import {
+    createOrder,
+    getAllOrders,
+    getOrderById,
+    updateOrder,
+    deleteOrder
+} from '../controllers/OrderController.js'; // Adjust the path as necessary
 
-const OrderRoute = express.Router();
+const router = express.Router();
 
-// Fetch all orders
-OrderRoute.get("/", fetchAllOrders);
+// Route to create a new order
+router.post('/', createOrder);
 
-// Add a new order
-OrderRoute.post("/", express.json(), addOrder);
+// Route to get all orders
+router.get('/', getAllOrders);
 
-// Update an existing order by ID
-OrderRoute.put("/:orderId", express.json(), updateOrder);
+// Route to get a specific order by ID
+router.get('/:id', getOrderById);
 
-// Delete an order by ID
-OrderRoute.delete("/:orderId", deleteOrder);
+// Route to update an order by ID
+router.put('/:id', updateOrder);
 
-export default OrderRoute;
+// Route to delete an order by ID
+router.delete('/:id', deleteOrder);
+
+export default router;

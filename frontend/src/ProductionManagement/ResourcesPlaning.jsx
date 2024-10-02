@@ -1,185 +1,181 @@
 import React, { useState, useEffect } from 'react';
-import './ResourcesPlaning.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import Header from '../Shared/Header';
 import Footer from '../Shared/Footer';
+import backgroundImage from '../image/bkv.mp4'; // Adjust the path according to your folder structure
 
 const ResourcePlanningSystem = () => {
-  const [resources, setResources] = useState([]);
-  const [filteredResources, setFilteredResources] = useState([]);
   const [newResources, setNewResources] = useState([{ id: 0, name: '', date: '', quantity: 0 }]);
-  const [isAdding, setIsAdding] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
+  // Sample resource names for the dropdown
+  const resourceNames = ['Wool', 'XL Eyes', 'L Eyes', 'Red Fabric'];
+
+  // Function to get today's date in YYYY-MM-DD format
+  const getCurrentDate = () => {
+    const today = new Date();
+    today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+    return today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+  };
+
+  // Set the default date when the component mounts
   useEffect(() => {
-    const initialResources = [
-      { id: 1, name: 'Resource A', date: '2024-08-20', quantity: 100 },
-      { id: 2, name: 'Resource B', date: '2024-08-21', quantity: 50 },
-      { id: 3, name: 'Resource C', date: '2024-08-20', quantity: 200 },
-    ];
-    setResources(initialResources);
-    setFilteredResources(initialResources);
-  }, []);
+    setNewResources([{ id: 0, name: '', date: getCurrentDate(), quantity: 0 }]); // Initialize with today's date
+  }, []); // Empty dependency array ensures this runs only once
 
-  useEffect(() => {
-    const filtered = resources.filter(
-      (resource) =>
-        resource.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        resource.date.includes(searchQuery)
-    );
-    setFilteredResources(filtered);
-  }, [searchQuery, resources]);
+  const handleSaveResources = async () => {
+    if (!Array.isArray(newResources) || newResources.length === 0 || newResources.some(r => !r.name || r.quantity <= 0)) {
+      setError('Please fill all fields correctly.');
+      return;
+    }
 
-  const handleAddResource = () => {
-    setIsAdding(true);
-    setNewResources([{ id: 0, name: '', date: new Date().toISOString().slice(0, 10), quantity: 0 }]);
-  };
-
-  const handleSaveResources = () => {
-    const newId = resources.length ? Math.max(...resources.map(r => r.id)) + 1 : 1;
-    const resourcesWithId = newResources.map((resource, index) => ({
-      ...resource,
-      id: newId + index
-    }));
-    setResources([...resources, ...resourcesWithId]);
-    setFilteredResources([...resources, ...resourcesWithId]);
-    setIsAdding(false);
-    setNewResources([{ id: 0, name: '', date: '', quantity: 0 }]);
-  };
-
-  const handleCancel = () => {
-    setIsAdding(false);
-    setNewResources([{ id: 0, name: '', date: '', quantity: 0 }]);
-  };
-
-  const handleDeleteResource = (id) => {
-    setResources(resources.filter((resource) => resource.id !== id));
-    setFilteredResources(filteredResources.filter((resource) => resource.id !== id));
+    setLoading(true);
+    setError('');
+    try {
+      await axios.post('/api/resource', newResources);
+      // Reset with today's date only when saving
+      setNewResources([{ id: 0, name: '', date: getCurrentDate(), quantity: 0 }]);
+    } catch (error) {
+      console.error(error);
+      setError('Error saving resources');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleResourceChange = (index, field, value) => {
     const updatedResources = [...newResources];
+
+    // Validate quantity to be a positive integer
+    if (field === 'quantity') {
+      const isValidQuantity = /^[1-9]\d*$/.test(value) || value === ''; // Allow only positive integers or empty
+      if (!isValidQuantity) {
+        return; // Exit if the value is invalid
+      }
+    }
+
     updatedResources[index] = { ...updatedResources[index], [field]: value };
     setNewResources(updatedResources);
   };
 
   const handleAddResourceField = () => {
-    setNewResources([...newResources, { id: 0, name: '', date: new Date().toISOString().slice(0, 10), quantity: 0 }]);
+    // Set the date to today's date when adding a new resource
+    setNewResources([...newResources, { id: 0, name: '', date: getCurrentDate(), quantity: 0 }]);
   };
 
-  const groupResourcesByDate = () => {
-    return filteredResources.reduce((acc, resource) => {
-      if (!acc[resource.date]) {
-        acc[resource.date] = [];
-      }
-      acc[resource.date].push(resource);
-      return acc;
-    }, {});
+  const handleCancel = () => {
+    // Reset form
+    setNewResources([{ id: 0, name: '', date: getCurrentDate(), quantity: 0 }]);
+    setError(''); // Clear any error messages
   };
 
-  const groupedResources = groupResourcesByDate();
+  const handleViewResources = () => {
+    navigate('/resourcetret'); // Navigate to the resource retrieve page (Resourcetret)
+  };
 
   return (
-    <div>
-      <Header />
-      <div className="container">
-        <h1 className="title">Resource Planning System</h1>
-        <div className="button-container">
-          <button className="btn btn-primary" onClick={handleAddResource}>
-            Add Resources
+    <div className="flex flex-col min-h-screen relative">
+      <video
+        autoPlay
+        loop
+        muted
+        className="absolute inset-0 w-full h-full object-cover z-0" // Ensure video is behind content
+      >
+        <source src={backgroundImage} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      <Header className="relative z-10" /> {/* Adjust z-index for header */}
+      
+      <div className="flex-1 flex justify-center items-center z-10"> {/* Set z-index for content */}
+        <div className="max-w-xl w-full bg-pink-100 rounded-lg shadow-xl p-10 border border-gray-200 space-y-6">
+          <h1 className="text-4xl font-bold text-purple-600 mb-4 text-center">Resource Planning System</h1>
+          {error && <div className="mb-4 text-red-600">{error}</div>}
+          <form>
+            {newResources.map((resource, index) => (
+              <div key={index} className="space-y-4">
+                <div>
+                  <label className="block text-lg font-semibold text-gray-700" htmlFor={`name-${index}`}>Item Name:</label>
+                  <select
+                    id={`name-${index}`}
+                    className="mt-1 block w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    value={resource.name}
+                    onChange={(e) => handleResourceChange(index, 'name', e.target.value)}
+                  >
+                    <option value="">Select Resource</option>
+                    {resourceNames.map((name, idx) => (
+                      <option key={idx} value={name}>{name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-lg font-semibold text-gray-700" htmlFor={`date-${index}`}>Date:</label>
+                  <input
+                    id={`date-${index}`}
+                    type="date"
+                    value={resource.date} // Set the date input value
+                    readOnly // Make the date field read-only
+                    className="mt-1 block w-full h-10 border border-gray-300 p-1 bg-gray-100 rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-lg font-semibold text-gray-700" htmlFor={`quantity-${index}`}>Quantity:</label>
+                  <input
+                    id={`quantity-${index}`}
+                    type="number"
+                    value={resource.quantity}
+                    onChange={(e) => handleResourceChange(index, 'quantity', e.target.value)} // Pass the string value to validate
+                    onKeyDown={(e) => {
+                      // Allow only numbers (0-9) and control keys (Backspace, Delete, Arrow keys)
+                      if (!/^[0-9]$/.test(e.key) && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) {
+                        e.preventDefault(); // Prevent the default action for invalid keys
+                      }
+                    }}
+                    className="mt-1 block w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                </div>
+              </div>
+            ))}
+            <div className="flex justify-between">
+              <button
+                type="button"
+                className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition duration-200"
+                onClick={handleAddResourceField}
+              >
+                Add Another Resource
+              </button>
+              <button
+                type="button"
+                className="bg-gray-300 text-black rounded-lg px-4 py-2 hover:bg-gray-400 transition duration-200"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="bg-purple-600 text-white rounded-lg px-4 py-2 hover:bg-purple-700 transition duration-200"
+                onClick={handleSaveResources}
+                disabled={loading}
+              >
+                Save
+              </button>
+            </div>
+          </form>
+
+          {/* View Resources button moved outside the form */}
+          <button
+            className="mt-4 w-full bg-purple-600 text-white rounded-lg px-4 py-2 hover:bg-purple-700 transition duration-200"
+            onClick={handleViewResources}
+          >
+            View Resources
           </button>
         </div>
-        {isAdding && (
-          <div className="form-container">
-            <h2 className="form-title">Add New Resources</h2>
-            <form>
-              {newResources.map((resource, index) => (
-                <div key={index} className="resource-form-group">
-                  <div className="form-group">
-                    <label htmlFor={`name-${index}`}>Item Name:</label>
-                    <input
-                      id={`name-${index}`}
-                      type="text"
-                      value={resource.name}
-                      onChange={(e) => handleResourceChange(index, 'name', e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor={`date-${index}`}>Date:</label>
-                    <input
-                      id={`date-${index}`}
-                      type="date"
-                      value={resource.date}
-                      readOnly
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor={`quantity-${index}`}>Quantity:</label>
-                    <input
-                      id={`quantity-${index}`}
-                      type="number"
-                      value={resource.quantity}
-                      onChange={(e) => handleResourceChange(index, 'quantity', parseInt(e.target.value, 10))}
-                    />
-                  </div>
-                </div>
-              ))}
-              <div className="form-actions">
-                <button className="btn btn-primary" type="button" onClick={handleSaveResources}>
-                  Save
-                </button>
-                <button className="btn btn-secondary" type="button" onClick={handleCancel}>
-                  Cancel
-                </button>
-                <button className="btn btn-secondary" type="button" onClick={handleAddResourceField}>
-                  Add Another Resource
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
-        <div className="table-container">
-          <h2 className="table-title">Resources</h2>
-          <div className="search-container">
-            <input
-              className="search-input"
-              type="text"
-              placeholder="Search by name or date"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          {Object.keys(groupedResources).map((date) => (
-            <div key={date}>
-              <h3>{date}</h3>
-              <table className="resource-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {groupedResources[date].map((resource) => (
-                    <tr key={resource.id}>
-                      <td>{resource.id}</td>
-                      <td>{resource.name}</td>
-                      <td>{resource.quantity}</td>
-                      <td>
-                        <button className="btn btn-danger" onClick={() => handleDeleteResource(resource.id)}>
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ))}
-        </div>
       </div>
-      <Footer />
+
+      <Footer className="relative z-10" /> {/* Adjust z-index for footer */}
     </div>
   );
 };
