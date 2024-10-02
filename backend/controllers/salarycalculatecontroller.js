@@ -1,56 +1,59 @@
-import salarycalculateModel from "../models/salarycalculateModel.js";
+import EmployeeSalary from '../models/salarycalculateModel.js';
 
-//add new salary record
-export const addSalary = async (req, res) => {
-    try {
-        console.log(req.fields);
-        const {basicSalary, allowances, deductions, grossSalary, netSalary,createdAt  } = req.fields;
-        
-        switch(true) {
-            case !basicSalary:
-                return res.json( { error: "basic salary is required" } );
-            case !allowances:
-                return res.json( { error: "allowances is required" } );
-            case !deductions:
-                return res.json( { error: "deductions is required" } );
-            case !grossSalary:
-                return res.json( { error: "gross salary is required" } );
-            case !netSalary:
-                return res.json( { error: "net salary is required" } );
-            case !createdAt:
-                return res.json( { error: "date is required" } );
-        }
+// Create a new employee salary record
+export const createEmployeeSalary = async (req, res) => {
+  try {
+    const newEmployeeSalary = new EmployeeSalary(req.body);
+    const savedEmployeeSalary = await newEmployeeSalary.save();
+    res.status(201).json(savedEmployeeSalary);
+  } catch (error) {
+    res.status(400).json({ message: 'Error creating employee salary record', error: error.message });
+  }
+};
 
-        const salary = new salarycalculateModel({...req.fields});
-        await salary.save();
-        res.status(201).json( { msg : "Salary record Added Successfully" } );
-    } catch (error) {
-        console.error(error);
-        res.status(400).json( { msg : "Salary record Adding Failed ", error } );
-    }
-}
+// Get all employee salary records
+export const getEmployeeSalaries = async (req, res) => {
+  try {
+    const employeeSalaries = await EmployeeSalary.find();
+    res.status(200).json(employeeSalaries);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching employee salary records', error: error.message });
+  }
+};
 
-// fetch all salary records
-export const fetchAllSalary = async (req, res) => {
-    try {
-        const salary = await salarycalculateModel.find();
-        res.json(salary);
-    } catch (error) {
-        res.status(400).json( { msg : "No Salary record Found", error } );
-    }
-}
+// Get a single employee salary record by ID
+export const getEmployeeSalaryById = async (req, res) => {
+  try {
+    const employeeSalary = await EmployeeSalary.findById(req.params.id);
+    if (!employeeSalary) return res.status(404).json({ message: 'Employee salary record not found' });
+    res.status(200).json(employeeSalary);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching employee salary record', error: error.message });
+  }
+};
 
-//fetch all salary by id
-export const getAllSalaryCalculatesById = async (req, res) => {
-    try {
-        const salary = await salarycalculateModel.findById(req.params.id);
-        if(!salary) {
-            return res.status(404).json( { msg : "Salary Record Not Found" } );
-        }
-        res.json(salary);
-    } catch (error) {
-        res.status(404).json( { msg : "Cannot find this salary record", error } );
-    }
-}
+// Update an employee salary record by ID
+export const updateEmployeeSalary = async (req, res) => {
+  try {
+    const updatedEmployeeSalary = await EmployeeSalary.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    if (!updatedEmployeeSalary) return res.status(404).json({ message: 'Employee salary record not found' });
+    res.status(200).json(updatedEmployeeSalary);
+  } catch (error) {
+    res.status(400).json({ message: 'Error updating employee salary record', error: error.message });
+  }
+};
 
-
+// Delete an employee salary record by ID
+export const deleteEmployeeSalary = async (req, res) => {
+  try {
+    const deletedEmployeeSalary = await EmployeeSalary.findByIdAndDelete(req.params.id);
+    if (!deletedEmployeeSalary) return res.status(404).json({ message: 'Employee salary record not found' });
+    res.status(200).json({ message: 'Employee salary record deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting employee salary record', error: error.message });
+  }
+};

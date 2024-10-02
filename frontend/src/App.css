@@ -1,0 +1,70 @@
+/* App.css */
+
+/* General Styles */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .content-container {
+    display: flex;
+    flex: 1;
+  }
+  
+  /* Header Styles */
+  header {
+    background-color: #4A90E2; /* Change as needed */
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.5rem;
+  }
+  
+  /* Sidebar Styles */
+  .sidebar {
+    width: 250px; /* Fixed width for the sidebar */
+    background-color: #f4f4f4; /* Light background */
+    padding: 1rem;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sidebar a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+  
+  .sidebar a:hover {
+    background-color: #ddd; /* Highlight color on hover */
+  }
+  
+  /* Main Content Styles */
+  .main-content {
+    flex: 1; /* Fills remaining space */
+    padding: 1rem;
+    background-color: #ffffff; /* White background for the main area */
+    overflow-y: auto; /* Scroll if content overflows */
+  }
+  
+  /* Footer Styles */
+  footer {
+    background-color: #333; /* Dark background */
+    color: white;
+    text-align: center;
+    padding: 0.5rem;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .content-container {
+      flex-direction: column; /* Stack sidebar and main content on smaller screens */
+    }
+  
+    .sidebar {
+      width: 100%; /* Full width for sidebar on small screens */
+    }
+  }
+  

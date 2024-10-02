@@ -1,74 +1,138 @@
-import React, { useState } from 'react';
-import Header from "../Shared/Header";
-import Footer from '../Shared/Footer';
-import './salaryret.css'; // Import the CSS file
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import './salaryret.css'; // Include your style
+import Salaryupdate from './salaryupdate'; // Make sure this is the correct import
 
 const SalaryDetailRetrievePage = () => {
-  const [salaryDetails, setSalaryDetails] = useState([
-    { id: 1, employeeName: 'John Doe', salary: 5000, paymentDate: '2022-01-01' },
-    { id: 2, employeeName: 'Jane Doe', salary: 6000, paymentDate: '2022-02-01' },
-    { id: 3, employeeName: 'Bob Smith', salary: 7000, paymentDate: '2022-03-01' },
-  ]);
+  const [salaryDetails, setSalaryDetails] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [departmentFilter, setDepartmentFilter] = useState('');
+  const [message, setMessage] = useState(null);
+  
+  // States for the update modal
+  const [selectedSalary, setSelectedSalary] = useState(null);
+  const [isModalOpen, setModalOpen] = useState(false);
 
-  const handleEdit = (salaryDetail) => {
-    // Implement edit logic here
-    console.log(`Edit: ${salaryDetail.id}`);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchSalaryDetails = async () => {
+      try {
+        const response = await axios.get('/api/salarycalculates');
+        setSalaryDetails(response.data);
+      } catch (error) {
+        setError(error.response ? error.response.data : error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSalaryDetails();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  const filteredSalaries = salaryDetails.filter((salary) => {
+    const matchesId = salary.employeeId.toString().includes(searchQuery);
+    const matchesDepartment = departmentFilter ? salary.department === departmentFilter : true;
+    return matchesId && matchesDepartment;
+  });
+
+  const handleEdit = (salary) => {
+    setSelectedSalary(salary);
+    setModalOpen(true); // Open the modal to update the salary
   };
 
-  const handleDelete = (salaryDetail) => {
-    // Implement delete logic here
-    console.log(`Delete: ${salaryDetail.id}`);
-    setSalaryDetails(salaryDetails.filter(detail => detail.id !== salaryDetail.id));
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this record?");
+    if (confirmDelete) {
+      try {
+        const response = await axios.delete(`/api/salarycalculates/${id}`);  // Use id
+        
+        if (response.status === 200) {
+          setSalaryDetails(salaryDetails.filter(salary => salary._id !== id));
+          setMessage(response.data.message || 'Employee salary record deleted successfully.');
+        }
+      } catch (error) {
+        console.error('Error deleting employee salary record:', error);
+        alert('Error deleting employee salary record: ' + (error.response?.data.message || error.message));
+      }
+    }
+  };
+
+  const handleUpdateSalary = (updatedSalary) => {
+    setSalaryDetails(salaryDetails.map(salary => (salary._id === updatedSalary._id ? updatedSalary : salary)));
+    setModalOpen(false); // Close modal after update
   };
 
   return (
-    <div>
-      <Header />
-
-      <div className="max-w-7xl mx-auto p-4 bg-white rounded-md shadow-md">
-        <h2 className="text-3xl font-bold mb-4">Salary Detail Retrieve Page</h2>
-        <div className="flex flex-wrap justify-center mb-4">
-          <div className="w-full md:w-1/2 xl:w-1/3 p-4">
-            <table className="table-auto w-full">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2">Employee Name</th>
-                  <th className="px-4 py-2">Salary</th>
-                  <th className="px-4 py-2">Payment Date</th>
-                  <th className="px-4 py-2">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {salaryDetails.map((salaryDetail) => (
-                  <tr key={salaryDetail.id}>
-                    <td className="px-4 py-2">{salaryDetail.employeeName}</td>
-                    <td className="px-4 py-2">{salaryDetail.salary}</td>
-                    <td className="px-4 py-2">{salaryDetail.paymentDate}</td>
-                    <td className="px-4 py-2">
-                      <div className="flex space-x-2">
-                        <button
-                          className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
-                          onClick={() => handleEdit(salaryDetail)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                          onClick={() => handleDelete(salaryDetail)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+    <div className="salary-detail-container">
+      {/* Render the update salary modal */}
+      {isModalOpen && (
+        <Salaryupdate
+          salary={selectedSalary}
+          onClose={() => setModalOpen(false)}
+          onUpdate={handleUpdateSalary}
+        />
+      )}
+      {message && <div className="message">{message}</div>}
+      <h2>Salary Details</h2>
+      <div>
+        <input
+          type="text"
+          placeholder="Search by Employee ID"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <select
+          value={departmentFilter}
+          onChange={(e) => setDepartmentFilter(e.target.value)}
+        >
+          <option value="">All Departments</option>
+          <option value="HR">HR</option>
+          <option value="IT">IT</option>
+          <option value="Finance">Finance</option>
+        </select>
       </div>
-
-      <Footer />
+      {filteredSalaries.length === 0 ? (
+        <p>No salary details found.</p>
+      ) : (
+        <table className="salary-detail-table">
+          <thead>
+            <tr>
+              <th>Employee Name</th>
+              <th>Employee ID</th>
+              <th>Department</th>
+              <th>Basic Salary</th>
+              <th>Gross Salary</th>
+              <th>Net Salary</th>
+              <th>Payroll Month</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredSalaries.map((salary) => (
+              <tr key={salary._id}> {/* Use _id as the key */}
+                <td>{salary.employeeName}</td>
+                <td>{salary.employeeId}</td>
+                <td>{salary.department}</td>
+                <td>{salary.basicSalary}</td>
+                <td>{salary.grossSalary}</td>
+                <td>{salary.netSalary}</td>
+                <td>{salary.payrollMonth}</td>
+                <td>
+                  <button onClick={() => handleEdit(salary)}>Edit</button>
+                  <button onClick={() => handleDelete(salary._id)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };

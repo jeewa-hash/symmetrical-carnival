@@ -1,319 +1,197 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './oderbillcal.css';
-import Header from "../Shared/Header";
-import Footer from "../Shared/Footer";
+import './oderbillcal.css'; // Ensure your CSS file reflects the new class names
 
 const initialOrder = {
-  orderItems: [{ name: '', quantity: 0, price: 0 }],
-  status: '',
+  orderItems: [{ name: '', quantity: 0, price: 0, totalPrice: 0 }],
   shopName: '',
-  orderDate: '',
+  shopAddress: '',
+  orderDate: new Date().toISOString().split('T')[0], // Default to today's date
   totalAmount: 0,
 };
 
+const itemOptions = [
+  { value: '', label: 'Select Item' },
+  { value: 'Toy Bear', label: 'Toy Bear' },
+  { value: 'Toy Rabbit', label: 'Toy Rabbit' },
+  { value: 'Stuffed Elephant', label: 'Stuffed Elephant' },
+  { value: 'Toy Dog', label: 'Toy Dog' },
+];
+
 const OrderCreation = () => {
+  const navigate = useNavigate();
   const [order, setOrder] = useState(initialOrder);
   const [orders, setOrders] = useState([]);
-  const [editIndex, setEditIndex] = useState(null);
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [message, setMessage] = useState('');
 
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const handleInputChange = (event, field) => {
+    let value = event.target.value;
 
-  const handleStatusChange = (event) => {
-    setOrder({ ...order, status: event.target.value });
+    // Apply validation for the shopAddress field
+    if (field === 'shopAddress') {
+      // Allow letters, numbers, spaces, '/', and ',' characters
+      value = value.replace(/[^a-zA-Z0-9/, ]/g, '');
+    }
+    
+
+    setOrder({ ...order, [field]: value });
   };
 
-  const handleShopNameChange = (event) => {
-    setOrder({ ...order, shopName: event.target.value });
-  };
-
-  const handleOrderDateChange = (event) => {
-    setOrder({ ...order, orderDate: event.target.value });
-  };
-
-  const handleItemNameChange = (event, index) => {
+  const handleItemChange = (event, index, field) => {
     const newOrderItems = [...order.orderItems];
-    newOrderItems[index].name = event.target.value;
-    setOrder({ ...order, orderItems: newOrderItems });
-  };
+    const value = field === 'quantity' ? Math.floor(parseFloat(event.target.value) || 0) : event.target.value;
 
-  const handleItemQuantityChange = (event, index) => {
-    const newOrderItems = [...order.orderItems];
-    newOrderItems[index].quantity = parseInt(event.target.value, 10);
-    setOrder({ ...order, orderItems: newOrderItems });
-  };
+    // Validate integer for quantity
+    if (field === 'quantity' && (value < 0 || !Number.isInteger(Number(value)))) {
+      return; // Ignore invalid input
+    }
 
-  const handleItemPriceChange = (event, index) => {
-    const newOrderItems = [...order.orderItems];
-    newOrderItems[index].price = parseFloat(event.target.value) || 0;
+    newOrderItems[index][field] =
+      field === 'quantity' || field === 'price'
+        ? Math.max(value, 0) // Ensure value is non-negative
+        : value;
+
+    // Update total price for the item
+    newOrderItems[index].totalPrice = newOrderItems[index].quantity * newOrderItems[index].price;
+
     setOrder({ ...order, orderItems: newOrderItems });
   };
 
   const handleAddItem = () => {
     setOrder({
       ...order,
-      orderItems: [...order.orderItems, { name: '', quantity: 0, price: 0 }],
+      orderItems: [...order.orderItems, { name: '', quantity: 0, price: 0, totalPrice: 0 }],
     });
   };
 
-  const calculateTotalAmount = (orderItems) => {
-    return orderItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const totalAmount = calculateTotalAmount(order.orderItems);
-    const updatedOrder = { ...order, totalAmount };
-    if (editIndex !== null) {
-      handleUpdateOrder(editIndex);
-    } else {
-      setOrders([...orders, updatedOrder]);
-      setOrder(initialOrder);
+  const handleCancelItem = () => {
+    if (order.orderItems.length > 1) {
+      const newOrderItems = [...order.orderItems];
+      newOrderItems.pop(); // Remove the last item
+      setOrder({ ...order, orderItems: newOrderItems });
     }
   };
 
-  const handleUpdateOrder = (index) => {
-    const updatedOrders = [...orders];
-    updatedOrders[index] = order;
-    setOrders(updatedOrders);
-    setOrder(initialOrder);
-    setEditIndex(null);
+  const calculateTotalAmount = () => {
+    return order.orderItems.reduce((acc, item) => acc + item.totalPrice, 0);
   };
 
-  const handleDeleteOrder = (index) => {
-    const updatedOrders = orders.filter((_, i) => i !== index);
-    setOrders(updatedOrders);
-  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  const handleEdit = (index) => {
-    setOrder(orders[index]);
-    setEditIndex(index);
-  };
+    const totalAmount = calculateTotalAmount();
+    const newOrder = { ...order, totalAmount }; // Use the default date stored in the order state
 
-  const handleViewOrder = (order) => {
-    setSelectedOrder(order);
-    setIsModalOpen(true);
+    try {
+      const response = await axios.post('/api/billorder', newOrder);
+      setOrders([...orders, response.data]);
+      setMessage('Order created successfully!');
+      setOrder(initialOrder); // Reset the form
+    } catch (error) {
+      console.error('Error saving order:', error);
+      setMessage('Error creating order. Please try again.');
+    }
   };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedOrder(null);
-  };
-
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const filteredOrders = orders.filter((order) =>
-    order.shopName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <div>
-      <Header/>
-    <div className="order-creation-container">
-      
-     <h2 className="title">
-        {editIndex !== null ? 'Edit Order Bill' : 'Order Bill Creation'}
-      </h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label className="form-label" htmlFor="shopName">
-            Shop Name
-          </label>
-          <input
-            className="form-input"
-            id="shopName"
-            type="text"
-            value={order.shopName}
-            onChange={handleShopNameChange}
-          />
-        </div>
-        <div className="form-group">
-          <label className="form-label" htmlFor="orderDate">
-            Order Date
-          </label>
-          <input
-            className="form-input"
-            id="orderDate"
-            type="date"
-            value={order.orderDate}
-            onChange={handleOrderDateChange}
-          />
-        </div>
-        {order.orderItems.map((item, index) => (
-          <div key={index} className="form-group">
-            <div className="form-label-group">
-              <label className="form-label" htmlFor={`itemName${index}`}>
-                Item {index + 1} Name
-              </label>
-              <input
-                className="form-input"
-                id={`itemName${index}`}
-                type="text"
-                value={item.name}
-                onChange={(event) => handleItemNameChange(event, index)}
-              />
-            </div>
-            <div className="form-label-group mt-2">
-              <label className="form-label" htmlFor={`itemQuantity${index}`}>
-                Quantity
-              </label>
-              <input
-                className="form-input"
-                id={`itemQuantity${index}`}
-                type="number"
-                value={item.quantity}
-                onChange={(event) => handleItemQuantityChange(event, index)}
-              />
-            </div>
-            <div className="form-label-group mt-2">
-              <label className="form-label" htmlFor={`itemPrice${index}`}>
-                Price
-              </label>
-              <input
-                className="form-input"
-                id={`itemPrice${index}`}
-                type="number"
-                step="0.01"
-                value={item.price}
-                onChange={(event) => handleItemPriceChange(event, index)}
-              />
-            </div>
+      <div className="order-creation">
+        <h2>Order Bill Creation</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="order-creation__form-group">
+            <label htmlFor="shopName">Shop Name</label>
+            <input
+              id="shopName"
+              type="text"
+              value={order.shopName}
+              onChange={(e) => handleInputChange(e, 'shopName')}
+              required
+            />
           </div>
-        ))}
-        <button
-          className="add-item-button"
-          type="button"
-          onClick={handleAddItem}
-        >
-          Add Item
-        </button>
-        <div className="total-amount-group mt-4">
-          <label className="form-label" htmlFor="totalAmount">
-            Total Amount
-          </label>
-          <input
-            className="form-input"
-            id="totalAmount"
-            type="number"
-            step="0.01"
-            value={calculateTotalAmount(order.orderItems)}
-            readOnly
-          />
-        </div>
-        <button
-          className="submit-button mt-4"
-          type="submit"
-        >
-          {editIndex !== null ? 'Update Order Bill' : 'Create Order Bill'}
-        </button>
-      </form>
+          <div className="order-creation__form-group">
+            <label htmlFor="shopAddress">Shop Address</label>
+            <input
+              id="shopAddress"
+              type="text"
+              value={order.shopAddress}
+              onChange={(e) => handleInputChange(e, 'shopAddress')}
+            />
+          </div>
+          <div className="order-creation__form-group">
+            <label htmlFor="orderDate">Order Date</label>
+            <input
+              id="orderDate"
+              type="date"
+              value={order.orderDate}
+              readOnly // Make the date input read-only
+              onFocus={(e) => e.target.blur()} // Prevent the date picker from opening.
+            />
+          </div>
 
-      <div className="search-group mt-8">
-        <input
-          className="form-input"
-          type="text"
-          placeholder="Search by Shop Name"
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
-      </div>
-
-      {filteredOrders.length > 0 && (
-        <div className="orders-list mt-8 p-4 bg-gray-100 rounded shadow-md">
-          <h3 className="orders-title text-xl font-bold mb-4">
-            All Orders
-          </h3>
-          {filteredOrders.map((order, index) => (
-            <div key={index} className="order-item mb-4 p-4 bg-white rounded shadow-sm">
-              <div className="order-header flex justify-between items-center">
-                <h4 className="order-title text-lg font-bold">
-                  Order {index + 1}
-                </h4>
-                <button
-                  className="view-button bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline"
-                  onClick={() => handleViewOrder(order)}
-                >
-                  View
-                </button>
-              </div>
-              <div className="order-details mt-4">
-                <p className="order-detail text-sm text-gray-700">
-                  Shop: {order.shopName}
-                </p>
-                <p className="order-detail text-sm text-gray-700">
-                  Date: {order.orderDate}
-                </p>
-                <p className="order-detail text-sm text-gray-700">
-                  Status: {order.status}
-                </p>
-                <p className="order-detail text-sm text-gray-700 font-bold mt-2">
-                  Total Amount: ${order.totalAmount.toFixed(2)}
-                </p>
-              </div>
-              <div className="order-actions mt-4">
-                <button
-                  className="edit-button bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline"
-                  onClick={() => handleEdit(index)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="delete-button bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline ml-2"
-                  onClick={() => handleDeleteOrder(index)}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {isModalOpen && selectedOrder && (
-        <div className="modal fixed inset-0 flex items-center justify-center z-50">
-          <div className="modal-overlay fixed inset-0 bg-black opacity-50"></div>
-          <div className="modal-content bg-white p-8 rounded shadow-lg">
-            <h3 className="modal-title text-xl font-bold mb-4">
-              Order Details
-            </h3>
-            <p className="modal-detail text-sm text-gray-700">
-              Shop: {selectedOrder.shopName}
-            </p>
-            <p className="modal-detail text-sm text-gray-700">
-              Date: {selectedOrder.orderDate}
-            </p>
-            <p className="modal-detail text-sm text-gray-700">
-              Status: {selectedOrder.status}
-            </p>
-            <div className="modal-items mt-4">
-              <h4 className="modal-items-title text-lg font-bold mb-2">
-                Items:
-              </h4>
-              {selectedOrder.orderItems.map((item, index) => (
-                <div key={index} className="modal-item text-sm text-gray-700">
-                  {index + 1}. {item.name} - Quantity: {item.quantity} - Price: ${item.price.toFixed(2)} - Total: ${item.quantity * item.price.toFixed(2)}
-                </div>
+          {/* Order Items Table */}
+          <table className="order-creation__items-table">
+            <thead>
+              <tr>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th>Price (Rs)</th> {/* Updated for Price */}
+                <th>Total Price (Rs)</th> {/* Updated for Total Price */}
+              </tr>
+            </thead>
+            <tbody>
+              {order.orderItems.map((item, index) => (
+                <tr key={index}>
+                  <td>
+                    <select
+                      value={item.name}
+                      onChange={(e) => handleItemChange(e, index, 'name')}
+                      required
+                    >
+                      {itemOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      value={item.quantity}
+                      onChange={(e) => handleItemChange(e, index, 'quantity')}
+                      min="0"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      value={item.price}
+                      onChange={(e) => handleItemChange(e, index, 'price')}
+                      step="0.01"
+                      min="0"
+                      required
+                    />
+                  </td>
+                  <td>Rs {item.totalPrice.toFixed(2)}</td> {/* Updated for Total Price */}
+                </tr>
               ))}
-            </div>
-            <p className="modal-detail text-sm text-gray-700 font-bold mt-4">
-              Total Amount: ${selectedOrder.totalAmount.toFixed(2)}
-            </p>
-            <button
-              className="close-button bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
-              onClick={handleCloseModal}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-    <Footer/>
+            </tbody>
+          </table>
+          <button type="button" onClick={handleAddItem}>
+            Add Item
+          </button>
+          <button type="button" onClick={handleCancelItem} disabled={order.orderItems.length <= 1}>
+            Cancel Last Item
+          </button>
+
+          <div>Total Amount: Rs {calculateTotalAmount().toFixed(2)}</div> {/* Updated for Total Amount */}
+          <button type="submit">Create Order Bill</button>
+        </form>
+        {message && <div className="order-creation__message">{message}</div>}
+        <button onClick={() => navigate('/orders')}>View All Order Bills</button>
+      </div>
     </div>
   );
 };
