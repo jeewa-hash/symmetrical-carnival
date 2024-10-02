@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import cors from 'cors';
+import path from 'path';
+import cors from 'cors';
 
 import connectDB from "./config/db.js";
 import productRoutes from "./routes/ProductRoutes.js";
@@ -15,6 +17,7 @@ import productionCostRoute from './routes/productionCostRoute.js';
 dotenv.config();
 const port = process.env.PORT || 5000;
 
+connectDB();
 connectDB();
 
 const app = express();

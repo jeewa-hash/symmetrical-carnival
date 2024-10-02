@@ -1,0 +1,137 @@
+/* Container for the entire form */
+.employee-salary-form-container {
+  max-width: 900px; /* Increased width */
+  margin: 40px auto; /* Increased margin */
+  padding: 30px; /* Increased padding */
+  border-radius: 12px; /* Slightly rounded corners */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+  background-color: #ffffff;
+}
+
+/* General styles for the form */
+.employee-salary-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main heading style */
+h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px; /* Increased bottom margin */
+  font-size: 28px; /* Increased font size */
+  font-family: 'Arial', sans-serif; /* Different font */
+}
+
+/* Sections for different parts of the form */
+.employee-details-section,
+.earnings-section,
+.deductions-section,
+.salary-summary-section {
+  margin-bottom: 30px; /* Increased margin */
+  padding: 25px; /* Increased padding */
+  border: 1px solid #dcdcdc;
+  border-radius: 10px; /* More rounded corners */
+  background-color: #f8f9fa;
+}
+
+/* Style for individual input groups */
+.input-group {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px; /* Increased margin */
+}
+
+/* Label styles */
+.input-group label {
+  flex: 1;
+  margin-right: 15px; /* Increased margin */
+  font-weight: bold;
+  color: #34495e;
+  font-size: 16px; /* Increased font size */
+}
+
+/* Input and select field styles */
+.input-group input,
+.input-group select {
+  flex: 2;
+  padding: 14px; /* Increased padding */
+  border: 1px solid #bdc3c7;
+  border-radius: 6px; /* More rounded corners */
+  font-size: 16px; /* Increased font size */
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Focus effect for input and select fields */
+.input-group input:focus,
+.input-group select:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 8px rgba(52, 152, 219, 0.5); /* Enhanced focus shadow */
+  outline: none;
+}
+
+/* Button styles */
+/* Button styles */
+.button-primary {
+  background-color: #3498db; /* Primary color */
+  color: white; /* Text color */
+  border: none;
+  padding: 14px 30px; /* Padding for a larger button */
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 18px; /* Font size */
+  font-weight: bold; /* Bold text */
+  transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+  margin-top: 15px; /* Margin above */
+}
+
+/* Hover effect for primary button */
+.button-primary:hover {
+  background-color: #2980b9; /* Darker shade for hover */
+}
+
+/* Active state for primary button */
+.button-primary:active {
+  transform: translateY(1px); /* Slightly pressed effect */
+}
+
+/* Secondary button styles */
+.button-secondary {
+  background-color: #e67e22; /* Secondary color */
+  color: white; /* Text color */
+  border: none;
+  padding: 14px 30px; /* Padding for a larger button */
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 18px; /* Font size */
+  font-weight: bold; /* Bold text */
+  transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+  margin-top: 15px; /* Margin above */
+}
+
+/* Hover effect for secondary button */
+.button-secondary:hover {
+  background-color: #d35400; /* Darker shade for hover */
+}
+
+/* Active state for secondary button */
+.button-secondary:active {
+  transform: translateY(1px); /* Slightly pressed effect */
+}
+
+
+/* Media query for responsive design */
+@media (max-width: 600px) {
+  .input-group {
+    flex-direction: column;
+  }
+
+  .input-group label {
+    margin-bottom: 5px;
+  }
+
+  .input-group input,
+  .input-group select {
+    width: 100%;
+  }
+}
