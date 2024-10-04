@@ -114,7 +114,6 @@ const EmployeeSalaryDetailsForm = () => {
             <option value="HR">HR</option>
             <option value="Marketing">Marketing</option>
             <option value="Sales">Sales</option>
-            <option value="IT">IT</option>
           </select>
         </div>
         <div className="button-container">
