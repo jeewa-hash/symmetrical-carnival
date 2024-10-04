@@ -1,59 +1,68 @@
 import React from 'react';
+import Header from './Shared/Header';
+import Footer from './Shared/Footer';
 import Financeuserinterface from './financehandling/financeuserinterface';
 import Salarycalculateinterface from './financehandling/salarycalculateinterface';
-import { BrowserRouter as Router,Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Orderbillinterface from './financehandling/orderbillinterface';
 import Home from './Home/Home';
-//import Login from './Login/login';
-//import Registration from './Registration/Registration';
 import Salaryret from './financehandling/salaryret';
 //import Financereport from './financehandling/financereport';
-//import About from './aboutus/about';
+import FIMainTable from './financehandling/fiMainTable';
+import Billorderret from './financehandling/billorderret';
+import Salaryupdate from './financehandling/salaryupdate'; 
+import RegistrationForm from './Registration/Registration';
+import { NotificationProvider } from './notification/notificatioonContext'; // Updated path for Notification Context
+import NotificationDropdown from './notification/notifidropdown'; // Updated path for Notification Dropdown
 import OrderAndProduction from './OrderAndProductionUi/OrderAndProduction';
-import HRInterface from './HRManagementInterface/HRInterface';
-import Financereport from './financehandling/financereport';
-import IMInterface from './InventoryManagement/Interface';
-import Inventory from './InventoryManagement/Inventory';
-import FinishGoods from './InventoryManagement/FinishGoods';
-import RawDataTable from './InventoryManagement/RawDataTable';
-import RawMaterialRequest from './InventoryManagement/RawMaterialRequest';
-import MonthlyEvaluation from './InventoryManagement/MonthlyEvalution';
-import ProductionRequest from './InventoryManagement/ProductionRequest';
-
-import LoginForm from './Login/loginForm';
-
-
-
+import ProductionManagementSystem from './ProductionManagement/productionPlaning';
+import OrderManagementSystem from './OrderManagement/order';
+import OrderRet from './OrderManagement/orderRet';
+import ResourcePlanningSystem from './ProductionManagement/ResourcesPlaning';
+import ResourceRetriew from './ProductionManagement/ResourceRet';
+import ProductionRet from './ProductionManagement/ProductionRet';
+import ProductionCostCalculator from './ProductionManagement/productionCost';
+import OrderAndProductionReport from './OrderandProductionReport/OrderandProductionReport';
 const App = () => {
   return (
-    <Router>
-     <div>
-        <Routes>
+    <NotificationProvider> {/* Wrap your app inside the NotificationProvider */}
+      <Router>
+        <div>
+          <Header />
           
-          <Route exact path="/" element={<Financeuserinterface />} />
-          <Route path="/orderandproductionui" element={<OrderAndProduction />} />
-          <Route path="/financeui" element={<Financeuserinterface />} />
-          <Route path="orderbillinterface" element={<Orderbillinterface />} />
-          <Route path="/salaryret" element={<Salaryret />} />
-          <Route path="/financereport" element={<Financereport />} />
-          <Route path="/Hrui" element={<HRInterface />} />
-          <Route path="/salarycalculateinterface" element={<Salarycalculateinterface />} />
-
+          <div>
+            {/* Add the NotificationDropdown component to show notifications */}
+            <NotificationDropdown />
+          </div>
           
-        <Route path="/inventoryui" element={<IMInterface />} />
-        <Route path='/inventory' element={<Inventory />} />
-         <Route path="/finishgoods" element={<FinishGoods />} />
-         <Route path="/rawdatatable" element={<RawDataTable />} />
-         <Route path="/rawmaterialrequest" element={<RawMaterialRequest />} />
-         <Route path="/monthlyevaluation" element={<MonthlyEvaluation />} />
-         <Route path="/productionrequest" element={<ProductionRequest />} />
-
-         <Route path="/loginform" element={<LoginForm />} />
-
-        </Routes>
-      </div>
-    </Router>
+          <div>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/register" element={<RegistrationForm />} />
+              <Route path="/financeui" element={<Financeuserinterface />} />
+              <Route path="/orderandproductionui" element={<OrderAndProduction />} />
+              <Route path="/orderandproductionui/production" element={<ProductionManagementSystem />} />
+              <Route path="/financeui/salarycalculateinterface" element={<Salarycalculateinterface />} />
+              <Route path="/financeui/orderbillinterface" element={<Orderbillinterface />} />
+              <Route path="/salaryret" element={<Salaryret />} />
+              <Route path="/financeui/ftable" element={<FIMainTable />} />
+              <Route path="/orders" element={<Billorderret />} />
+              <Route path="/salary-update/:employeeId" element={<Salaryupdate />} />
+              <Route path="/orderandproductionui/order" element={<OrderManagementSystem />} />
+              <Route path="/orderandproductionui/orderret" element={<OrderRet/>} />
+              <Route path="/orderandproductionui/resources" element={<ResourcePlanningSystem />} />
+              <Route path="/Resourcetret" element={<ResourceRetriew/>} />
+              <Route path="/productret" element={<ProductionRet/>} />
+              <Route path="/orderandproductionui/cost" element={<ProductionCostCalculator/>} />
+              <Route path="/orderandproductionui/report" element={<OrderAndProductionReport />} />
+            </Routes>
+          </div>
+          
+          <Footer />
+        </div>
+      </Router>
+    </NotificationProvider>
   );
-}
+};
 
 export default App;
