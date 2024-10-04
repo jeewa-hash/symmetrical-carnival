@@ -208,7 +208,7 @@ const ProductionManagementSystem = () => {
             >
               View Productions
             </button>
-            <button onClick={() => navigate('/orders')}>View All Order Bills</button>
+            
           </div>
           <BatchSelection selectedBatch={selectedBatch} onBatchSelect={handleBatchSelect} />
           <ProductionPlanningForm
