@@ -7,7 +7,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Orderbillinterface from './financehandling/orderbillinterface';
 import Home from './Home/Home';
 import Salaryret from './financehandling/salaryret';
-//import Financereport from './financehandling/financereport';
 import FIMainTable from './financehandling/fiMainTable';
 import Billorderret from './financehandling/billorderret';
 import Salaryupdate from './financehandling/salaryupdate'; 
@@ -23,13 +22,14 @@ import ResourceRetriew from './ProductionManagement/ResourceRet';
 import ProductionRet from './ProductionManagement/ProductionRet';
 import ProductionCostCalculator from './ProductionManagement/productionCost';
 import OrderAndProductionReport from './OrderandProductionReport/OrderandProductionReport';
+import LoginForm from './Login/loginForm';
 const App = () => {
   return (
     <NotificationProvider> {/* Wrap your app inside the NotificationProvider */}
       <Router>
         <div>
           <Header />
-          
+          <LoginForm />
           <div>
             {/* Add the NotificationDropdown component to show notifications */}
             <NotificationDropdown />

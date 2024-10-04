@@ -14,9 +14,10 @@
   "license": "ISC",
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.1",
-    "antd": "^5.20.6",
+    "antd": "^5.21.2",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "chart.js": "^4.4.4",
     "concurrently": "^8.2.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -28,8 +29,10 @@
     "mongoose": "^8.5.1",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.1.4",
+    "react-chartjs-2": "^5.2.0",
     "rechart": "^0.0.1",
     "recharts": "^2.12.7",
+    "victory": "^37.1.1",
     "vite": "^5.4.2"
   }
 }
