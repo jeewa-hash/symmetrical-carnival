@@ -18,6 +18,8 @@ import FinishGoods from './InventoryManagement/FinishGoods';
 import RawDataTable from './InventoryManagement/RawDataTable';
 import RawMaterialRequest from './InventoryManagement/RawMaterialRequest';
 import MonthlyEvaluation from './InventoryManagement/MonthlyEvalution';
+import ProductionRequest from './InventoryManagement/ProductionRequest';
+
 
 const App = () => {
   return (
@@ -41,6 +43,8 @@ const App = () => {
          <Route path="/rawdatatable" element={<RawDataTable />} />
          <Route path="/rawmaterialrequest" element={<RawMaterialRequest />} />
          <Route path="/monthlyevaluation" element={<MonthlyEvaluation />} />
+         <Route path="/productionrequest" element={<ProductionRequest />} />
+
         </Routes>
       </div>
     </Router>

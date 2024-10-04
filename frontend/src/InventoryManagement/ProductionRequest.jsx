@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, InputNumber, Button, Table, Select, DatePicker, message, Modal } from 'antd';
+import { Form, Input, InputNumber, Button, Table, DatePicker, message, Modal } from 'antd';
 import moment from 'moment';
 import Header from '../Shared/Header';
 import Footer from '../Shared/Footer';
 import axios from 'axios';
 import backgroundImage from '../image/design.png'; // Adjust the path according to your structure
 
-const { Option } = Select;
-
-const RawMaterialRequest = () => {
+const ProductionRequest = () => {
   const [formData, setFormData] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null);
@@ -18,7 +16,7 @@ const RawMaterialRequest = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/api/rawMaterialRequest');
+        const response = await axios.get('http://localhost:4000/api/productionRequest');
         setFormData(response.data);
       } catch (error) {
         message.error('Failed to fetch data');
@@ -35,19 +33,14 @@ const RawMaterialRequest = () => {
       render: (text) => moment(text).format('YYYY-MM-DD'),
     },
     {
-      title: 'Material Name',
-      dataIndex: 'materialName',
-      key: 'materialName',
+      title: 'Product Name',
+      dataIndex: 'productName',
+      key: 'productName',
     },
     {
       title: 'Quantity',
       dataIndex: 'quantity',
       key: 'quantity',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
     },
     {
       title: 'Comments',
@@ -58,9 +51,9 @@ const RawMaterialRequest = () => {
       title: 'Actions',
       key: 'actions',
       render: (_, record) => (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Button type="primary" onClick={() => onEdit(record)}>Edit</Button>
-          <Button type="primary" danger style={{ marginLeft: '8px' }} onClick={() => confirmDelete(record)}>Delete</Button>
+        <div className="flex">
+          <Button type="primary" onClick={() => onEdit(record)} style={{ marginRight: '8px' }}>Edit</Button>
+          <Button type="primary" danger onClick={() => confirmDelete(record)}>Delete</Button>
         </div>
       ),
     },
@@ -73,14 +66,14 @@ const RawMaterialRequest = () => {
         date: values.date.toDate(),
       };
       if (isEditing) {
-        await axios.put(`http://localhost:4000/api/rawMaterialRequest/${editingRecord._id}`, newData);
+        await axios.put(`http://localhost:4000/api/productionRequest/${editingRecord._id}`, newData);
         const updatedData = formData.map((item) =>
           item._id === editingRecord._id ? { ...item, ...newData } : item
         );
         setFormData(updatedData);
         message.success('Request updated successfully');
       } else {
-        const response = await axios.post('http://localhost:4000/api/rawMaterialRequest', newData);
+        const response = await axios.post('http://localhost:4000/api/productionRequest', newData);
         setFormData([...formData, { key: response.data.key, ...newData }]);
         message.success('Request created successfully');
       }
@@ -105,7 +98,7 @@ const RawMaterialRequest = () => {
 
   const onDelete = async (record) => {
     try {
-      await axios.delete(`http://localhost:4000/api/rawMaterialRequest/${record._id}`);
+      await axios.delete(`http://localhost:4000/api/productionRequest/${record._id}`);
       const newData = formData.filter((item) => item._id !== record._id);
       setFormData(newData);
       message.success('Request deleted successfully');
@@ -124,7 +117,7 @@ const RawMaterialRequest = () => {
   };
 
   const filteredData = formData.filter(item =>
-    item.materialName.toLowerCase().includes(searchQuery.toLowerCase())
+    item.productName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -139,7 +132,7 @@ const RawMaterialRequest = () => {
       <Header />
       <div className="flex-1 flex justify-center items-center relative">
         <div className="max-w-2xl w-full bg-pink-100 bg-opacity-80 backdrop-blur-lg rounded-lg shadow-xl p-10 border border-gray-200 space-y-6 z-10">
-          <h1 className="form-heading text-4xl font-bold text-purple-600 mb-4 text-center">Raw Material Request</h1>
+          <h1 className="form-heading text-4xl font-bold text-purple-600 mb-4 text-center">Production Request</h1>
 
           <Form
             form={form}
@@ -160,12 +153,12 @@ const RawMaterialRequest = () => {
             </Form.Item>
 
             <Form.Item
-              label="Material Name"
-              name="materialName"
-              rules={[{ required: true, message: 'Please enter the material name' }]}
+              label="Product Name"
+              name="productName"
+              rules={[{ required: true, message: 'Please enter the product name' }]}
             >
               <Input 
-                placeholder="Enter material name" 
+                placeholder="Enter product name" 
                 style={{ width: '100%' }} 
                 onKeyPress={(e) => {
                   if (/^[0-9]$/.test(e.key)) {
@@ -178,7 +171,7 @@ const RawMaterialRequest = () => {
             <Form.Item
               label="Quantity"
               name="quantity"
-              rules={[
+              rules={[ 
                 { required: true, message: 'Please enter the quantity' },
                 { type: 'number', message: 'Quantity must be a number' },
                 { validator: (_, value) => {
@@ -198,18 +191,6 @@ const RawMaterialRequest = () => {
             </Form.Item>
 
             <Form.Item
-              label="Status"
-              name="status"
-              rules={[{ required: true, message: 'Please select the status' }]}
-            >
-              <Select placeholder="Select status" style={{ width: '100%' }}>
-                <Option value="InStock">InStock</Option>
-                <Option value="LowStock">LowStock</Option>
-                <Option value="OutOfStock">OutOfStock</Option>
-              </Select>
-            </Form.Item>
-
-            <Form.Item
               label="Comments"
               name="comments"
               rules={[{ required: true, message: 'Please enter comments' }]}
@@ -226,7 +207,7 @@ const RawMaterialRequest = () => {
 
           {/* Search Bar */}
           <Input
-            placeholder="Search by Material Name"
+            placeholder="Search by Product Name"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             style={{
@@ -242,7 +223,7 @@ const RawMaterialRequest = () => {
             columns={columns}
             rowKey={(record) => record.key}
             pagination={false}
-            className="raw-material-request-table"
+            className="production-request-table"
             style={{ width: '100%', margin: '20px auto' }}
           />
         </div>
@@ -252,4 +233,5 @@ const RawMaterialRequest = () => {
   );
 };
 
-export default RawMaterialRequest;
+export default ProductionRequest;
+``

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, InputNumber, DatePicker, Button, Table, Modal } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import './FinishGoods.css';
 import Header from '../Shared/Header';
 import Footer from '../Shared/Footer';
+import backgroundImage from '../image/design.png'; // Adjust the path according to your structure
 
 const FinishGoods = () => {
   const [formData, setFormData] = useState([]);
@@ -19,7 +19,7 @@ const FinishGoods = () => {
 
   useEffect(() => {
     setFilteredData(
-      formData.filter(item => 
+      formData.filter(item =>
         item.productName.toLowerCase().includes(searchText.toLowerCase())
       )
     );
@@ -132,101 +132,107 @@ const FinishGoods = () => {
       title: 'Actions',
       key: 'actions',
       render: (_, __, index) => (
-        <>
+        <div style={{ display: 'flex', gap: '8px' }}>
           <Button type="primary" onClick={() => handleEdit(index)}>Edit</Button>
-          <Button type="primary" danger style={{ marginLeft: '8px' }} onClick={() => handleDelete(index)}>
-            Delete
-          </Button>
-        </>
+          <Button type="primary" danger onClick={() => handleDelete(index)}>Delete</Button>
+        </div>
       ),
     },
   ];
 
   return (
-    <div>
-      <Header/>
-      <div className="inventory-container">
-        <h1 className="form-heading">Finished Goods</h1>
+    <div
+      className="flex flex-col min-h-screen relative"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <Header />
+      <div className="flex-1 flex justify-center items-center relative">
+        <div className="max-w-2xl w-full bg-pink-100 bg-opacity-80 backdrop-blur-lg rounded-lg shadow-xl p-10 border border-gray-200 space-y-6 z-10">
+          <h1 className="form-heading text-4xl font-bold text-purple-600 mb-4 text-center">Finished Goods</h1>
 
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleFinish}
-          onValuesChange={handleValuesChange}
-          className="finished-goods-form"
-        >
-          <Form.Item
-            label="Product Name"
-            name="productName"
-            rules={[
-              { required: true, message: 'Please enter the product name' },
-              {
-                pattern: /^[A-Za-z\s]+$/,
-                message: 'Product Name can only contain letters and spaces!'
-              }
-            ]}
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleFinish}
+            onValuesChange={handleValuesChange}
+            className="space-y-4"
           >
-            <Input
-              placeholder="Enter product name"
-              onKeyPress={(e) => {
-                if (!/^[A-Za-z\s]+$/.test(e.key)) {
-                  e.preventDefault();
-                }
-              }}
-            />
-          </Form.Item>
+            <Form.Item
+              label="Product Name"
+              name="productName"
+              rules={[{ required: true, message: 'Please enter the product name' },
+              { pattern: /^[A-Za-z\s]+$/, message: 'Product Name can only contain letters and spaces!' }]}
+            >
+              <Input
+                placeholder="Enter product name"
+                onKeyPress={(e) => {
+                  if (!/^[A-Za-z\s]+$/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </Form.Item>
 
-          <Form.Item
-            label="Quantity"
-            name="quantity"
-            rules={[{ required: true, message: 'Please enter the quantity' }]}
-          >
-            <InputNumber min={1} placeholder="Enter quantity" style={{ width: '100%' }} />
-          </Form.Item>
+            <Form.Item
+              label="Quantity"
+              name="quantity"
+              rules={[{ required: true, message: 'Please enter the quantity' }]}
+            >
+              <InputNumber min={1} placeholder="Enter quantity" style={{ width: '100%' }} className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+            </Form.Item>
 
-          <Form.Item
-            label="Unit Price"
-            name="unitPrice"
-            rules={[{ required: true, message: 'Please enter the unit price' }]}
-          >
-            <InputNumber min={0} step={0.01} placeholder="Enter unit price" style={{ width: '100%' }} />
-          </Form.Item>
+            <Form.Item
+              label="Unit Price"
+              name="unitPrice"
+              rules={[{ required: true, message: 'Please enter the unit price' }]}
+            >
+              <InputNumber min={0} step={0.01} placeholder="Enter unit price" style={{ width: '100%' }} className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+            </Form.Item>
 
-          <Form.Item
-            label="Date Manufactured"
-            name="dateManufactured"
-            rules={[{ required: true, message: 'Please select the manufacture date' }]}
-          >
-            <DatePicker style={{ width: '100%' }} />
-          </Form.Item>
+            <Form.Item
+              label="Date Manufactured"
+              name="dateManufactured"
+              rules={[{ required: true, message: 'Please select the manufacture date' }]}
+            >
+              <DatePicker style={{ width: '100%' }} className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+            </Form.Item>
 
-          <Form.Item label="Total Value" name="totalValue">
-            <InputNumber disabled style={{ width: '100%' }} />
-          </Form.Item>
+            <Form.Item label="Total Value" name="totalValue">
+              <InputNumber disabled style={{ width: '100%' }} />
+            </Form.Item>
 
-          <Button type="primary" htmlType="submit" style={{ backgroundColor: '#ff6f61', borderColor: '#ff6f61', marginBottom: '20px' }}>
-            {editingIndex !== null ? 'Update' : 'Submit'}
-          </Button>
-        </Form>
+            <div className="flex justify-center">
+              <Button type="primary" htmlType="submit" style={{ backgroundColor: '#ff6f61', borderColor: '#ff6f61' }} className="bg-purple-600 text-white rounded-lg px-4 py-2 hover:bg-purple-700 transition duration-200">
+                {editingIndex !== null ? 'Update' : 'Submit'}
+              </Button>
+            </div>
+          </Form>
 
-        {/* Search Bar */}
-        <Input
-          placeholder="Search by product name"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          style={{ margin: '20px 0', width: '100%' }}
-        />
+          {/* Search Bar */}
+          <Input
+            placeholder="Search by product name"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ margin: '20px 0', width: '100%' }}
+            className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
 
-        <Table
-          dataSource={filteredData}
-          columns={columns}
-          rowKey={(record) => record.productName + record.dateManufactured}
-          pagination={false}
-          className="finished-goods-table"
-          style={{ width: '100%', margin: '20px auto' }} // Center the table and reduce width
-        />
+          <Table
+            dataSource={filteredData}
+            columns={columns}
+            rowKey={(record) => record.productName + record.dateManufactured}
+            pagination={false}
+            className="finished-goods-table"
+            style={{ width: '100%', margin: '20px auto' }}
+          />
+        </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

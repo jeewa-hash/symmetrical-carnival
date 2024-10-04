@@ -1,35 +1,33 @@
-// packages
 import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import path from "path";
-import cors  from 'cors';
+import cors from 'cors';
 
- // Adjust the origin as needed
-
-
-// utiles
+// Utilities
 import OrderRoute from './routes/OrderRoute.js';
 import connectDB from "./config/db.js";
 import productRoutes from "./routes/ProductRoutes.js";
-import categoryRoutes from "./routes/CategoryRoutes.js"
+import categoryRoutes from "./routes/CategoryRoutes.js";
 import uploadRoutes from './routes/UploadRoutes.js';
-import RawMaterial from './routes/RawMaterialRoute.js'
+import RawMaterial from './routes/RawMaterialRoute.js';
 import FinishingGoodsRoute from './routes/FinishingGoodsRoute.js';
-import RawMaterialRequest from './routes/RawMaterialRequestRoute.js'
-import MonthlyEvalution from './routes/MonthlyEvalutionRoute.js'
+import RawMaterialRequest from './routes/RawMaterialRequestRoute.js';
+import MonthlyEvalution from './routes/MonthlyEvalutionRoute.js';
+import ProductionRequest from './routes/ProductionRequestRoute.js';
 
-// load the .env file
+
+// Load the .env file
 dotenv.config();
 const port = process.env.PORT || 5000;
 
-connectDB()
+connectDB();
 
-const app = express()
+const app = express();
 
-app.use(express.json())
-app.use(express.urlencoded( { extended: true } ))
-app.use(cookieParser())
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(cors({
     origin: 'http://localhost:5173', // Change this to your frontend's URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods
@@ -37,15 +35,17 @@ app.use(cors({
 }));
 
 app.use("/api/category", categoryRoutes);
-app.use("/api/products" , productRoutes);
+app.use("/api/products", productRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/order", OrderRoute);
 app.use("/api/rawMaterial", RawMaterial);
 app.use('/api/finishingGoods', FinishingGoodsRoute);
 app.use('/api/rawMaterialRequest', RawMaterialRequest);
 app.use('/api/monthlyEvaluation', MonthlyEvalution);
+app.use('/api/productionRequest', ProductionRequest);
+
 
 const __dirname = path.resolve();
-app.use("/uploads/products", express.static(path.join(__dirname + '/uploads/products')));
+app.use("/uploads/products", express.static(path.join(__dirname, '/uploads/products')));
 
 app.listen(port, () => console.log(`server running on port: ${port}`));

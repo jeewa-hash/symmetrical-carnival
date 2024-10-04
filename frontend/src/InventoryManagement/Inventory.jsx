@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, InputNumber, Button, Table, Modal } from 'antd'; // Import Modal
+import { Form, Input, InputNumber, Button, Table, Modal, Select } from 'antd';
 import axios from 'axios';
 import Header from '../Shared/Header';
 import Footer from '../Shared/Footer';
-import './Inventory.css'; // You can add custom styles here if needed.
+import backgroundImage from '../image/design.png'; // Adjust the path accordingly
+
+const { Option } = Select;
 
 const Inventory = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +13,7 @@ const Inventory = () => {
     quantity: 0,
     unitPrice: 0,
     totalValue: 0,
+    unitMeasurement: 'meter', // Default unit
   });
 
   const [inventoryList, setInventoryList] = useState([]);
@@ -94,6 +97,7 @@ const Inventory = () => {
       quantity: 0,
       unitPrice: 0,
       totalValue: 0,
+      unitMeasurement: 'meter',
     });
     form.resetFields(); // Reset the form fields using form instance
   };
@@ -120,112 +124,170 @@ const Inventory = () => {
       key: 'totalValue',
     },
     {
+      title: 'Unit Measurement',
+      dataIndex: 'unitMeasurement',
+      key: 'unitMeasurement',
+    },
+    {
       title: 'Actions',
       key: 'actions',
       render: (_, __, index) => (
-        <>
+        <div style={{ display: 'flex', justifyContent: 'space-between', width: '150px' }}>
           <Button type="primary" onClick={() => handleEdit(index)}>
             Edit
           </Button>
-          <Button type="primary" danger style={{ marginLeft: '8px' }} onClick={() => handleDelete(index)}>
+          <Button type="primary" danger onClick={() => handleDelete(index)}>
             Delete
           </Button>
-        </>
+        </div>
       ),
     },
   ];
 
   return (
-    <div>
+    <div
+      className="flex flex-col min-h-screen relative"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       <Header />
-      <div className="inventory-container">
-        <h1 className="form-heading">Raw Materials</h1>
-        <Form
-          form={form} // Attach the form instance
-          layout="vertical"
-          onValuesChange={handleFormChange}
-          onFinish={handleSubmit}
-          className="inventory-form"
-        >
-          <Form.Item
-            label="Material Name"
-            name="materialName"
-            rules={[{ required: true, message: 'Please input the material name!' },
-            {
-              pattern: /^[A-Za-z\s]+$/,
-              message: 'Material Name can only contain letters and spaces!',
-            },
-            ]}
+
+      <div className="flex-1 flex justify-center items-center relative">
+        <div className="max-w-2xl w-full bg-pink-100 bg-opacity-80 backdrop-blur-lg rounded-lg shadow-xl p-10 border border-gray-200 space-y-6 z-10">
+          <h2 className="text-4xl font-bold text-purple-600 mb-4 text-center">
+            Inventory Management
+          </h2>
+
+          <Form
+            form={form} // Attach the form instance
+            layout="vertical"
+            onValuesChange={handleFormChange}
+            onFinish={handleSubmit}
+            className="space-y-4"
           >
-            <Input
-              placeholder="Enter Material Name"
-              onKeyPress={(e) => {
-                if (!/^[A-Za-z\s]+$/.test(e.key)) {
-                  e.preventDefault();
-                }
-              }}
-            />
-          </Form.Item>
+            <Form.Item
+              label="Material Name"
+              name="materialName"
+              rules={[
+                { required: true, message: 'Please input the material name!' },
+                { pattern: /^[A-Za-z\s]+$/, message: 'Material Name can only contain letters and spaces!' },
+              ]}
+            >
+              <Input
+                placeholder="Enter Material Name"
+                onKeyPress={(e) => {
+                  if (!/^[A-Za-z\s]+$/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </Form.Item>
 
-          <Form.Item
-            label="Quantity"
-            name="quantity"
-            rules={[{ required: true, message: 'Please input the quantity!' }, { type: 'number', min: 1, message: 'Quantity must be a positive number!' }]}
-          >
-            <InputNumber
-              min={1}
-              placeholder="Enter Quantity"
-              style={{ width: '100%' }}
-              onKeyPress={(e) => {
-                if (!/[0-9]/.test(e.key)) {
-                  e.preventDefault();
-                }
-              }}
-            />
-          </Form.Item>
+            <Form.Item
+              label="Quantity"
+              name="quantity"
+              rules={[
+                { required: true, message: 'Please input the quantity!' },
+                { type: 'number', min: 1, message: 'Quantity must be a positive number!' },
+              ]}
+            >
+              <InputNumber
+                min={1}
+                placeholder="Enter Quantity"
+                style={{ width: '100%' }}
+                className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                onKeyPress={(e) => {
+                  if (!/[0-9]/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+              />
+            </Form.Item>
 
-          <Form.Item
-            label="Unit Price"
-            name="unitPrice"
-            rules={[{ required: true, message: 'Please input the unit price!' }, { type: 'number', min: 0, message: 'Unit Price cannot be negative!' }]}
-          >
-            <InputNumber
-              min={0}
-              step={0.01}
-              placeholder="Enter Unit Price"
-              style={{ width: '100%' }}
-              onKeyPress={(e) => {
-                if (!/[0-9.]/.test(e.key)) {
-                  e.preventDefault();
-                }
-              }}
-            />
-          </Form.Item>
+            <Form.Item
+              label="Unit Price"
+              name="unitPrice"
+              rules={[
+                { required: true, message: 'Please input the unit price!' },
+                { type: 'number', min: 0, message: 'Unit Price cannot be negative!' },
+              ]}
+            >
+              <InputNumber
+                min={0}
+                step={0.01}
+                placeholder="Enter Unit Price"
+                style={{ width: '100%' }}
+                className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                onKeyPress={(e) => {
+                  if (!/[0-9.]/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+              />
+            </Form.Item>
 
-          <Form.Item label="Total Value">
-            <InputNumber name="totalValue" value={formData.totalValue} disabled style={{ width: '100%' }} />
-          </Form.Item>
+            <Form.Item
+              label="Unit Measurement"
+              name="unitMeasurement"
+              rules={[{ required: true, message: 'Please select a unit of measurement!' }]}
+            >
+              <Select
+                placeholder="Select Unit"
+                className="w-full h-10"
+                onChange={(value) => setFormData({ ...formData, unitMeasurement: value })}
+              >
+                <Option value="meter">Meter</Option>
+                <Option value="cm">Centimeter</Option>
+                <Option value="yard">Yard</Option>
+                <Option value="kilogram">Kilogram</Option>
+                <Option value="piece">Piece</Option>
+              </Select>
+            </Form.Item>
 
-          <Button type="primary" htmlType="submit" style={{ backgroundColor: '#ff6f61', borderColor: '#ff6f61', marginBottom: '20px' }}>
-            {isEditing ? 'Update' : 'Submit'}
-          </Button>
-        </Form>
+            <Form.Item label="Total Value">
+              <InputNumber
+                name="totalValue"
+                value={formData.totalValue}
+                disabled
+                style={{ width: '100%' }}
+                className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </Form.Item>
 
-        <div className="table-container">
+            <div className="flex justify-center">
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ backgroundColor: '#ff6f61', borderColor: '#ff6f61' }}
+                className="bg-purple-600 text-white rounded-lg px-4 py-2 hover:bg-purple-700"
+              >
+                {isEditing ? 'Update Material' : 'Add Material'}
+              </Button>
+            </div>
+          </Form>
+
           <Input
             placeholder="Search by Material Name"
-            value={searchQuery}
             onChange={handleSearch}
-            style={{ marginBottom: '1rem' }}
+            className="w-full h-10 border border-gray-300 p-1 rounded-lg mt-4"
           />
+
           <Table
-            columns={columns}
             dataSource={filteredList}
-            rowKey={(record) => record._id} // Assuming each material has an _id field
+            columns={columns}
+            rowKey="_id"
+            className="mt-4"
             pagination={{ pageSize: 5 }}
+            bordered
+            scroll={{ x: true }} // Enable horizontal scrolling for the table
           />
         </div>
       </div>
+
       <Footer />
     </div>
   );

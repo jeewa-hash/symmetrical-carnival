@@ -25,9 +25,8 @@ export const getMaterialById = async (req, res) => {
 
 // Add a new material
 export const createMaterial = async (req, res) => {
-    console.log("res",req.body)
   try {
-    const { materialName, quantity, unitPrice } = req.body;
+    const { materialName, quantity, unitPrice, unitMeasurement } = req.body;
     const totalValue = quantity * unitPrice;
 
     const newMaterial = new Material({
@@ -35,26 +34,25 @@ export const createMaterial = async (req, res) => {
       quantity,
       unitPrice,
       totalValue,
+      unitMeasurement,
     });
 
     await newMaterial.save();
     res.status(201).json(newMaterial);
   } catch (error) {
-
-    res.status(500).json({ message: error});
+    res.status(500).json({ message: 'Error creating material', error });
   }
 };
 
 // Update a material by ID
 export const updateMaterial = async (req, res) => {
-    console.log("req",req.body)
   try {
-    const { materialName, quantity, unitPrice } = req.body;
+    const { materialName, quantity, unitPrice, unitMeasurement } = req.body;
     const totalValue = quantity * unitPrice;
 
     const updatedMaterial = await Material.findByIdAndUpdate(
       req.params.id,
-      { materialName, quantity, unitPrice, totalValue },
+      { materialName, quantity, unitPrice, totalValue, unitMeasurement },
       { new: true }
     );
 
@@ -64,7 +62,7 @@ export const updateMaterial = async (req, res) => {
 
     res.status(200).json(updatedMaterial);
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json({ message: 'Error updating material', error });
   }
 };
 

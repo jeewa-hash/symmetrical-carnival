@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, InputNumber, Button, Table, Select, Modal, message } from 'antd'; // Added Modal and message
+import { Form, Input, InputNumber, Button, Table, Select, Modal, message } from 'antd';
 import Header from "../Shared/Header";
 import Footer from "../Shared/Footer";
 import axios from 'axios';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable'; // Import the autotable plugin
-import './MonthlyEvalution.css';
+import 'jspdf-autotable';
+import backgroundImage from '../image/design.png'; // Adjust the path according to your structure
+import moment from 'moment';
+import logo from '../image/logo.png';
 
-const { Option } = Select; // Destructuring Option
-const { confirm } = Modal; // Destructuring Modal confirm
+const { Option } = Select;
+const { confirm } = Modal;
 
 const MonthlyEvaluation = () => {
   const [formData, setFormData] = useState([]);
@@ -55,10 +57,10 @@ const MonthlyEvaluation = () => {
       title: 'Actions',
       key: 'actions',
       render: (_, record) => (
-        <>
+        <div style={{ display: 'flex', gap: '8px' }}>
           <Button type="primary" onClick={() => onEdit(record)}>Edit</Button>
-          <Button type="primary" danger style={{ marginLeft: '8px' }} onClick={() => onDelete(record)}>Delete</Button>
-        </>
+          <Button type="primary" danger onClick={() => onDelete(record)}>Delete</Button>
+        </div>
       ),
     },
   ];
@@ -77,7 +79,7 @@ const MonthlyEvaluation = () => {
     }
   };
 
-  const onDelete = (key) => {
+  const onDelete = (record) => {
     confirm({
       title: 'Are you sure you want to delete this record?',
       content: 'This action cannot be undone.',
@@ -86,8 +88,8 @@ const MonthlyEvaluation = () => {
       cancelText: 'No',
       onOk: async () => {
         try {
-          await axios.delete(`http://localhost:4000/api/monthlyEvaluation/${key._id}`); // Fixed template literal syntax
-          const newData = formData.filter(item => item._id !== key._id);
+          await axios.delete(`http://localhost:4000/api/monthlyEvaluation/${record._id}`);
+          const newData = formData.filter(item => item._id !== record._id);
           setFormData(newData);
           message.success('Record deleted successfully');
         } catch (error) {
@@ -112,7 +114,7 @@ const MonthlyEvaluation = () => {
     const recordData = { ...values, totalInventory };
 
     try {
-      const response = await axios.put(`http://localhost:4000/api/monthlyEvaluation/${editingRecord._id}`, recordData); // Fixed template literal syntax
+      const response = await axios.put(`http://localhost:4000/api/monthlyEvaluation/${editingRecord._id}`, recordData);
       const updatedData = formData.map(item =>
         item._id === editingRecord._id ? { ...item, ...response.data } : item
       );
@@ -136,139 +138,157 @@ const MonthlyEvaluation = () => {
 
   const downloadPDF = () => {
     const doc = new jsPDF();
-    doc.text("Monthly Evaluation Report", 14, 16);
-    
-    const tableColumn = ["Month", "Total Raw Materials", "Total Finished Goods", "Total Inventory"];
-    const tableRows = formData.map(record => [
-      record.month,
-      record.totalRawMaterials,
-      record.totalFinishedGoods,
-      record.totalInventory,
-    ]);
-
-    doc.autoTable(tableColumn, tableRows, { startY: 20 });
-    doc.save("monthly_evaluation_report.pdf");
+  
+    const img = new Image();
+    img.src = logo; // Ensure 'logo' is defined and accessible
+    img.onload = () => {
+      // Add the logo to the PDF
+      doc.addImage(img, "PNG", 14, 10, 40, 20); // Adjust the position and size as needed
+  
+      // Set font size for company name
+      
+      doc.setFontSize(20);
+      doc.text("Bear Works Lanka", 60, 20); // Position for company name (adjusted to be in the same row as the logo)
+  
+      // Set font size for report title
+      doc.setFontSize(16);
+      doc.text("Monthly Evaluation Report", 14, 40); // Position for report title
+  
+      // Define table columns and rows
+      const tableColumn = ["Month", "Total Raw Materials", "Total Finished Goods", "Total Inventory"];
+      const tableRows = formData.map(record => [
+        record.month,
+        record.totalRawMaterials,
+        record.totalFinishedGoods,
+        record.totalInventory,
+      ]);
+  
+      // Draw the table starting below the report title
+      doc.autoTable(tableColumn, tableRows, { startY: 50 }); // Adjust startY based on the title position
+      doc.save("monthly_evaluation_report.pdf");
+    };
   };
+  
 
-  // Filtered data based on search query
   const filteredData = formData.filter(item =>
     item.month.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div>
+    <div
+      className="flex flex-col min-h-screen relative"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       <Header />
 
-      <div className="inventory-evaluation-container">
-        <h1 className="form-heading">Monthly Inventory Evaluation</h1>
-
-        <Button
-          type="primary"
-          onClick={downloadPDF}
-          style={{ backgroundColor: '#ff6f61', borderColor: '#ff6f61', marginBottom: '20px' }}
-        >
-          Download Monthly Evaluation
-        </Button>
-
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={isEditing ? saveEdit : onFinish}
-          onValuesChange={handleValuesChange}
-          className="inventory-evaluation-form"
-        >
-          <Form.Item
-            label="Month"
-            name="month"
-            rules={[{ required: true, message: 'Please select a month' }]}
-          >
-            <Select placeholder="Select month" style={{ width: '100%' }}>
-              <Option value="January">January</Option>
-              <Option value="February">February</Option>
-              <Option value="March">March</Option>
-              <Option value="April">April</Option>
-              <Option value="May">May</Option>
-              <Option value="June">June</Option>
-              <Option value="July">July</Option>
-              <Option value="August">August</Option>
-              <Option value="September">September</Option>
-              <Option value="October">October</Option>
-              <Option value="November">November</Option>
-              <Option value="December">December</Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            label="Total Raw Materials"
-            name="totalRawMaterials"
-            rules={[{ required: true, message: 'Please enter total raw materials' }, { type: 'number', message: 'Total Raw Materials must be a number' }]}
-          >
-            <InputNumber
-              min={0}
-              placeholder="Enter total raw materials"
-              style={{ width: '100%' }}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Total Finished Goods"
-            name="totalFinishedGoods"
-            rules={[{ required: true, message: 'Please enter total finished goods' }, { type: 'number', message: 'Total Finished Goods must be a number' }]}
-          >
-            <InputNumber
-              min={0}
-              placeholder="Enter total finished goods"
-              style={{ width: '100%' }}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Total Inventory"
-            name="totalInventory"
-            rules={[{ required: true, message: 'Please enter total inventory' }]}
-          >
-            <InputNumber min={0} placeholder="Enter total inventory" disabled style={{ width: '100%' }} />
-          </Form.Item>
+      <div className="flex-1 flex justify-center items-center relative">
+        <div className="max-w-2xl w-full bg-white bg-opacity-80 backdrop-blur-lg rounded-lg shadow-xl p-10 border border-gray-200 space-y-6 z-10">
+          <h1 className="form-heading text-4xl font-bold text-purple-600 mb-4 text-center">Monthly Inventory Valuation</h1>
 
           <Button
             type="primary"
-            htmlType="submit"
+            onClick={downloadPDF}
             style={{ backgroundColor: '#ff6f61', borderColor: '#ff6f61', marginBottom: '20px' }}
           >
-            {isEditing ? 'Update' : 'Submit'}
+            Download Monthly Evaluation
           </Button>
-          {isEditing && (
-            <Button type="default" onClick={() => {
-              setIsEditing(false);
-              setEditingRecord(null);
-              form.resetFields();
-            }} style={{ width: '100%', marginTop: '10px' }}>
-              Cancel
+
+          <Input
+            placeholder="Search by month"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{ marginBottom: '20px', width: '100%' }}
+          />
+
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={isEditing ? saveEdit : onFinish}
+            onValuesChange={handleValuesChange}
+            className="space-y-4"
+          >
+            <Form.Item
+              label="Month"
+              name="month"
+              rules={[{ required: true, message: 'Please select a month' }]}
+            >
+              <Select placeholder="Select month" style={{ width: '100%' }}>
+                <Option value="January">January</Option>
+                <Option value="February">February</Option>
+                <Option value="March">March</Option>
+                <Option value="April">April</Option>
+                <Option value="May">May</Option>
+                <Option value="June">June</Option>
+                <Option value="July">July</Option>
+                <Option value="August">August</Option>
+                <Option value="September">September</Option>
+                <Option value="October">October</Option>
+                <Option value="November">November</Option>
+                <Option value="December">December</Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              label="Total Raw Materials"
+              name="totalRawMaterials"
+              rules={[{ required: true, message: 'Please enter total raw materials' }, { type: 'number', message: 'Total Raw Materials must be a number' }]}
+            >
+              <InputNumber
+                min={0}
+                placeholder="Enter total raw materials"
+                style={{ width: '100%' }}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Total Finished Goods"
+              name="totalFinishedGoods"
+              rules={[{ required: true, message: 'Please enter total finished goods' }, { type: 'number', message: 'Total Finished Goods must be a number' }]}
+            >
+              <InputNumber
+                min={0}
+                placeholder="Enter total finished goods"
+                style={{ width: '100%' }}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Total Inventory"
+              name="totalInventory"
+              rules={[{ required: true, message: 'Please enter total inventory' }]}
+            >
+              <InputNumber min={0} placeholder="Enter total inventory" disabled style={{ width: '100%' }} />
+            </Form.Item>
+
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ backgroundColor: '#ff6f61', borderColor: '#ff6f61', marginBottom: '20px' }}
+            >
+              {isEditing ? 'Update' : 'Submit'}
             </Button>
-          )}
-        </Form>
+            {isEditing && (
+              <Button type="default" onClick={() => {
+                setIsEditing(false);
+                setEditingRecord(null);
+                form.resetFields();
+              }}>
+                Cancel
+              </Button>
+            )}
+          </Form>
 
-        {/* Search bar for filtering */}
-        <Input
-          placeholder="Search by Month"
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          style={{
-            margin: '20px 0',
-            width: '100%',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            borderRadius: '4px',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-          }}
-        />
-
-        <Table
-          columns={columns}
-          dataSource={filteredData} // Use filtered data
-          pagination={{ pageSize: 10 }}
-          rowKey="_id"
-        />
+          <Table
+            dataSource={filteredData}
+            columns={columns}
+            rowKey="_id"
+            pagination={{ pageSize: 5 }}
+          />
+        </div>
       </div>
 
       <Footer />

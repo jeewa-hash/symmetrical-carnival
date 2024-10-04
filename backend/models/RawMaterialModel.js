@@ -21,6 +21,11 @@ const RawMaterialSchema = new mongoose.Schema({
     required: true,
     min: 0,
   },
+  unitMeasurement: {
+    type: String,
+    required: true,
+    enum: ['meter', 'cm', 'yard', 'kilogram', 'piece'], // Add the valid measurement units
+  },
 });
 
 const Material = mongoose.model('RawMaterial', RawMaterialSchema);
