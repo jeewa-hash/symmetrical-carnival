@@ -1,29 +1,12 @@
-import express from "express";
-import formidable from "express-formidable";
-const productRoutes = express.Router();
+import express from 'express';
+import { addProduction, fetchAllProductions, updateProduction, deleteProduction, fetchProductionById } from '../controllers/ProductController.js';
 
-import { addProduct, fetchProducts, fetchProductById, updateProduct, deleteProduct } from "../controllers/ProductController.js"; 
+const ProductionRoute = express.Router();
 
-// addProduct
-productRoutes.post("/" , formidable(), addProduct);
+ProductionRoute.get("/", fetchAllProductions);
+ProductionRoute.post("/", express.json(), addProduction);
+ProductionRoute.get("/:productionId", fetchProductionById);
+ProductionRoute.put("/:productionId", express.json(), updateProduction);
+ProductionRoute.delete("/:productionId", deleteProduction);
 
-// fetchProducts
-productRoutes.get("/" , fetchProducts);
-
-// fetchProductById
-productRoutes.get("/:id" , fetchProductById);
-
-// updateProductDetails
-productRoutes.put("/:id" , formidable(), updateProduct);
-
-// removeProduct
-productRoutes.delete("/:id" , deleteProduct);
-
-
-// fetchAllProducts
-// addProductReview
-// fetchTopProducts
-// fetchNewProducts
-// filterProducts
-
-export default productRoutes;
+export default ProductionRoute;

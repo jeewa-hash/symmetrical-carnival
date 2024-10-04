@@ -1,0 +1,192 @@
+/* General styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #e9ecef; /* Light gray background for better contrast */
+  margin: 0;
+  padding: 0;
+}
+
+/* Header and Footer styles */
+header, footer {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Order list container */
+.order-list-container {
+  max-width: 1200px; /* Maximum width of the container */
+  margin: auto; /* Center the container */
+  padding: 20px; /* Add padding */
+}
+
+/* Title styles */
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #343a40; /* Dark gray for better contrast */
+}
+
+/* Search input styles */
+.search-group {
+  margin-bottom: 1rem;
+}
+
+/* Form input styles */
+.form-input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%; /* Make inputs full width */
+}
+
+/* Button styles */
+.add-item-button, .submit-button, .close-button,
+.view-button, .edit-button, .delete-button {
+  padding: 10px 16px; /* General padding */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.add-item-button, .view-button {
+  background-color: #007bff; /* Primary button color */
+  color: white;
+}
+
+.edit-button {
+  background-color: #ffc107; /* Warning button color */
+  color: white;
+}
+
+.delete-button {
+  background-color: #dc3545; /* Danger button color */
+  color: white;
+}
+
+.add-item-button:hover, .view-button:hover {
+  background-color: #0056b3; /* Darken on hover */
+}
+
+.edit-button:hover {
+  background-color: #e0a800; /* Darken on hover */
+}
+
+.delete-button:hover {
+  background-color: #c82333; /* Darken on hover */
+}
+
+/* Orders table styles */
+.orders-table-container {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  overflow: hidden; /* Round corners for the table container */
+  box-shadow: none; /* Remove shadow for a flatter look */
+  margin-bottom: 1rem; /* Add margin below the table */
+}
+
+.orders-table {
+  width: 100%; /* Set the table width to 100% */
+  border-collapse: separate; /* Separate borders for clearer distinction */
+  border-spacing: 0 10px; /* Add spacing between rows */
+}
+
+.orders-table th, .orders-table td {
+  padding: 0.75rem; /* Increase padding for better spacing */
+  border: 1px solid #ddd; /* Set border color */
+  text-align: left; /* Align text to the left */
+  background-color: white; /* Set background to white for cells */
+}
+
+/* Add hover effect for table rows */
+.orders-table tr:hover {
+  background-color: #f1f1f1; /* Change background on hover for better distinction */
+}
+
+.orders-table th {
+  background-color: #f2f2f2; /* Light gray background for header */
+  font-weight: bold; /* Bold header text */
+}
+
+/* Items table styles */
+.items-table {
+  width: 100%; /* Set the table width to 100% */
+  border-collapse: collapse; /* Collapse borders for a cleaner look */
+}
+
+.items-table th, .items-table td {
+  padding: 0.5rem; /* Padding for items table */
+  border: 1px solid #ddd; /* Set border color */
+}
+
+/* Button container styles */
+.button-container {
+  display: flex; /* Use flexbox to align buttons in a line */
+  gap: 10px; /* Space between buttons */
+  margin-top: 1rem; /* Space above the button container */
+}
+
+/* Modal styles */
+.modal {
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 600px; /* Adjust width as necessary */
+  max-width: 90%; /* Responsive max width */
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: white; /* Ensure modal background is white */
+}
+
+/* Close button style */
+.close-button {
+  cursor: pointer;
+  color: #333;
+}
+
+/* Form styles in modals */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.form-select, .form-input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+}
+
+/* Submit button in modals */
+.submit-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.submit-button:hover {
+  background-color: #218838; /* Darken on hover */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .orders-table {
+    font-size: 14px; /* Adjust font size for smaller screens */
+  }
+  .modal-content {
+    width: 90%; /* Make modals full width on small screens */
+  }
+}

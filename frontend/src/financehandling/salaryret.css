@@ -1,0 +1,104 @@
+/* SalaryDetailRetrievePage.css */
+.salary-detail-container {
+  max-width: 90%; /* Responsive width */
+  margin: auto; /* Center the container */
+  padding: 2rem; /* Increased padding for better spacing */
+  background-color: #ffffff; /* White background */
+  border-radius: 0.75rem; /* Rounded corners */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+.salary-detail-container h2 {
+  font-size: 2rem; /* Larger heading */
+  font-weight: bold;
+  color: #1f2937; /* Dark text color */
+  text-align: center; /* Center align the heading */
+  margin-bottom: 1.5rem; /* Space below heading */
+}
+
+.salary-detail-container input[type="text"],
+.salary-detail-container select {
+  width: 100%; /* Full width inputs */
+  padding: 0.75rem; /* Increased padding for inputs */
+  margin-bottom: 1rem; /* Space below each input */
+  border: 1px solid #d1d5db; /* Border color */
+  border-radius: 0.5rem; /* Rounded corners */
+  font-size: 1rem; /* Font size for better readability */
+  transition: border-color 0.3s; /* Smooth transition on focus */
+}
+
+.salary-detail-container input[type="text"]:focus,
+.salary-detail-container select:focus {
+  border-color: #4f46e5; /* Highlight border on focus */
+  outline: none; /* Remove default outline */
+}
+
+.salary-detail-container .message {
+  margin-bottom: 1rem; /* Space below message */
+  padding: 1rem; /* Padding for the message box */
+  background-color: #d1fae5; /* Light green background for success messages */
+  color: #065f46; /* Dark green text color */
+  border-radius: 0.5rem; /* Rounded corners */
+  text-align: center; /* Center text in message */
+}
+
+.salary-detail-table {
+  width: 100%; /* Full width table */
+  border-collapse: collapse; /* Collapse borders */
+  margin-top: 1rem; /* Space above table */
+}
+
+.salary-detail-table th,
+.salary-detail-table td {
+  padding: 1rem; /* Padding for cells */
+  text-align: left; /* Align text to left */
+  border-bottom: 1px solid #e5e7eb; /* Light gray border */
+}
+
+.salary-detail-table th {
+  background-color: #f3f4f6; /* Light gray header */
+  font-size: 1.1rem; /* Slightly larger font for headers */
+  font-weight: bold; /* Bold text for headers */
+  color: #374151; /* Darker text color */
+}
+
+.salary-detail-table tbody tr:hover {
+  background-color: #f9fafb; /* Light gray background on row hover */
+}
+
+.salary-detail-table button {
+  padding: 0.5rem 1rem; /* Padding for buttons */
+  border: none; /* Remove border */
+  border-radius: 0.5rem; /* Rounded corners */
+  font-size: 0.9rem; /* Button text size */
+  cursor: pointer; /* Pointer cursor */
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
+.salary-detail-table button:nth-child(1) {
+  background-color: #4f46e5; /* View button color */
+  color: white; /* Text color */
+}
+
+.salary-detail-table button:nth-child(1):hover {
+  background-color: #4338ca; /* Darker on hover */
+}
+
+.salary-detail-table button:nth-child(2) {
+  background-color: #3b82f6; /* Edit button color */
+  color: white; /* Text color */
+  margin: 0 0.5rem; /* Space between buttons */
+}
+
+.salary-detail-table button:nth-child(2):hover {
+  background-color: #2563eb; /* Darker on hover */
+}
+
+.salary-detail-table button:nth-child(3) {
+  background-color: #dc2626; /* Delete button color */
+  color: white; /* Text color */
+}
+
+.salary-detail-table button:nth-child(3):hover {
+  background-color: #991b1b; /* Darker on hover */
+}

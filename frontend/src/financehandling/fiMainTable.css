@@ -1,0 +1,113 @@
+/* FinanceManager.css */
+.finance-manager {
+    max-width: 90%; /* Adjusted for better responsiveness */
+    margin: auto;
+    padding: 2rem; /* Increased padding */
+    background-color: #ffffff; /* White background for better contrast */
+    border-radius: 0.75rem; /* More rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Softer shadow */
+  }
+  
+  .finance-manager__title {
+    font-size: 2.5rem; /* Increased title size */
+    font-weight: bold;
+    color: #1f2937; /* Text color */
+    text-align: center;
+    margin-bottom: 2rem; /* Increased bottom margin */
+  }
+  
+  .finance-manager__form {
+    margin-bottom: 2.5rem; /* Increased bottom margin */
+  }
+  
+  .finance-manager__section-title {
+    font-size: 2rem; /* Increased section title size */
+    font-weight: bold;
+    color: #111827; /* Darker text for visibility */
+    margin-bottom: 1rem; /* Space below section titles */
+  }
+  
+  .finance-manager__input-label {
+    display: block;
+    font-size: 1rem; /* Increased label size */
+    font-weight: medium;
+    color: #374151; /* Text color */
+    margin-bottom: 0.5rem; /* Added margin below labels */
+  }
+  
+  .finance-manager__input {
+    margin-top: 0.5rem; /* Adjusted top margin */
+    display: block;
+    width: 100%;
+    padding: 0.75rem; /* Added padding for better touch targets */
+    border: 1px solid #d1d5db; /* Border color */
+    border-radius: 0.5rem; /* More rounded corners */
+    transition: border-color 0.2s; /* Smooth transition for focus state */
+  }
+  
+  .finance-manager__input:focus {
+    border-color: #4f46e5; /* Border color on focus */
+    outline: none; /* Remove default outline */
+  }
+  
+  .finance-manager__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem; /* Increased padding */
+    border: none;
+    font-size: 1rem; /* Increased button text size */
+    font-weight: medium;
+    border-radius: 0.5rem; /* More rounded corners */
+    background-color: #4f46e5; /* Primary color */
+    color: white; /* Text color */
+    cursor: pointer;
+    transition: background-color 0.2s; /* Smooth transition for hover state */
+  }
+  
+  .finance-manager__button:hover {
+    background-color: #38aaca; /* Darker color on hover */
+  }
+  
+  .finance-manager__summary {
+    margin-bottom: 2.5rem; /* Increased bottom margin */
+    padding: 1.5rem; /* Added padding */
+    background-color: #f3f4f6; /* Light background for summary section */
+    border-radius: 0.5rem; /* Rounded corners */
+  }
+  
+  .finance-manager__table {
+    overflow-x: auto;
+  }
+  
+  .finance-manager__table-header {
+    background-color: #e5e7eb; /* Light gray for header */
+  }
+  
+  .finance-manager__table-cell {
+    padding: 1rem 2rem; /* Increased padding */
+    text-align: left;
+    font-size: 0.875rem; /* Increased font size */
+    font-weight: medium;
+    color: #6b7280; /* Gray color */
+  }
+  
+  .finance-manager__table-row {
+    background-color: #ffffff; /* White background for rows */
+    transition: background-color 0.2s; /* Smooth transition for hover state */
+  }
+  
+  .finance-manager__table-row:hover {
+    background-color: #f9fafb; /* Light gray on hover */
+  }
+  
+  .finance-manager__delete-button {
+    color: #dc2626; /* Red for delete */
+    cursor: pointer;
+    font-weight: bold; /* Bold text for visibility */
+  }
+  
+  .finance-manager__delete-button:hover {
+    color: #991b1b; /* Darker red on hover */
+  }
+  

@@ -2,7 +2,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-import path from "path";
+import path from 'path';
+import cors from 'cors';
+
 
 // utils (correct the spelling from "utiles" to "utils")
 import connectDB from "./config/db.js";
@@ -26,7 +28,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Define routes
 app.use("/api/category", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/upload", uploadRoutes);
