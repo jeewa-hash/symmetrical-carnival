@@ -1,13 +1,11 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import ui from '../image/1.png'; // Import the image
-import Header from '../Shared/Header';
-import Footer from '../Shared/Footer';
 
 function OrderAndProduction() {
   return (
     <div className="flex flex-col h-screen font-poppins bg-gradient-to-br from-purple-100 via-white to-pink-50">
-      <Header />
+     
 
       
       
@@ -62,6 +60,7 @@ function OrderAndProduction() {
                 report
               </button>
             </Link>
+            
           </div>
         </div>
 
@@ -76,7 +75,7 @@ function OrderAndProduction() {
         </div>
       </div>
     
-      <Footer />
+      
     </div>
    
   );

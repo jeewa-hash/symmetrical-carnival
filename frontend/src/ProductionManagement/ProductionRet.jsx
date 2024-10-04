@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import Header from '../Shared/Header';
-import Footer from '../Shared/Footer';
+import  jsPDF from 'jspdf';
+//import autoTable from 'jspdf-autotable';
 
 const ProductionList = () => {
   const [productions, setProductions] = useState([]);
@@ -185,7 +183,7 @@ const ProductionList = () => {
 
   return (
     <div className="purple-500 min-h-screen">
-      <Header />
+     
       <div className="container mx-auto px-4 py-8">
         <h2 className="text-3xl font-bold mb-6 text-center text-black">Production List</h2>
 
@@ -378,7 +376,7 @@ const ProductionList = () => {
           </div>
         )}
       </div>
-      <Footer />
+      
     </div>
   );
 };

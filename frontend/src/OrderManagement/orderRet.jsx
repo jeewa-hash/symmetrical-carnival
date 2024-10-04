@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Header from '../Shared/Header';
-import Footer from '../Shared/Footer';
+
 import backgr from '../image/bbk.png';
 
 const availableItems = [
@@ -188,7 +187,7 @@ const formatDate = (dateString) => {
 
 return (
   <div className="purple-500 min-h-screen">
-    <Header />
+    
     <div
       className="relative min-h-screen flex flex-col justify-center"
       style={{
@@ -420,7 +419,7 @@ return (
       </div>
     )}
 </div>
-    <Footer />
+    
   </div>
 );
 };

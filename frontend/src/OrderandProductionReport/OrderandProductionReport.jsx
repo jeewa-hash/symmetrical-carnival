@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import Header from '../Shared/Header';
-import Footer from '../Shared/Footer';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
@@ -122,7 +118,7 @@ const ProductionList = () => {
 
   return (
     <div className="bg-pink-50 min-h-screen">
-      <Header />
+      
       <div className="container mx-auto px-4 py-8">
         <h2 className="text-3xl font-bold mb-6 text-center text-pink-600">Production Data</h2>
 
@@ -145,7 +141,7 @@ const ProductionList = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      
     </div>
   );
 };

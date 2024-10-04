@@ -58,6 +58,11 @@ const HomePage = () => {
                 Finance Handling
               </button>
             </Link>
+            <Link to="orderandproductionui">
+              <button className="w-full py-4 px-8 text-xl font-semibold text-white bg-gradient-to-r from-orange-300 to-pink-300 rounded-full hover:from-orange-200 hover:to-pink-200 transform hover:scale-105 transition duration-300 ease-in-out shadow-lg">
+                Order and Production Handling
+              </button>
+            </Link>
     </div>
   </div>
 

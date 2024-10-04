@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Header from '../Shared/Header';
-import Footer from '../Shared/Footer';
+
 
 // Utility function to get today's date in YYYY-MM-DD format
 const getTodayDate = () => {
@@ -198,7 +197,7 @@ const ProductionManagementSystem = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <Header /> {/* Header Component */}
+      
       <div className="flex-1 flex justify-center items-center">
         <div className="w-full max-w-3xl p-10 bg-white border border-gray-200 rounded-lg shadow-xl space-y-6">
           <h1 className="text-4xl font-bold text-center text-purple-600">Production Planning System</h1>
@@ -209,6 +208,7 @@ const ProductionManagementSystem = () => {
             >
               View Productions
             </button>
+            <button onClick={() => navigate('/orders')}>View All Order Bills</button>
           </div>
           <BatchSelection selectedBatch={selectedBatch} onBatchSelect={handleBatchSelect} />
           <ProductionPlanningForm
@@ -222,7 +222,7 @@ const ProductionManagementSystem = () => {
           {successMessage && <div className="text-center mt-4 text-green-500">{successMessage}</div>}
         </div>
       </div>
-      <Footer /> {/* Footer Component */}
+   
     </div>
   );
 };

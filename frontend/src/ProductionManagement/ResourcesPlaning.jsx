@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Header from '../Shared/Header';
-import Footer from '../Shared/Footer';
+
 import backgroundImage from '../image/bkv.mp4'; // Adjust the path according to your folder structure
 
 const ResourcePlanningSystem = () => {
@@ -88,7 +87,7 @@ const ResourcePlanningSystem = () => {
         Your browser does not support the video tag.
       </video>
 
-      <Header className="relative z-10" /> {/* Adjust z-index for header */}
+      
       
       <div className="flex-1 flex justify-center items-center z-10"> {/* Set z-index for content */}
         <div className="max-w-xl w-full bg-pink-100 rounded-lg shadow-xl p-10 border border-gray-200 space-y-6">
@@ -175,7 +174,7 @@ const ResourcePlanningSystem = () => {
         </div>
       </div>
 
-      <Footer className="relative z-10" /> {/* Adjust z-index for footer */}
+      
     </div>
   );
 };

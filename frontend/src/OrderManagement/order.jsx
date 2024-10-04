@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import Header from '../Shared/Header';
-import Footer from '../Shared/Footer';
+
 import backgroundImage from '../image/design.png'; // Adjust the path according to your folder structure
 
 // Initialize order with today's date
@@ -147,7 +146,7 @@ const OrderCreation = () => {
   return (
     <div className="flex flex-col min-h-screen relative">
 
-      <Header />
+      
 
       <div
         className="flex-1 flex justify-center items-center bg-cover bg-center relative"
@@ -294,7 +293,7 @@ const OrderCreation = () => {
         </div>
       </div>
 
-      <Footer />
+     
     </div>
   );
 };

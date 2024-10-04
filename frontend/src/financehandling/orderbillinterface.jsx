@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './oderbillcal.css'; // Ensure your CSS file reflects the new class names
+import Orderret from '../viewslidebar/viewtashorder';
 
 const initialOrder = {
   orderItems: [{ name: '', quantity: 0, price: 0, totalPrice: 0 }],
@@ -24,6 +25,7 @@ const OrderCreation = () => {
   const [order, setOrder] = useState(initialOrder);
   const [orders, setOrders] = useState([]);
   const [message, setMessage] = useState('');
+  const [isSlideViewOpen, setIsSlideViewOpen] = useState(false);
 
   const handleInputChange = (event, field) => {
     let value = event.target.value;
@@ -33,7 +35,6 @@ const OrderCreation = () => {
       // Allow letters, numbers, spaces, '/', and ',' characters
       value = value.replace(/[^a-zA-Z0-9/, ]/g, '');
     }
-    
 
     setOrder({ ...order, [field]: value });
   };
@@ -56,6 +57,33 @@ const OrderCreation = () => {
     newOrderItems[index].totalPrice = newOrderItems[index].quantity * newOrderItems[index].price;
 
     setOrder({ ...order, orderItems: newOrderItems });
+  };
+
+  const handleShopNameKeyPress = async (event) => {
+    if (event.key === 'Enter') {
+      const shopName = event.target.value.trim();
+
+      try {
+        const response = await axios.get(`/api/order?shopName=${shopName}`);
+        const shopData = response.data;
+
+        if (shopData.length > 0) {
+          const fetchedShop = shopData[0];
+
+          // Update order with fetched shop details
+          setOrder({
+            ...order,
+            shopName: fetchedShop.shopName,
+            shopAddress: fetchedShop.address,
+          });
+        } else {
+          setMessage('Shop not found. Please check the shop name.');
+        }
+      } catch (error) {
+        console.error('Error fetching shop details:', error);
+        setMessage('Error fetching shop details. Please try again.');
+      }
+    }
   };
 
   const handleAddItem = () => {
@@ -81,7 +109,7 @@ const OrderCreation = () => {
     event.preventDefault();
 
     const totalAmount = calculateTotalAmount();
-    const newOrder = { ...order, totalAmount }; // Use the default date stored in the order state
+    const newOrder = { ...order, totalAmount };
 
     try {
       const response = await axios.post('/api/billorder', newOrder);
@@ -92,6 +120,10 @@ const OrderCreation = () => {
       console.error('Error saving order:', error);
       setMessage('Error creating order. Please try again.');
     }
+  };
+
+  const toggleSlideView = () => {
+    setIsSlideViewOpen(!isSlideViewOpen);
   };
 
   return (
@@ -106,6 +138,7 @@ const OrderCreation = () => {
               type="text"
               value={order.shopName}
               onChange={(e) => handleInputChange(e, 'shopName')}
+              onKeyPress={handleShopNameKeyPress}
               required
             />
           </div>
@@ -115,7 +148,7 @@ const OrderCreation = () => {
               id="shopAddress"
               type="text"
               value={order.shopAddress}
-              onChange={(e) => handleInputChange(e, 'shopAddress')}
+              readOnly
             />
           </div>
           <div className="order-creation__form-group">
@@ -124,7 +157,7 @@ const OrderCreation = () => {
               id="orderDate"
               type="date"
               value={order.orderDate}
-              readOnly // Make the date input read-only
+              readOnly
               onFocus={(e) => e.target.blur()} // Prevent the date picker from opening.
             />
           </div>
@@ -135,8 +168,8 @@ const OrderCreation = () => {
               <tr>
                 <th>Item Name</th>
                 <th>Quantity</th>
-                <th>Price (Rs)</th> {/* Updated for Price */}
-                <th>Total Price (Rs)</th> {/* Updated for Total Price */}
+                <th>Price (Rs)</th>
+                <th>Total Price (Rs)</th>
               </tr>
             </thead>
             <tbody>
@@ -174,7 +207,7 @@ const OrderCreation = () => {
                       required
                     />
                   </td>
-                  <td>Rs {item.totalPrice.toFixed(2)}</td> {/* Updated for Total Price */}
+                  <td>Rs {item.totalPrice.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
@@ -186,12 +219,40 @@ const OrderCreation = () => {
             Cancel Last Item
           </button>
 
-          <div>Total Amount: Rs {calculateTotalAmount().toFixed(2)}</div> {/* Updated for Total Amount */}
+          <div>Total Amount: Rs {calculateTotalAmount().toFixed(2)}</div>
           <button type="submit">Create Order Bill</button>
         </form>
         {message && <div className="order-creation__message">{message}</div>}
         <button onClick={() => navigate('/orders')}>View All Order Bills</button>
-      </div>
+        <button onClick={toggleSlideView} className="mt-2 bg-blue-300 text-black px-4 py-2 rounded hover:bg-blue-400">
+        View Orders
+      </button>
+
+      {/* Slide View for Orderret */}
+      {isSlideViewOpen && (
+        <div className="fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 backdrop-blur-sm z-50">
+          <div className="bg-white w-96 h-full shadow-lg overflow-y-auto">
+            
+            {/* Close button bar */}
+            <div className="flex justify-between items-center bg-gray-100 p-4 border-b">
+              <h2 className="text-lg font-semibold">Orders</h2>
+              <button
+                onClick={toggleSlideView}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+              >
+                Close
+              </button>
+            </div>
+
+            {/* Slide content */}
+            <div className="p-4">
+              <Orderret />
+            </div>
+          </div>
+        </div>
+      )}
+
+    </div>
     </div>
   );
 };

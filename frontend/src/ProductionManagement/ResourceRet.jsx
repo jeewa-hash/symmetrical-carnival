@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import jsPDF from 'jspdf'; // Importing jsPDF library
-import Header from '../Shared/Header';
-import Footer from '../Shared/Footer';
 
 const ResourcesRetrieve = () => {
   const [resources, setResources] = useState([]);
@@ -79,7 +77,7 @@ const ResourcesRetrieve = () => {
 
   return (
     <div className="purple-500 min-h-screen"> {/* Changed to bg-purple-500 for the page background */}
-      <Header />
+      
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6 text-center text-black">Resources List</h1>
 
@@ -176,7 +174,7 @@ const ResourcesRetrieve = () => {
           <p className="text-center text-gray-600">No resources available.</p>
         )}
       </div>
-      <Footer />
+      
     </div>
   );
 };

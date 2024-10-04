@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Header from '../Shared/Header';
-import Footer from '../Shared/Footer';
+
 
 const ProductionCostCalculator = () => {
   const [productName, setProductName] = useState('');
@@ -170,7 +169,7 @@ const ProductionCostCalculator = () => {
 
   return (
     <div className="flex flex-col min-h-screen relative">
-      <Header />
+      
       <div className="flex-1 flex justify-center items-center z-10">
         <div className="max-w-xl w-full bg-pink-100 rounded-lg shadow-xl p-10 border border-gray-200 space-y-6">
           <h2 className="text-4xl font-bold text-purple-600 mb-4 text-center">Production Cost Calculator</h2>
@@ -286,7 +285,8 @@ const ProductionCostCalculator = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      
+      
     </div>
   );
 };

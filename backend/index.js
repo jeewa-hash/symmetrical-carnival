@@ -3,8 +3,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import cors from 'cors';
-import path from 'path';
-import cors from 'cors';
+
 
 import connectDB from "./config/db.js";
 import productRoutes from "./routes/ProductRoutes.js";
@@ -13,6 +12,10 @@ import uploadRoutes from './routes/UploadRoutes.js';
 import OrderRoute from './routes/OrderRoute.js';
 import ResourceRoute from './routes/ResourceRoute.js';
 import productionCostRoute from './routes/productionCostRoute.js';
+import salarycalculatorrouter from './routes/salarycalculatorrouter.js';
+import billOrderRouter from './routes/billOrderRouter.js';
+
+
 
 dotenv.config();
 const port = process.env.PORT || 5000;
@@ -33,6 +36,10 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/order", OrderRoute);
 app.use("/api/resource", ResourceRoute);
 app.use("/api/productionCost", productionCostRoute);
+app.use('/api/salarycalculates', salarycalculatorrouter);
+app.use('/api/billorder', billOrderRouter);
+
+
 
 
 
