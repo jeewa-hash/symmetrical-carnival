@@ -183,7 +183,17 @@ const FinishGoods = () => {
               name="quantity"
               rules={[{ required: true, message: 'Please enter the quantity' }]}
             >
-              <InputNumber min={1} placeholder="Enter quantity" style={{ width: '100%' }} className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+              <InputNumber
+                min={1}
+                placeholder="Enter Quantity"
+                style={{ width: '100%' }}
+                className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                onKeyPress={(e) => {
+                  if (!/[0-9]/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+              />
             </Form.Item>
 
             <Form.Item
@@ -191,7 +201,17 @@ const FinishGoods = () => {
               name="unitPrice"
               rules={[{ required: true, message: 'Please enter the unit price' }]}
             >
-              <InputNumber min={0} step={0.01} placeholder="Enter unit price" style={{ width: '100%' }} className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+            <InputNumber
+                min={1}
+                placeholder="Enter price"
+                style={{ width: '100%' }}
+                className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                onKeyPress={(e) => {
+                  if (!/[0-9]/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+              />
             </Form.Item>
 
             <Form.Item

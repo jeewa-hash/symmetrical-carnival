@@ -45,7 +45,7 @@ function Interface() {
             </Link>
             <Link to="/productionrequest">
               <button className="w-full py-1 px-4 text-lg font-semibold text-white bg-gradient-to-r from-pink-300 to-purple-300 rounded-full hover:from-pink-200 hover:to-purple-200 transform hover:scale-105 transition duration-300 ease-in-out shadow-lg">
-                Production Report
+                Production Request
               </button>
             </Link>
             

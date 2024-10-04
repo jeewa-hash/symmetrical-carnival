@@ -15,7 +15,7 @@ import FinishingGoodsRoute from './routes/FinishingGoodsRoute.js';
 import RawMaterialRequest from './routes/RawMaterialRequestRoute.js';
 import MonthlyEvalution from './routes/MonthlyEvalutionRoute.js';
 import ProductionRequest from './routes/ProductionRequestRoute.js';
-
+import AuthRoutes from './routes/AuthRoutes.js';
 
 // Load the .env file
 dotenv.config();
@@ -29,7 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:5173', // Change this to your frontend's URL
+    origin: 'http://localhost:5174', // Change this to your frontend's URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods
     credentials: true // Optional, if you need to support cookies
 }));
@@ -43,6 +43,7 @@ app.use('/api/finishingGoods', FinishingGoodsRoute);
 app.use('/api/rawMaterialRequest', RawMaterialRequest);
 app.use('/api/monthlyEvaluation', MonthlyEvalution);
 app.use('/api/productionRequest', ProductionRequest);
+app.use('/api/auth', AuthRoutes);
 
 
 const __dirname = path.resolve();

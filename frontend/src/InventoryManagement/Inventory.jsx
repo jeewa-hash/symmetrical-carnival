@@ -158,7 +158,7 @@ const Inventory = () => {
       <div className="flex-1 flex justify-center items-center relative">
         <div className="max-w-2xl w-full bg-pink-100 bg-opacity-80 backdrop-blur-lg rounded-lg shadow-xl p-10 border border-gray-200 space-y-6 z-10">
           <h2 className="text-4xl font-bold text-purple-600 mb-4 text-center">
-            Inventory Management
+            Raw Materials
           </h2>
 
           <Form

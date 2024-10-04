@@ -191,9 +191,15 @@ const RawMaterialRequest = () => {
               ]}
             >
               <InputNumber
-                min={0}
-                placeholder="Enter quantity"
+                min={1}
+                placeholder="Enter Quantity"
                 style={{ width: '100%' }}
+                className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                onKeyPress={(e) => {
+                  if (!/[0-9]/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
               />
             </Form.Item>
 

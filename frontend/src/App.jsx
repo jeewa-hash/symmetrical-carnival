@@ -20,6 +20,9 @@ import RawMaterialRequest from './InventoryManagement/RawMaterialRequest';
 import MonthlyEvaluation from './InventoryManagement/MonthlyEvalution';
 import ProductionRequest from './InventoryManagement/ProductionRequest';
 
+import LoginForm from './Login/loginForm';
+
+
 
 const App = () => {
   return (
@@ -44,6 +47,8 @@ const App = () => {
          <Route path="/rawmaterialrequest" element={<RawMaterialRequest />} />
          <Route path="/monthlyevaluation" element={<MonthlyEvaluation />} />
          <Route path="/productionrequest" element={<ProductionRequest />} />
+
+         <Route path="/loginform" element={<LoginForm />} />
 
         </Routes>
       </div>
