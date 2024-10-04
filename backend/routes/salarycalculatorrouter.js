@@ -1,15 +1,19 @@
-import express from "express";
-const salarycalculatorrouter = express.Router();
+import express from 'express';
+import { 
+  createEmployeeSalary, 
+  getEmployeeSalaries, 
+  getEmployeeSalaryById, 
+  updateEmployeeSalary, 
+  deleteEmployeeSalary 
+} from '../controllers/salarycalculatecontroller.js';
 
-import { addSalary, fetchAllSalary, getAllSalaryCalculatesById  } from "../controllers/salarycalculatecontroller.js";
+const router = express.Router();
 
-// addsalary
-salarycalculatorrouter.post("/" , express.json(), addSalary);
+// Define your routes
+router.post('/', express.json(), createEmployeeSalary);  // Create a new employee salary record
+router.get('/', getEmployeeSalaries);                    // Get all employee salary records
+router.get('/:id', getEmployeeSalaryById);               // Get a single employee salary record by ID
+router.put('/:id', updateEmployeeSalary);                // Update an employee salary record by ID
+router.delete('/:id', deleteEmployeeSalary);             // Delete an employee salary record by ID
 
-//fetchsalary
-salarycalculatorrouter.get("/" , fetchAllSalary);
-
-//fetchsalarybyid
-salarycalculatorrouter.get("/:id" , getAllSalaryCalculatesById);
-
-export default salarycalculatorrouter
+export default router;

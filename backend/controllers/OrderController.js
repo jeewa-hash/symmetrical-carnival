@@ -1,50 +1,62 @@
-
-
-
 import OrderModel from "../models/OrderModel.js";
 
 
-//fetch all orders 
-
-export const fetchAllOrders = async (req, res) => {
+// Create a new order
+export const createOrder = async (req, res) => {
     try {
-        const { status } = req.query; // Example: filter by status if passed as a query parameter
-        const orders = status ? await OrderModel.find({ status }) : await OrderModel.find();
-        res.json(orders);
+        const newOrder = new OrderModel(req.body);
+        await newOrder.save();
+        res.status(201).json(newOrder);
     } catch (error) {
-        res.status(400).json({ msg: "No order record found", error });
+        res.status(400).json({ message: error.message });
     }
-
 };
 
-
-
-
-// Add a new order
-export const addOrder = async (req, res) => {
+// Get all orders
+export const getAllOrders = async (req, res) => {
     try {
-        // Extract fields from the request body
-        const { shopName, orderDate, status, orderItems } = req.body;
-
-        // Validate the required fields
-        if (!shopName) return res.status(400).json({ error: "Shop name is required" });
-        if (!orderDate) return res.status(400).json({ error: "Order date is required" });
-        if (!status) return res.status(400).json({ error: "Status is required" });
-        if (!orderItems || !Array.isArray(orderItems) || orderItems.length === 0) {
-            return res.status(400).json({ error: "At least one order item is required" });
-        }
-
-        // Create a new Order document
-        const order = new OrderModel({ shopName, orderDate, status, orderItems });
-
-        // Save the order record to the database
-        await order.save();
-
-        // Respond with success message
-        res.status(201).json({ msg: "Order added successfully", order });
+        const orders = await OrderModel.find();
+        res.status(200).json(orders);
     } catch (error) {
-        // Log the error and respond with a failure message
-        console.error(error);
-        res.status(400).json({ msg: "Failed to add order", error });
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Get a specific order by ID
+export const getOrderById = async (req, res) => {
+    try {
+        const order = await OrderModel.findById(req.params.id);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+        res.status(200).json(order);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Update an order by ID
+export const updateOrder = async (req, res) => {
+    try {
+        const order = await OrderModel.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+        res.status(200).json(order);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+// Delete an order by ID
+export const deleteOrder = async (req, res) => {
+    try {
+        const order = await OrderModel.findByIdAndDelete(req.params.id);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+        res.status(204).send(); // No content to send back
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };

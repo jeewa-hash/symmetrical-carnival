@@ -1,0 +1,101 @@
+/* EditOrderModal.css */
+
+/* Modal styles */
+.modal {
+    position: fixed; /* Fixed position for modal */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for centering */
+    background-color: #ffffff; /* White background */
+    border-radius: 0.5rem; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Soft shadow */
+    padding: 2rem; /* Padding for the modal */
+    width: 90%; /* Responsive width */
+    max-width: 600px; /* Max width for larger screens */
+    z-index: 1000; /* Keep modal on top */
+  }
+  
+  /* Modal heading */
+  .modal h2 {
+    font-size: 2rem; /* Larger font size */
+    color: #1f2937; /* Dark text color */
+    text-align: center; /* Centered heading */
+    margin-bottom: 1.5rem; /* Space below heading */
+  }
+  
+  /* Form styles */
+  .modal form {
+    display: flex; /* Flexbox layout */
+    flex-direction: column; /* Stack elements vertically */
+  }
+  
+  /* Label styles */
+  .modal label {
+    margin-bottom: 0.5rem; /* Space below labels */
+    font-weight: bold; /* Bold text */
+    color: #374151; /* Dark text color */
+  }
+  
+  /* Input field styles */
+  .modal input[type="text"],
+  .modal input[type="date"],
+  .modal input[type="number"] {
+    padding: 0.75rem; /* Padding for inputs */
+    border: 1px solid #e5e7eb; /* Light gray border */
+    border-radius: 0.25rem; /* Rounded corners */
+    margin-bottom: 1rem; /* Space below inputs */
+    font-size: 1rem; /* Font size */
+    color: #374151; /* Dark text color */
+  }
+  
+  /* Input field focus effect */
+  .modal input:focus {
+    outline: none; /* Remove outline */
+    border-color: #4f46e5; /* Highlight border color on focus */
+  }
+  
+  /* Order item styles */
+  .order-item {
+    border: 1px solid #e5e7eb; /* Light gray border */
+    border-radius: 0.25rem; /* Rounded corners */
+    padding: 1rem; /* Padding for order item */
+    margin-bottom: 1rem; /* Space below order items */
+    background-color: #f9fafb; /* Light gray background */
+  }
+  
+  /* Button styles */
+  .modal button {
+    padding: 0.75rem; /* Padding for buttons */
+    border: none; /* Remove border */
+    border-radius: 0.5rem; /* Rounded corners */
+    font-size: 1rem; /* Font size */
+    cursor: pointer; /* Pointer cursor */
+    margin-top: 1rem; /* Space above buttons */
+    transition: background-color 0.3s, transform 0.3s; /* Transition effects */
+  }
+  
+  /* Submit button styles */
+  .modal button[type="submit"] {
+    background-color: #4f46e5; /* Submit button color */
+    color: white; /* Text color */
+  }
+  
+  /* Cancel button styles */
+  .modal button[type="button"] {
+    background-color: #dc2626; /* Cancel button color */
+    color: white; /* Text color */
+  }
+  
+  /* Button hover effects */
+  .modal button:hover {
+    transform: translateY(-2px); /* Lift effect */
+  }
+  
+  .modal button[type="submit"]:hover {
+    background-color: #4338ca; /* Darker on hover */
+  }
+  
+  .modal button[type="button"]:hover {
+    background-color: #991b1b; /* Darker on hover */
+  }
+  

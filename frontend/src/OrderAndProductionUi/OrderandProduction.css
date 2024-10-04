@@ -45,8 +45,8 @@
 
 /* Common button styling */
 .ctaButton, .resourceButton, .reportButton {
-  padding: 10px 25px;
-  font-size: 12px;
+  padding: 10px 20px;
+  font-size: 10px;
   color: #ffffff;
   background-color: #ff6f61;
   border: none;

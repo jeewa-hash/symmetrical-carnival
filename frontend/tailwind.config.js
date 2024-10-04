@@ -1,8 +1,25 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    
+    "./src/OrderAndProductionUi/OrderAndProduction.jsx",
+    "./src/OrderManagement/order.jsx",
+     "./src/OrderManagement/orderRet.jsx",
+     "./src/ProductionManagement/productionPlaning.jsx",
+     "./src/ProductionManagement/ResourcesPlaning.jsx",
+     "./src/ProductionManagement/productionCost.jsx",
+     "./src/ProductionManagement/ProductionRet.jsx",
+     "./src/ProductionManagement/ResourceRet.js",
+     "./src/OrderAndProductionUi/AboutUs.jsx",
+     "./src/OrderandProductionReport/OrderandProductionReport.jsx",
+     "./src/financehandling/financeuserinterface.jsx",
+     "./src/Shared/Header.jsx",
+     "./src/Shared/Footer.jsx",
+     "./src/Home/Home.jsx",
+     "./src/financehandling/salarycalculateinterface.jsx",
+     "./src/financehandling/vieworderinvoice.jsx",
+     "./src/financehandling/billorderret.jsx",
+     "./src/financehandling/fiMainTable.jsx",
   ],
   theme: {
     extend: {},

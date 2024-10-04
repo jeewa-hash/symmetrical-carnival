@@ -1,0 +1,99 @@
+/* Basic Modal Styles */
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    width: 100%;
+    animation: fadeIn 0.3s;
+  }
+  
+  /* Close Button Styles */
+  .close-button {
+    cursor: pointer;
+    color: #ff0000;
+    font-size: 20px;
+    float: right;
+  }
+  
+  /* Heading Styles */
+  h2 {
+    margin-top: 0;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+  }
+  
+  /* Error Message Styles */
+  .error {
+    color: #ff0000;
+    margin-bottom: 15px;
+  }
+  
+  /* Form Styles */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .form-group input:read-only {
+    background-color: #f9f9f9; /* Light grey for read-only fields */
+    color: #666; /* Grey text for read-only fields */
+  }
+  
+  /* Button Styles */
+  .update-button {
+    background-color: #4caf50; /* Green */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .update-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+  }
+  
+  /* Animation for Modal */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.7);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  

@@ -1,0 +1,331 @@
+/* General container styles */
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f0f4f8; /* Softer background color */
+  margin: 0;
+  padding: 0;
+}
+
+/* Button Styles */
+.btn-download-batch {
+  background-color: green; /* Change to green */
+  color: white; /* Text color */
+  border: none; /* Remove default border */
+  padding: 10px 20px; /* Add some padding */
+  cursor: pointer; /* Change cursor to pointer */
+  border-radius: 5px; /* Optional: Add rounded corners */
+  font-size: 16px; /* Adjust font size */
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
+.btn-download-batch:hover {
+  background-color: darkgreen; /* Darker green on hover */
+}
+
+.btn-download,
+.btn-view,
+.btn-edit,
+.btn-delete,
+.btn-submit {
+  padding: 8px 16px; /* Adjusted padding for a smaller button */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+}
+
+.btn-download {
+  background-color: #0ac482; /* Default color */
+  color: white;
+}
+
+.btn-download:hover {
+  background-color: #4158aa; /* Hover color */
+}
+
+.btn-view {
+  background-color: #244fbc; /* Teal for view */
+  color: white;
+}
+
+.btn-view:hover {
+  background-color: #160f7d; /* Darker teal on hover */
+}
+
+.btn-edit {
+  background-color: #ffc107; /* Yellow for edit */
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #e0a800; /* Darker yellow on hover */
+}
+
+.btn-delete {
+  background-color: #dc3545; /* Red for delete */
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+.btn-submit {
+  background-color: #28a745; /* Green for submit */
+  color: white;
+}
+
+.btn-submit:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+.btn-download.disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* PDF Button Styles */
+.pdf-button {
+  background-color: #dc3545; /* Distinctive color */
+  color: white;
+  padding: 8px 16px; /* Same size as other buttons */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+}
+
+.pdf-button:hover {
+  background-color: #c82333; /* Darker shade on hover */
+}
+
+/* Edit Form Styles */
+.edit-form-container,
+.view-form-container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.edit-form-title,
+.view-form-title {
+  text-align: center;
+  color: #e7b256;
+  font-size: 1.8em;
+  margin-bottom: 20px;
+}
+
+.edit-form,
+.view-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-form label,
+.view-form label {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.edit-form input[type="text"],
+.edit-form input[type="date"],
+.edit-form select,
+.view-form p {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.edit-form button[type="submit"],
+.view-form button {
+  background-color: #28a745; /* Green */
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.edit-form button[type="submit"]:hover,
+.view-form button:hover {
+  background-color: #218838; /* Darker green for edit form */
+}
+
+/* View Form Button Color */
+.view-form button {
+  background-color: #007bff; /* Blue */
+}
+
+.view-form button:hover {
+  background-color: #0056b3; /* Darker blue */
+}
+
+/* Error message styles */
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+/* Production List Styles */
+.production-list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+  border-radius: 8px;
+  background-color: #ffffff; /* Card effect */
+}
+
+/* Title styles */
+h2, h3 {
+  color: #343a40;
+  margin-bottom: 10px;
+}
+
+.production-list-container h2 {
+  color: rgb(255, 149, 0); /* Set the color to orange */
+  text-align: center; /* Center the text */
+  font-size: 2em; /* Increase the font size */
+  margin: 20px 0; /* Add some margin for spacing */
+  font-weight: bold; 
+}
+
+/* Search input styles */
+.search-container {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px; /* Reduced padding for smaller height */
+  border: 2px solid #007bff; /* Primary color border */
+  border-radius: 5px;
+  transition: border-color 0.3s;
+  font-size: 14px; /* Smaller font size */
+}
+
+.search-input:focus {
+  border-color: #0056b3; /* Darker primary color on focus */
+}
+
+/* Batch section styles */
+.batch-section {
+  margin-bottom: 30px;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s; /* Smooth shadow transition */
+}
+
+.batch-section:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+.batch-title {
+  margin-top: 0;
+  font-size: 1.6em; /* Increase font size */
+  color: #007bff;
+  font-weight: bold;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
+}
+
+/* Table styles */
+.production-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.production-list-table th,
+.production-list-table td {
+  border: 1px solid #dee2e6;
+  padding: 12px;
+  text-align: left;
+  transition: background-color 0.3s; /* Smooth hover transition */
+}
+
+.production-list-table th {
+  background-color: #e9ecef; /* Lighter header */
+  color: #495057;
+}
+
+.production-list-table tr:hover {
+  background-color: #f1f1f1; /* Row hover effect */
+}
+
+/* Modal styles */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  width: 400px;
+  border-radius: 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  background-color: #ffffff; /* White background */
+  padding: 20px; /* Add padding */
+  position: relative; /* Position relative for pseudo-element */
+}
+
+.modal-content::before {
+  content: '';
+  position: absolute;
+  top: 10px; /* Adjust for emboss effect */
+  left: 10px; /* Adjust for emboss effect */
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.1); /* Slightly off-white */
+  border-radius: 5px;
+  z-index: -1; /* Place behind modal content */
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+}
+
+.close-button {
+  font-size: 1.5em;
+  cursor: pointer;
+  color: #b5676e; /* Close button color */
+}
+
+/* Form styles */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ced4da;
+  border-radius: 5px;
+  transition: border-color 0.3s;
+}
+
+.form-input:focus {
+  border-color: #103706; /* Focus effect */
+}
+
+.border-red-500 {
+  border-color: #dc3545;
+}
+
+.text-red-500 {
+  color: #dc3545;
+}
+
+.modal-title {
+  font-size: 1.5em;
+  color: #343a40; /* Modal title color */
+  margin-bottom: 20px; /* Space below title */
+}

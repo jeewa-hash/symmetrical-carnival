@@ -16,15 +16,23 @@ import RawMaterialRequest from './routes/RawMaterialRequestRoute.js';
 import MonthlyEvalution from './routes/MonthlyEvalutionRoute.js';
 import ProductionRequest from './routes/ProductionRequestRoute.js';
 import AuthRoutes from './routes/AuthRoutes.js';
+import OrderRoute from './routes/OrderRoute.js';
+import ResourceRoute from './routes/ResourceRoute.js';
+import productionCostRoute from './routes/productionCostRoute.js';
+import salarycalculatorrouter from './routes/salarycalculatorrouter.js';
+import billOrderRouter from './routes/billOrderRouter.js';
 
-// Load the .env file
+
+
 dotenv.config();
 const port = process.env.PORT || 5000;
 
 connectDB();
+connectDB();
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -44,6 +52,13 @@ app.use('/api/rawMaterialRequest', RawMaterialRequest);
 app.use('/api/monthlyEvaluation', MonthlyEvalution);
 app.use('/api/productionRequest', ProductionRequest);
 app.use('/api/auth', AuthRoutes);
+app.use("/api/resource", ResourceRoute);
+app.use("/api/productionCost", productionCostRoute);
+app.use('/api/salarycalculates', salarycalculatorrouter);
+app.use('/api/billorder', billOrderRouter);
+
+
+
 
 
 const __dirname = path.resolve();

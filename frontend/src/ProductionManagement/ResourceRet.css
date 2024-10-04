@@ -1,0 +1,183 @@
+/* Combined CSS for Modal and Resource Management */
+
+/* Container styles */
+.container {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+  background-color: #ffffff; /* Card effect */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Title styles */
+.title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: rgb(255, 149, 0); /* Set the color to orange */
+  font-weight: bold; /* Bold title */
+}
+
+/* Resource table styles */
+.resource-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.resource-table th,
+.resource-table td {
+  border: 1px solid #dee2e6; /* Light border */
+  padding: 12px;
+  text-align: left;
+  transition: background-color 0.3s; /* Smooth hover transition */
+}
+
+.resource-table th {
+  background-color: #e9ecef; /* Lighter header */
+  font-weight: bold;
+  color: #495057; /* Darker text for contrast */
+}
+
+.resource-table tr:nth-child(even) {
+  background-color: #f9f9f9; /* Even row background */
+}
+
+.resource-table tr:hover {
+  background-color: #f1f1f1; /* Row hover effect */
+}
+
+/* Error message styles */
+.error {
+  color: #dc3545; /* Error color */
+  text-align: center;
+  margin: 10px 0;
+}
+
+/* Button styles */
+.update-button {
+  background-color: #28a745; /* Green */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  text-align: center;
+  display: inline-block;
+  font-size: 1rem;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.update-button:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+}
+
+.view-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff; /* White background */
+  padding: 20px; /* Add padding */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  border-radius: 8px;
+  max-width: 400px; /* Adjusted width */
+  width: 90%;
+  transition: transform 0.3s;
+  animation: scale-in 0.3s ease-in-out; /* Animation for appearance */
+}
+
+.modal-content {
+  padding: 20px; /* Add padding */
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation keyframes */
+@keyframes scale-in {
+  from {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Additional button styles */
+.close-button,
+.action-button,
+.delete-button {
+  background-color: #007bff; /* Blue color */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 5px;
+  transition: background-color 0.3s;
+}
+
+.close-button:hover,
+.action-button:hover,
+.delete-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Delete button styles */
+.delete-button {
+  background-color: #dc3545; /* Red for delete action */
+}
+
+.delete-button:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .resource-table {
+    font-size: 14px; /* Smaller font size for mobile */
+  }
+
+  .view-modal {
+    width: 90%; /* Full width for mobile */
+  }
+}
+
+/* Modal specific styles */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.error-text {
+  color: red;
+  font-size: 12px;
+}
+
+.btn-update, .btn-close {
+  margin-right: 10px;
+}
