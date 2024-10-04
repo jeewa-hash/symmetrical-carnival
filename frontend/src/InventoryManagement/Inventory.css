@@ -1,0 +1,78 @@
+/* General Form Styling */
+.inventory-container {
+    width: 100%;
+    padding: 40px; /* Increased padding for more space around the form */
+    box-sizing: border-box;
+    background-color: #f0f4f8; /* Light background color for the container */
+  }
+  
+  .item-form {
+    width: 100%;
+    max-width: 1000px; /* Increased max-width to make the form larger */
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff; /* White background for the form */
+  }
+  
+  .item-form .form-group {
+    margin-bottom: 20px; /* Increased margin for better spacing */
+  }
+  
+  .item-form label {
+    display: block;
+    font-size: 16px; /* Larger font size for labels */
+    font-weight: bold;
+    margin-bottom: 8px; /* Increased margin for better spacing */
+    color: #333; /* Dark color for better readability */
+  }
+  
+  .item-form input,
+  .item-form select {
+    width: 100%;
+    padding: 12px; /* Increased padding for a more comfortable input area */
+    font-size: 18px; /* Larger font size for input fields */
+    border: 1px solid #ccc; /* Slightly lighter border color */
+    border-radius: 6px; /* Rounded corners for inputs */
+    box-sizing: border-box;
+  }
+  
+  .item-form input:focus,
+  .item-form select:focus {
+    border-color: #0056b3; /* Darker border color on focus */
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.25); /* Enhanced focus shadow */
+  }
+  
+  .item-form button {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px; /* Larger font size for button */
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #0056b3; /* Darker blue for a more prominent button */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .item-form button:hover {
+    background-color: #004085; /* Darker blue on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .item-form button:active {
+    background-color: #003366; /* Even darker blue on active */
+  }
+  
+  /* Heading Styling */
+  .form-heading {
+    font-size: 28px; /* Larger font size for the heading */
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px; /* Increased margin for more space above the form */
+    text-align: center;
+  }
+  

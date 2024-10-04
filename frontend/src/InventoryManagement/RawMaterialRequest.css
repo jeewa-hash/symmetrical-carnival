@@ -1,0 +1,22 @@
+.raw-material-request-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-heading {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .raw-material-request-form .form-item {
+    margin-bottom: 16px; /* Adjust spacing between fields */
+  }
+  
+  .raw-material-request-table {
+    margin-top: 20px;
+  }
+  
