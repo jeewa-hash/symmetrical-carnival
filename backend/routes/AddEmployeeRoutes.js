@@ -1,27 +1,35 @@
 import express from 'express';
-import {
-    createEmployee,
-    getEmployees,
-    getEmployeeById,
-    updateEmployee,
-    deleteEmployee
-} from '../controllers/addEmployeeController.js';  // Ensure the correct path and case
+import EmployeeController from '../controllers/addEmployeeController.js';
 
 const EmployeeRoutes = express.Router();
 
+// Middleware to parse JSON body
+EmployeeRoutes.use(express.json());
+
 // Route to create a new employee
-EmployeeRoutes.post("/", express.json(), createEmployee);
+EmployeeRoutes.post("/", EmployeeController.createEmployee);
 
 // Route to get all employees
-EmployeeRoutes.get("/", getEmployees);
+EmployeeRoutes.get("/", EmployeeController.getAllEmployees);
 
 // Route to get an employee by ID
-EmployeeRoutes.get("/:id", getEmployeeById);
+EmployeeRoutes.get("/:id", EmployeeController.getEmployeeById);
 
 // Route to update an employee by ID
-EmployeeRoutes.put("/:id", express.json(), updateEmployee);
+EmployeeRoutes.put("/:id", EmployeeController.updateEmployee);
 
 // Route to delete an employee by ID
-EmployeeRoutes.delete("/:id", deleteEmployee);
+EmployeeRoutes.delete("/:id", EmployeeController.deleteEmployee);
+
+// Route to get employee count (added for your HR dashboard)
+EmployeeRoutes.get("/count", async (req, res) => {
+    try {
+        const count = await EmployeeController.getEmployeeCount(); // Make sure this function is implemented in your controller
+        res.json({ count });
+    } catch (error) {
+        console.error('Error fetching employee count:', error);
+        res.status(500).json({ message: 'Failed to fetch employee count' });
+    }
+});
 
 export default EmployeeRoutes;

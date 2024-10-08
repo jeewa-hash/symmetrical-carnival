@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import Header from '../Shared/Header';
-import Footer from '../Shared/Footer';
+
 import backgroundImage from '../image/BR.png'; // Update the path to your image
 
 const LoginForm = () => {
@@ -34,6 +33,14 @@ const LoginForm = () => {
             navigate('/inventoryui');
           } else if (values.email === 'senithrockz@gmail.com') {
             navigate('/finishgoods');
+          }else if (values.email === 'jkumarasekara@gmail.com') {
+            navigate('/financeui');
+          }else if (values.email === 'osheratashmi@gmail.com') {
+            navigate('/orderandproductionui');
+          }else if (values.email === 'yashirasarasi04@gmail.com') {
+            navigate('/supplierui');
+          }else if (values.email === 'gangulr30@gmail.com') {
+            navigate('/hrui');
           } else {
             message.error('User not authorized for this section.');
           }
@@ -58,7 +65,7 @@ const LoginForm = () => {
         height: '100vh', // Ensures the background covers the full height
       }}
     >
-      <Header />
+   
       <div className="flex-1 flex justify-center items-center">
         <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
           <h1 className="text-2xl font-bold text-center mb-6">{isLogin ? 'Login' : 'Register'}</h1>
@@ -96,7 +103,7 @@ const LoginForm = () => {
           </Form>
         </div>
       </div>
-      <Footer />
+      
     </div>
   );
 };

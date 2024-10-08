@@ -11,7 +11,7 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/dashboard-summary') 
+    fetch('/api/dashboard-summary') 
       .then(response => response.json())
       .then(data => setDashboardData(data))
       .catch(error => console.error('Error fetching dashboard data:', error));

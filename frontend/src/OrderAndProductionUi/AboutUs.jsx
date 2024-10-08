@@ -10,10 +10,10 @@ const AboutUs = () => {
 
         <section className="mb-12">
           <h2 className="text-3xl lg:text-4xl font-semibold text-gray-800 mb-6 text-center">
-            Welcome to [Your Company Name]!
+            Welcome to Bear Works Lanka!
           </h2>
           <p className="text-gray-600 text-lg lg:text-xl leading-relaxed text-center">
-            At [Your Company Name], we believe in the magic of imagination and the power of play. Established in [Year of Establishment],
+            At Bear Works Lanka, we believe in the magic of imagination and the power of play. Established in 1992,
             we are a family-run business dedicated to crafting high-quality, safe, and lovable soft toys that bring comfort and joy to both children and adults.
           </p>
         </section>
@@ -37,7 +37,7 @@ const AboutUs = () => {
         <section className="mb-12 bg-blue-50 rounded-lg p-8">
           <h2 className="text-2xl lg:text-3xl font-semibold text-blue-600 mb-4">Our Story</h2>
           <p className="text-gray-700 text-lg lg:text-xl leading-relaxed">
-            [Your Company Name] began with a passion for creativity and a love for toys. Our founder, [Founder’s Name], created the first soft toy for their child in [City/Region]. The heartfelt design quickly turned into a business after friends and family admired the hand-crafted toys.
+            Bear Works Lanka began with a passion for creativity and a love for toys. Our founder, Oshera K.A.T., created the first soft toy for their child in Kaduwela. The heartfelt design quickly turned into a business after friends and family admired the hand-crafted toys.
           </p>
         </section>
 
@@ -51,7 +51,7 @@ const AboutUs = () => {
         </section>
 
         <section className="bg-purple-50 rounded-lg p-8 text-center">
-          <h2 className="text-2xl lg:text-3xl font-semibold text-purple-600 mb-4">Join the [Your Company Name] Family</h2>
+          <h2 className="text-2xl lg:text-3xl font-semibold text-purple-600 mb-4">Join the Bear Works Lanka Family</h2>
           <p className="text-gray-700 text-lg lg:text-xl leading-relaxed">
             We’re so grateful to have you with us! Whether you’re buying for yourself, gifting to a loved one, or growing your collection, we’re thrilled to share our toys with you. Let’s spread joy, one soft toy at a time.
           </p>

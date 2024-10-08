@@ -118,23 +118,34 @@ const handleEditItemsChange = (index, event) => {
   setEditFormData({ ...editFormData, orderItems: updatedItems });
 };
 
-const handleAddNewItem = () => {
+const handleAddNewItem = () => {  //validation error
   const item = availableItems.find((item) => item.name === selectedNewItem);
+
+  // Check if newQuantity contains only positive digits (no negative numbers, strings, or special characters)
+  const isValidQuantity = /^[1-9]\d*$/.test(newQuantity); // Ensures it starts with 1-9 and is a positive integer
+
+  if (!isValidQuantity || newQuantity === '') {
+    alert('Quantity must be a valid positive number (no decimals or special characters).');
+    return;
+  }
+
   if (item) {
     setEditFormData((prevData) => ({
       ...prevData,
       orderItems: [
         ...prevData.orderItems,
-        { name: item.name, quantity: newQuantity },
+        { name: item.name, quantity: parseInt(newQuantity, 10) }, // Convert to number
       ],
     }));
-    setSelectedNewItem('');
-    setNewQuantity(1);
-    setShowNewItemInput(false);
+    setSelectedNewItem(''); // Clear the selected item
+    setNewQuantity('1'); // Reset quantity to a valid default value (positive digit)
+    setShowNewItemInput(false); // Hide the input field for adding new items
   } else {
     alert('Please select a valid item.');
   }
 };
+
+
 
 const handleDeleteItem = (index) => {
   const updatedItems = editFormData.orderItems.filter((_, i) => i !== index);
@@ -187,7 +198,7 @@ const formatDate = (dateString) => {
 
 return (
   <div className="purple-500 min-h-screen">
-    
+ 
     <div
       className="relative min-h-screen flex flex-col justify-center"
       style={{
@@ -365,41 +376,52 @@ return (
                   </button>
                 </div>
               ))}
-              {showNewItemInput ? (
-                <div className="flex items-center mb-2">
-                  <select
-                    value={selectedNewItem}
-                    onChange={(e) => setSelectedNewItem(e.target.value)}
-                    className="w-1/2 p-2 border border-gray-300 rounded"
-                  >
-                    <option value="">Select Item</option>
-                    {availableItems.map((item) => (
-                      <option key={item.id} value={item.name}>{item.name}</option>
-                    ))}
-                  </select>
-                  <input
-                    type="text"
-                    value={newQuantity}
-                    onChange={(e) => setNewQuantity(e.target.value)}
-                    className="ml-2 w-1/4 p-2 border border-gray-300 rounded"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddNewItem}
-                    className="ml-2 bg-green-500 text-white rounded px-2 py-1"
-                  >
-                    Add Item
-                  </button>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setShowNewItemInput(true)}
-                  className="mt-2 text-blue-500"
-                >
-                  + Add New Item
-                </button>
-              )}
+              {showNewItemInput ? (  // Show new item validation
+  <div className="flex items-center mb-2">
+    <select
+      value={selectedNewItem}
+      onChange={(e) => setSelectedNewItem(e.target.value)}
+      className="w-1/2 p-2 border border-gray-300 rounded"
+    >
+      <option value="">Select Item</option>
+      {availableItems.map((item) => (
+        <option key={item.id} value={item.name}>{item.name}</option>
+      ))}
+    </select>
+
+    <input
+      type="text"
+      value={newQuantity}
+      onChange={(e) => {
+        const value = e.target.value;
+
+        // Ensure the value contains only digits and is a positive integer
+        if (/^\d*$/.test(value)) {
+          setNewQuantity(value);
+        }
+      }}
+      className="ml-2 w-1/4 p-2 border border-gray-300 rounded"
+      placeholder="Quantity"
+    />
+
+    <button
+      type="button"
+      onClick={handleAddNewItem}
+      className="ml-2 bg-green-500 text-white rounded px-2 py-1"
+    >
+      Add Item
+    </button>
+  </div>
+) : (
+  <button
+    type="button"
+    onClick={() => setShowNewItemInput(true)}
+    className="mt-2 text-blue-500"
+  >
+    + Add New Item
+  </button>
+)}
+
             </div>
             <button
               type="submit"
@@ -419,7 +441,7 @@ return (
       </div>
     )}
 </div>
-    
+  
   </div>
 );
 };

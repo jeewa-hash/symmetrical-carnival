@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, InputNumber, DatePicker, Button, Table, Modal } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import Header from '../Shared/Header';
-import Footer from '../Shared/Footer';
 import backgroundImage from '../image/design.png'; // Adjust the path according to your structure
 
 const FinishGoods = () => {
@@ -149,7 +147,7 @@ const FinishGoods = () => {
         backgroundPosition: 'center',
       }}
     >
-      <Header />
+     
       <div className="flex-1 flex justify-center items-center relative">
         <div className="max-w-2xl w-full bg-pink-100 bg-opacity-80 backdrop-blur-lg rounded-lg shadow-xl p-10 border border-gray-200 space-y-6 z-10">
           <h1 className="form-heading text-4xl font-bold text-purple-600 mb-4 text-center">Finished Goods</h1>
@@ -252,7 +250,7 @@ const FinishGoods = () => {
           />
         </div>
       </div>
-      <Footer />
+      
     </div>
   );
 };

@@ -1,97 +1,204 @@
-import React, { useState } from 'react';
-import Header from '../Shared/Header';
-import Footer from '../Shared/Footer';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import backgroundImage from '../image/BR.png'; // Import the background image
 
 const AttendanceRetrieve = () => {
-  // Initialize attendance state with an array of attendance objects
-  const [attendances, setAttendances] = useState([
-    { id: 1, empId: 'E001', name: 'John Doe', date: '2022-01-01', clockIn: '09:00', clockOut: '17:00', status: 'Present' },
-    { id: 2, empId: 'E002', name: 'Jane Doe', date: '2022-02-01', clockIn: '09:15', clockOut: '17:15', status: 'Present' },
-    { id: 3, empId: 'E003', name: 'Bob Smith', date: '2022-03-01', clockIn: '09:30', clockOut: '17:30', status: 'Absent' },
-  ]);
-
-  const [filteredAttendances, setFilteredAttendances] = useState(attendances);
+  const [employees, setEmployees] = useState([]);
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [message, setMessage] = useState('');
+
+  const fetchEmployees = async () => {
+    try {
+      const response = await axios.get('/api/employee');
+      setEmployees(response.data);
+    } catch (error) {
+      setMessage('Failed to fetch employee data.');
+    }
+  };
+
+  const fetchAttendances = async () => {
+    try {
+      const response = await axios.get('/api/Attendence');
+      setAttendanceData(response.data);
+    } catch (error) {
+      setMessage('Failed to fetch attendance data.');
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployees();
+    fetchAttendances();
+  }, []);
+
+  useEffect(() => {
+    const today = new Date().toLocaleDateString();
+    const todayAttendances = attendanceData.filter((attendance) => {
+      const attendanceDate = new Date(attendance.date).toLocaleDateString();
+      return attendanceDate === today;
+    });
+
+    const filtered = employees.filter((employee) => {
+      const attendanceRecord = todayAttendances.find((att) => att.empId === employee.employeeId);
+      const matchesSearch =
+        employee.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        employee.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        employee.employeeId.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesStatus = statusFilter
+        ? (statusFilter === 'Present' ? attendanceRecord?.present : !attendanceRecord?.present)
+        : true;
+
+      return matchesSearch && matchesStatus;
+    });
+
+    setFilteredEmployees(filtered);
+  }, [employees, attendanceData, searchTerm, statusFilter]);
 
   const handleSearch = (e) => {
-    const searchTerm = e.target.value;
-    setSearchTerm(searchTerm);
-    const filtered = attendances.filter((attendance) =>
-      attendance.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredAttendances(filtered);
+    setSearchTerm(e.target.value);
   };
 
   const handleStatusFilter = (e) => {
-    const status = e.target.value;
-    setStatusFilter(status);
-    const filtered = attendances.filter((attendance) =>
-      status ? attendance.status === status : true
-    );
-    setFilteredAttendances(filtered);
+    setStatusFilter(e.target.value);
   };
 
   const handleReset = () => {
     setSearchTerm('');
     setStatusFilter('');
-    setFilteredAttendances(attendances);
+    setFilteredEmployees(employees);
+  };
+
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    doc.text('Employee Attendance', 20, 10);
+
+    const headers = [['First Name', 'Last Name', 'Employee ID', 'Status']];
+
+    const data = filteredEmployees.map((emp) => {
+      const attendanceRecord = attendanceData.find((att) => att.empId === emp.employeeId);
+      const status = attendanceRecord ? (attendanceRecord.present ? 'Present' : 'Absent') : 'Absent';
+      return [emp.firstName, emp.lastName, emp.employeeId, status];
+    });
+
+    doc.autoTable({
+      head: headers,
+      body: data,
+      startY: 20,
+    });
+
+    doc.save('Employee_Attendance.pdf');
   };
 
   return (
-    <div>
-      <Header />
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 md:p-8">
-      <h1 className="text-3xl font-bold mb-4">Attendance Retrieving and Filtering</h1>
-      <div className="flex justify-between mb-4">
-        <input
-          type="search"
-          value={searchTerm}
-          onChange={handleSearch}
-          placeholder="Search by name"
-          className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 pl-10 text-sm text-gray-700"
-        />
-        <select
-          value={statusFilter}
-          onChange={handleStatusFilter}
-          className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 pl-10 text-sm text-gray-700"
-        >
-          <option value="">All Statuses</option>
-          <option value="Present">Present</option>
-          <option value="Absent">Absent</option>
-        </select>
-        <button onClick={handleReset} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Reset
-        </button>
+    <div
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+   
+      <div className="max-w-7xl mx-auto p-4 sm:p-6 md:p-8 bg-white bg-opacity-75 rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold mb-4">Attendance Records</h1>
+        <div className="flex flex-col sm:flex-row justify-between mb-4 gap-4">
+          <input
+            type="search"
+            value={searchTerm}
+            onChange={handleSearch}
+            placeholder="Search by Employee ID"
+            className="w-full md:w-1/2 lg:w-1/3 p-1 text-sm text-gray-700 border border-gray-300 rounded" // Adjusted padding
+          />
+          <select
+            value={statusFilter}
+            onChange={handleStatusFilter}
+            className="w-full md:w-1/2 lg:w-1/3 p-1 text-sm text-gray-700 border border-gray-300 rounded" // Adjusted padding
+          >
+            <option value="">All Statuses</option>
+            <option value="Present">Present</option>
+            <option value="Absent">Absent</option>
+          </select>
+          <button
+            onClick={handleReset}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded" // Adjusted padding
+          >
+            Reset
+          </button>
+          <button
+            onClick={generatePDF}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded" // Adjusted padding
+          >
+            Download PDF
+          </button>
+        </div>
+
+        {/* Attendance Table */}
+        <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+          <table className="min-w-full w-full table-auto border-collapse divide-y divide-gray-200"> {/* Adjusted width */}
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  First Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Last Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Employee ID
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredEmployees.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="text-center py-4">
+                    No attendance records found.
+                  </td>
+                </tr>
+              ) : (
+                filteredEmployees.map((employee) => {
+                  const attendanceRecord = attendanceData.find(
+                    (att) => att.empId === employee.employeeId
+                  );
+                  const status = attendanceRecord
+                    ? attendanceRecord.present
+                      ? 'Present'
+                      : 'Absent'
+                    : 'Absent';
+                  return (
+                    <tr key={employee._id}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {employee.firstName}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {employee.lastName}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {employee.employeeId}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {status}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <table className="w-full table-auto">
-        <thead>
-          <tr>
-            <th className="px-4 py-2">ID</th>
-            <th className="px-4 py-2">Employee ID</th>
-            <th className="px-4 py-2">Name</th>
-            <th className="px-4 py-2">Date</th>
-            <th className="px-4 py-2">Clock In</th>
-            <th className="px-4 py-2">Clock Out</th>
-            <th className="px-4 py-2">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredAttendances.map((attendance) => (
-            <tr key={attendance.id}>
-              <td className="border px-4 py-2">{attendance.id}</td>
-              <td className="border px-4 py-2">{attendance.empId}</td>
-              <td className="border px-4 py-2">{attendance.name}</td>
-              <td className="border px-4 py-2">{attendance.date}</td>
-              <td className="border px-4 py-2">{attendance.clockIn}</td>
-              <td className="border px-4 py-2">{attendance.clockOut}</td>
-              <td className="border px-4 py-2">{attendance.status}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    <Footer />
+   
     </div>
   );
 };

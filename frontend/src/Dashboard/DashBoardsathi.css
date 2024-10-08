@@ -1,0 +1,49 @@
+/* Main container for the dashboard */
+.dashboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f9; /* Light background color */
+}
+
+/* Card to display the completed deliveries count */
+.dashboard-card {
+    background-color: #ffffff; /* White background for the card */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    text-align: center;
+    width: 300px;
+}
+
+/* Heading for the completed deliveries text */
+.dashboard-card h3 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333333; /* Darker text for good contrast */
+    margin-bottom: 10px;
+}
+
+/* Completed deliveries number */
+.completed-deliveries-number {
+    font-size: 48px;
+    color: #4CAF50; /* Green color for completed status */
+    font-weight: bold;
+}
+
+/* Responsive design for smaller devices */
+@media (max-width: 600px) {
+    .dashboard-card {
+        width: 30%;
+        padding: 15px;
+    }
+    
+    .dashboard-card h3 {
+        font-size: 20px;
+    }
+    
+    .completed-deliveries-number {
+        font-size: 36px;
+    }
+}

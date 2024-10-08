@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, InputNumber, Button, Table, Modal, Select } from 'antd';
 import axios from 'axios';
-import Header from '../Shared/Header';
-import Footer from '../Shared/Footer';
+
 import backgroundImage from '../image/design.png'; // Adjust the path accordingly
 
 const { Option } = Select;
@@ -153,7 +152,7 @@ const Inventory = () => {
         backgroundPosition: 'center',
       }}
     >
-      <Header />
+      
 
       <div className="flex-1 flex justify-center items-center relative">
         <div className="max-w-2xl w-full bg-pink-100 bg-opacity-80 backdrop-blur-lg rounded-lg shadow-xl p-10 border border-gray-200 space-y-6 z-10">
@@ -288,7 +287,7 @@ const Inventory = () => {
         </div>
       </div>
 
-      <Footer />
+      
     </div>
   );
 };

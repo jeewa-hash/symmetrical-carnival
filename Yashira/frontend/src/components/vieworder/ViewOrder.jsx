@@ -16,7 +16,7 @@ const ViewOrder = ({ orderId, onClose }) => {
 
     const fetchOrderDetails = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/orders/${orderId}`);
+            const response = await fetch(`/api/orders/${orderId}`);
             if (!response.ok) {
                 throw new Error('Order not found');
             }
@@ -33,7 +33,7 @@ const ViewOrder = ({ orderId, onClose }) => {
 
     const updateOrderStatus = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
+            const response = await fetch(`/api/orders/${orderId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const ViewOrder = ({ orderId, onClose }) => {
         }
 
         try {
-            const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
+            const response = await fetch(`/api/orders/${orderId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ const ViewOrder = ({ orderId, onClose }) => {
 
     const deleteOrder = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
+            const response = await fetch(`/api/orders/${orderId}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {

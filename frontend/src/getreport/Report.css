@@ -1,0 +1,57 @@
+.deliverytable{
+    width: 100%;
+    background-color: rgb(203, 197, 197);
+    font-family: Arial, sans-serif;
+    margin: 50px auto;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 8px rgb(0,0,0,0.065);
+}
+.deliverytable table{
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 30px;
+}
+.deliverytable table thead th{
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #49abbc;
+    color: black;
+}
+.deliverytable table tbody th{
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+.deliverytable button{
+    margin: 0 10px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-bar {
+    width: 100%;
+    margin: 20px 0;
+    display: flex;
+    justify-content: flex-end; /* Align the search bar to the right */
+}
+
+.search-bar input {
+    width: 300px; /* Adjust the width to fit nicely */
+    padding: 10px;
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: box-shadow 0.3s ease; /* Smooth transition */
+}
+
+.search-bar input:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(73, 171, 188, 0.7); /* Highlight border on focus */
+    border-color: #49abbc; /* Color change on focus */
+}
+

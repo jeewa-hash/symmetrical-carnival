@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
 
 // Utility function to get today's date in YYYY-MM-DD format
 const getTodayDate = () => {
@@ -20,7 +19,7 @@ const BatchSelection = ({ selectedBatch, onBatchSelect }) => (
         <button
           key={batch}
           onClick={() => onBatchSelect(batch)}
-          className={`px-4 py-2 rounded-lg text-white ${selectedBatch === batch ? 'bg-purple-600' : 'bg-gray-400 hover:bg-gray-500'}`}
+          className={`px-4 py-2 rounded-lg text-white ${selectedBatch === batch ? 'bg-rose-500' : 'bg-gray-400 hover:bg-gray-500'}`}
         >
           {batch}
         </button>
@@ -35,9 +34,6 @@ const ProductionPlanningForm = ({ isEditing, newProduction, products, onInputCha
 
   return (
     <div className="max-w-xl mx-auto p-10 bg-pink-100 border border-gray-200 rounded-lg shadow-xl space-y-6">
-      <h3 className="text-4xl font-bold text-purple-600 text-center mb-4">
-        
-      </h3>
       <form onSubmit={onSubmit}>
         {products.map((product, index) => (
           <div key={index} className="mb-4">
@@ -113,24 +109,45 @@ const ProductionManagementSystem = () => {
   const [products, setProducts] = useState([{ name: '', quantity: '' }]);
   const [isEditing, setIsEditing] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [isSlideViewOpen, setIsSlideViewOpen] = useState(false);
+  const [formData, setFormData] = useState([]);
+  const [groupedRequests, setGroupedRequests] = useState({});
+  const [checkedOrders, setCheckedOrders] = useState([]); // State for checked items
 
-  const navigate = useNavigate(); // Using navigate function from react-router-dom
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProductions = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get('/api/products');
-        const filteredProductions = response.data.filter(
-          (production) => production.batch === selectedBatch
-        );
-        setProductions(filteredProductions);
+        const response = await axios.get('http://localhost:4000/api/productionRequest');
+        setFormData(response.data);
       } catch (error) {
-        console.error('Error fetching production data!', error);
+        console.error('Failed to fetch data', error);
       }
     };
+    fetchData();
+  }, []);
 
-    fetchProductions();
-  }, [selectedBatch]);
+  useEffect(() => {
+    const groupRequests = () => {
+      const grouped = formData.reduce((acc, request) => {
+        const date = new Date(request.date).toLocaleDateString('en-GB', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        });
+
+        if (!acc[date]) {
+          acc[date] = [];
+        }
+        acc[date].push(request);
+        return acc;
+      }, {});
+
+      setGroupedRequests(grouped);
+    };
+    groupRequests();
+  }, [formData]);
 
   const handleBatchSelect = (batch) => {
     setSelectedBatch(batch);
@@ -138,12 +155,6 @@ const ProductionManagementSystem = () => {
 
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
-    if (name === 'quantity') {
-      const isValidQuantity = /^[1-9][0-9]*$/.test(value) || value === '';
-      if (!isValidQuantity) {
-        return;
-      }
-    }
     const updatedProducts = [...products];
     updatedProducts[index][name] = value;
     setProducts(updatedProducts);
@@ -159,27 +170,7 @@ const ProductionManagementSystem = () => {
   const handleProductionSubmit = async (e) => {
     e.preventDefault();
     if (products.length > 0) {
-      try {
-        const productionData = {
-          name: products.map((p) => p.name).join(', '),
-          quantity: products.reduce((acc, p) => acc + Number(p.quantity), 0),
-          productionDate: getTodayDate(),
-          status: newProduction.status,
-          batch: selectedBatch,
-          products,
-        };
-
-        if (isEditing) {
-          await axios.put(`/api/products/${newProduction.id}`, productionData);
-        } else {
-          await axios.post('/api/products', productionData);
-        }
-
-        setSuccessMessage('Production planned successfully!');
-        resetForm();
-      } catch (error) {
-        console.error('Error submitting production data!', error);
-      }
+      resetForm();
     } else {
       setSuccessMessage('Please add at least one product to the production plan.');
     }
@@ -192,24 +183,31 @@ const ProductionManagementSystem = () => {
   };
 
   const handleViewProductions = () => {
-    navigate('/productret'); // Navigate to the /productret page
+    navigate('/productret');
+  };
+
+  const handleSlideView = () => {
+    setIsSlideViewOpen(!isSlideViewOpen);
+  };
+
+  const handleCheckboxChange = (id) => {
+    setCheckedOrders((prevChecked) =>
+      prevChecked.includes(id) ? prevChecked.filter((item) => item !== id) : [...prevChecked, id]
+    );
+  };
+  
+  const separateAndCombineOrders = (filteredOrders, checkedOrders) => {
+    const uncheckedOrders = filteredOrders.filter((order) => !checkedOrders.includes(order._id));
+    const checkedOrdersList = filteredOrders.filter((order) => checkedOrders.includes(order._id));
+    
+    return [...uncheckedOrders, ...checkedOrdersList];
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      
       <div className="flex-1 flex justify-center items-center">
-        <div className="w-full max-w-3xl p-10 bg-white border border-gray-200 rounded-lg shadow-xl space-y-6">
-          <h1 className="text-4xl font-bold text-center text-purple-600">Production Planning System</h1>
-          <div className="flex justify-center mb-6">
-            <button
-              onClick={handleViewProductions}
-              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200"
-            >
-              View Productions
-            </button>
-            
-          </div>
+        <div className="w-full max-w-3xl p-10 bg-pink-100 rounded-lg shadow-xl">
+          <h1 className="text-4xl font-bold text-purple-600 text-center mb-6 -mt8">Production Management System</h1>
           <BatchSelection selectedBatch={selectedBatch} onBatchSelect={handleBatchSelect} />
           <ProductionPlanningForm
             isEditing={isEditing}
@@ -219,10 +217,81 @@ const ProductionManagementSystem = () => {
             onStatusChange={handleStatusChange}
             onSubmit={handleProductionSubmit}
           />
-          {successMessage && <div className="text-center mt-4 text-green-500">{successMessage}</div>}
+          <div className="flex justify-between mt-6">
+            <button
+              onClick={handleViewProductions}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
+            >
+              View Productions
+            </button>
+            <button
+              onClick={handleSlideView}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200"
+            >
+              View Orders
+            </button>
+          </div>
+          {successMessage && <div className="mt-4 text-green-600">{successMessage}</div>}
         </div>
       </div>
-   
+
+      {/* Slide-in View */}
+<div
+  className={`fixed inset-y-0 right-0 w-80 bg-gradient-to-b from-pink-200 to-rose-400 text-rose-900 transition-transform duration-300 transform ${isSlideViewOpen ? 'translate-x-0' : 'translate-x-full'}`}
+>
+  <div className="p-4">
+    <h2 className="text-2xl font-bold">Orders</h2>
+    <ul className="mt-2 space-y-2">
+      {/* Separate and combine orders */}
+      {Object.keys(groupedRequests).map((date) => {
+        const filteredOrders = groupedRequests[date]; // Get the orders for the specific date
+        const combinedOrders = separateAndCombineOrders(filteredOrders, checkedOrders);
+        
+        // Separate checked and unchecked orders
+        const uncheckedOrders = combinedOrders.filter((order) => !checkedOrders.includes(order._id));
+        const checkedOrdersList = combinedOrders.filter((order) => checkedOrders.includes(order._id));
+
+        return (
+          <li key={date} className="border-b py-2">
+            <h3 className="font-semibold">{date}</h3>
+            <ul>
+              {/* Render unchecked orders first */}
+              {uncheckedOrders.map((request) => (
+                <li key={request._id} className={`text-sm`}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={checkedOrders.includes(request._id)}
+                      onChange={() => handleCheckboxChange(request._id)}
+                      className="mr-2"
+                    />
+                    {request.productName}: {request.quantity} pcs
+                  </label>
+                </li>
+              ))}
+
+              {/* Render checked orders at the bottom */}
+              {checkedOrdersList.map((request) => (
+                <li key={request._id} className={`text-sm blur-sm opacity-50`}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={checkedOrders.includes(request._id)}
+                      onChange={() => handleCheckboxChange(request._id)}
+                      className="mr-2"
+                    />
+                    {request.productName}: {request.quantity} pcs
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</div>
+
     </div>
   );
 };

@@ -12,7 +12,7 @@ const MakeOrder = () => {
   useEffect(() => {
     const fetchSuppliers = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/suppliers'); 
+        const response = await fetch('/api/suppliers'); 
         const data = await response.json();
         setSuppliers(data.suppliers); 
       } catch (error) {
@@ -58,7 +58,7 @@ const MakeOrder = () => {
     };
 console.log('orderData:',orderData)
     try {
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const response = await fetch('/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

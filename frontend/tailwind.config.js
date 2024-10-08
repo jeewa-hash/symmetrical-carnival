@@ -20,6 +20,17 @@ export default {
      "./src/financehandling/vieworderinvoice.jsx",
      "./src/financehandling/billorderret.jsx",
      "./src/financehandling/fiMainTable.jsx",
+     "./src/AboutUS/AboutUs.jsx",
+     "./src/financehandling/orderbillinterface.jsx",
+     "./src/financehandling/salaryret.jsx",
+     "./src/financehandling/salaryupdate.jsx",
+     "./src/AddEmp/Addemp.jsx",
+    "./src/leaveReqForm/LeaveForm.jsx",
+    "./src/SalaryMangment/Salarymang.jsx",
+    "./src/AttendanceT/Attencance.jsx",
+    "./src/AddEmpRet/empRet.jsx",
+    
+
   ],
   theme: {
     extend: {},

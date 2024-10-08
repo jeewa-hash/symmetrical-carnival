@@ -1,0 +1,41 @@
+.addReport{
+    background-color: rgb(203, 197, 197);
+    width: 25%;
+    margin: 50px auto;
+    padding: 40px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 8px rgb(0,0,0,0.065);
+}
+.addReport .inputGroup{
+    width: 100;
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+}
+.addReport .inputGroup input{
+    padding: 10px;
+    border: 1px solid grey;
+    border-radius: 5px;
+}
+.addReport h3{
+    font-weight: bold;
+    text-align: center;
+    color: black;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 2px rgb(0,0,0,0.7);
+}
+.addReport .inputGroup label{
+    color: black;
+    margin-bottom: 5px;
+}
+.addReport button{
+    margin-top: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #49abbc;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}   
+

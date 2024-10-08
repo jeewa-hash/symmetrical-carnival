@@ -1,13 +1,11 @@
 import React from 'react';
-import Header from "../Shared/Header";
-import Footer from "../Shared/Footer";
 import { Link } from "react-router-dom";
 import ui from '../image/1.png'; // Import the image
 
 function Interface() {
   return (
     <div className="flex flex-col h-screen font-poppins bg-gradient-to-br from-purple-100 via-white to-pink-50">
-      <Header />
+     
       
       <div className="flex-1 flex justify-center items-center bg-pink-100 rounded-3xl shadow-xl mx-16 my-8 border border-gray-200">
         
@@ -63,7 +61,7 @@ function Interface() {
         </div>
       </div>
       
-      <Footer />
+      
     </div>
   );
 }

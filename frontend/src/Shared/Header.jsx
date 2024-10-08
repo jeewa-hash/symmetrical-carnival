@@ -4,16 +4,18 @@ import logo from '../image/logo.png';
 
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // State to track login status
+  const [userEmail, setUserEmail] = useState('jkumarasekara@gmail.com'); // Assume user email is set here
   const navigate = useNavigate(); // Create a navigate function
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false); // State for dropdown
 
   const handleUserClick = (event) => {
     event.preventDefault(); // Prevent the default link behavior
     setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar visibility
   };
 
-  const handleCloseSidebar = () => {
-    setIsSidebarOpen(false);
+  const handleUserDropdownToggle = () => {
+    setIsUserDropdownOpen(!isUserDropdownOpen); // Toggle the dropdown
   };
 
   // Function to handle login and logout
@@ -27,9 +29,30 @@ const Header = () => {
     }
   };
 
-  // Simulate login success when navigating back from login page
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
+  const handleNavigateHome = () => {
+    navigate('/'); // Navigate to home page
+  };
+  
+  const handleNavigateAboutus = () => {
+    navigate('/aboutus'); // Navigate to about us page
+  };
+
+  const handleNavigateSection = (section) => {
+    if (userEmail === 'jkumarasekara@gmail.com') {
+      navigate('/financeui'); // Navigate to Finance UI
+    } else if (userEmail === 'naveeshabjayah@gmail.com') {
+      navigate('/inventoryui'); // Navigate to Inventory UI
+    } else if (userEmail === 'anotheruser@example.com') {
+      navigate('/hrui'); // Navigate to HR UI
+    } else if (userEmail === 'yetanotheruser@example.com') {
+      navigate('/salesui'); // Navigate to Sales UI
+    } else {
+      alert('You do not have permission to access this section.'); // Alert for unauthorized access
+    }
+  };
+
+  const handleFinanceDropdownToggle = () => {
+    setIsFinanceDropdownOpen(!isFinanceDropdownOpen);
   };
 
   return (
@@ -49,64 +72,106 @@ const Header = () => {
           <nav className="hidden md:flex items-center justify-center space-x-20 p-6 shadow-md rounded-lg">
             <ul className="flex list-none p-0 m-0">
               <li className="relative group">
-                <a
-                  href="#home"
-                  className="text-2xl font-semibold text-gray-800 transition duration-300 hover:text-[#ff6f61] p-4 rounded-md flex items-center"
+                <button
+                  onClick={handleNavigateHome}
+                  className="relative text-2xl font-semibold text-gray-800 transition duration-500 ease-in-out hover:text-white hover:bg-[#ff6f61] p-4 rounded-lg shadow-lg transform hover:scale-105 flex items-center space-x-2"
                 >
-                  Home
-                  <span className="ml-2 hidden group-hover:block text-[#ff6f61] text-sm">
+                  <span className="transition-transform transform group-hover:rotate-[360deg] duration-500">Home</span>
+                  <span className="ml-2 group-hover:ml-4 transition-all duration-500 ease-in-out text-[#ff6f61] text-2xl group-hover:text-white">
                     🏡
                   </span>
-                </a>
+                </button>
                 <span className="absolute left-0 right-0 bottom-0 h-1 bg-[#ff6f61] transition-all duration-300 scale-x-0 group-hover:scale-x-100" />
               </li>
+
               <li className="relative group">
-                <a
-                  href="#users"
-                  onClick={handleUserClick}
-                  className="text-2xl font-semibold text-gray-800 transition duration-300 hover:text-[#ff6f61] p-4 rounded-md flex items-center"
+                <button
+                  onClick={handleUserDropdownToggle} // Toggle dropdown on click
+                  className="relative text-2xl font-semibold text-gray-800 transition duration-500 ease-in-out hover:text-white hover:bg-[#ff6f61] p-4 rounded-lg shadow-lg transform hover:scale-105 flex items-center space-x-2"
                 >
-                  Users
-                  <span className="ml-2 hidden group-hover:block text-[#ff6f61] text-sm">
+                  <span className="transition-transform transform group-hover:rotate-[360deg] duration-500">Users</span>
+                  <span className="ml-2 group-hover:ml-4 transition-all duration-500 ease-in-out text-[#ff6f61] text-2xl group-hover:text-white">
                     👤
                   </span>
-                </a>
+                </button>
                 <span className="absolute left-0 right-0 bottom-0 h-1 bg-[#ff6f61] transition-all duration-300 scale-x-0 group-hover:scale-x-100" />
+                
+                {/* Conditionally render the dropdown */}
+                {isUserDropdownOpen && (
+                  <ul className="absolute bg-white shadow-lg rounded-lg mt-2 w-48 py-2 z-10 transition-opacity duration-300 ease-in-out opacity-100">
+                    {/* Finance Manager Dropdown */}
+                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('financeui')}>
+                      <button onClick={handleFinanceDropdownToggle} className="w-full text-left">
+                        Finance Manager
+                      </button>
+                    </li>
+                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('financeui')}>
+                      HR Manager
+                    </li>
+                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('financeui')}>
+                      Order and Production Manager
+                    </li>
+                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('inventoryui')}>
+                    <button onClick={handleFinanceDropdownToggle} className="w-full text-left">
+                    Inventory Manager
+                      </button>
+                    </li>
+                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('financeui')}>
+                      Supplier Manager
+                    </li>
+                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('financeui')}>
+                      Delivery Manager
+                    </li>
+                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('financeui')}>
+                      Sales Representative
+                    </li>
+                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('financeui')}>
+                      Other Workers
+                    </li>
+                    
+                    
+                    
+                   
+                  </ul>
+                )}
               </li>
+
               <li className="relative group">
-                <a
-                  href="#about"
-                  className="text-2xl font-semibold text-gray-800 transition duration-300 hover:text-[#ff6f61] p-4 rounded-md flex items-center"
+                <button
+                  onClick={handleNavigateAboutus}
+                  className="relative text-2xl font-semibold text-gray-800 transition duration-500 ease-in-out hover:text-white hover:bg-[#ff6f61] p-4 rounded-lg shadow-lg transform hover:scale-105 flex items-center space-x-2"
                 >
-                  About Us
-                  <span className="ml-2 hidden group-hover:block text-[#ff6f61] text-sm">
+                  <span className="transition-transform transform group-hover:rotate-[360deg] duration-500">About Us</span>
+                  <span className="ml-2 group-hover:ml-4 transition-all duration-500 ease-in-out text-[#ff6f61] text-2xl group-hover:text-white">
                     ℹ️
                   </span>
-                </a>
+                </button>
                 <span className="absolute left-0 right-0 bottom-0 h-1 bg-[#ff6f61] transition-all duration-300 scale-x-0 group-hover:scale-x-100" />
               </li>
+
               <li className="relative group">
-                <a
-                  href="#contact"
-                  className="text-2xl font-semibold text-gray-800 transition duration-300 hover:text-[#ff6f61] p-4 rounded-md flex items-center"
+                <button
+                  onClick={() => navigate('#contact')}
+                  className="relative text-2xl font-semibold text-gray-800 transition duration-500 ease-in-out hover:text-white hover:bg-[#ff6f61] p-4 rounded-lg shadow-lg transform hover:scale-105 flex items-center space-x-2"
                 >
-                  Contact Us
-                  <span className="ml-2 hidden group-hover:block text-[#ff6f61] text-sm">
+                  <span className="transition-transform transform group-hover:rotate-[360deg] duration-500">Contact Us</span>
+                  <span className="ml-2 group-hover:ml-4 transition-all duration-500 ease-in-out text-[#ff6f61] text-2xl group-hover:text-white">
                     📞
                   </span>
-                </a>
+                </button>
                 <span className="absolute left-0 right-0 bottom-0 h-1 bg-[#ff6f61] transition-all duration-300 scale-x-0 group-hover:scale-x-100" />
               </li>
+
               <li className="relative group">
-                <a
-                  href="#notice"
-                  className="text-2xl font-semibold text-gray-800 transition duration-300 hover:text-[#ff6f61] p-4 rounded-md flex items-center"
+                <button
+                  onClick={() => navigate('#notice')}
+                  className="relative text-2xl font-semibold text-gray-800 transition duration-500 ease-in-out hover:text-white hover:bg-[#ff6f61] p-4 rounded-lg shadow-lg transform hover:scale-105 flex items-center space-x-2"
                 >
-                  Notice
-                  <span className="ml-2 hidden group-hover:block text-[#ff6f61] text-sm">
+                  <span className="transition-transform transform group-hover:rotate-[360deg] duration-500">Notice</span>
+                  <span className="ml-2 group-hover:ml-4 transition-all duration-500 ease-in-out text-[#ff6f61] text-2xl group-hover:text-white">
                     📢
                   </span>
-                </a>
+                </button>
                 <span className="absolute left-0 right-0 bottom-0 h-1 bg-[#ff6f61] transition-all duration-300 scale-x-0 group-hover:scale-x-100" />
               </li>
             </ul>
@@ -117,7 +182,7 @@ const Header = () => {
               onClick={handleLoginToggle}
               className="login-button flex items-center justify-center bg-[#ff6f61] text-white font-semibold rounded-[18px] px-[80px] py-[7px] transition duration-300 ease-in-out transform hover:bg-[#e45b4c] cursor-pointer whitespace-nowrap"
             >
-              {isLoggedIn ? 'Log Out' : 'Log In'}
+              {isLoggedIn ? 'Log In' : 'Log Out'}
             </button>
           </div>
         </div>

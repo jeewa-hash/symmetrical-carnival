@@ -16,7 +16,7 @@ const SupplierList = () => {
 
   const fetchSuppliers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/suppliers');
+      const response = await fetch('/api/suppliers');
       const data = await response.json();
       setSuppliers(data.suppliers);
     } catch (error) {
@@ -26,7 +26,7 @@ const SupplierList = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/suppliers/${id}`, {
+      const response = await fetch(`/api/suppliers/${id}`, {
         method: 'DELETE',
       });
 
