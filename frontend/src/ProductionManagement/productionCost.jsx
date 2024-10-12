@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import backgroundImage from '../image/design.png'; // Ensure the path to the image is correct
 
 const ProductionCostCalculator = () => {
   const [productName, setProductName] = useState('');
@@ -168,8 +168,14 @@ const ProductionCostCalculator = () => {
   );
 
   return (
-    <div className="flex flex-col min-h-screen relative">
-      
+    <div
+      className="flex flex-col min-h-screen relative"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       <div className="flex-1 flex justify-center items-center z-10">
         <div className="max-w-xl w-full bg-pink-100 rounded-lg shadow-xl p-10 border border-gray-200 space-y-6">
           <h2 className="text-4xl font-bold text-purple-600 mb-4 text-center">Production Cost Calculator</h2>
@@ -231,26 +237,26 @@ const ProductionCostCalculator = () => {
             </button>
             {showEntries && (
               <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-200 text-sm"> {/* Added text-sm for smaller font */}
+                <table className="min-w-full bg-white border border-gray-200 text-sm">
                   <thead>
                     <tr>
                       {['productName', 'materialCost', 'laborCost', 'overheadCost', 'waterCost', 'currentBill', 'totalCost'].map((field) => (
                         <th
                           key={field}
-                          className="cursor-pointer border-b text-left p-1 text-black-300 hover:text-purple-800" // Reduced padding to p-1
+                          className="cursor-pointer border-b text-left p-1 text-black-300 hover:text-purple-800"
                           onClick={() => handleSort(field)}
                         >
                           {field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                         </th>
                       ))}
-                      <th className="border-b text-left p-1">Actions</th> {/* Reduced padding to p-1 */}
+                      <th className="border-b text-left p-1">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredEntries.length > 0 ? (
                       filteredEntries.map((entry, index) => (
                         <tr key={entry._id} className="hover:bg-gray-100">
-                          <td className="border-b p-1">{entry.productName}</td> {/* Reduced padding to p-1 */}
+                          <td className="border-b p-1">{entry.productName}</td>
                           <td className="border-b p-1">{entry.materialCost}</td>
                           <td className="border-b p-1">{entry.laborCost}</td>
                           <td className="border-b p-1">{entry.overheadCost}</td>
@@ -259,13 +265,13 @@ const ProductionCostCalculator = () => {
                           <td className="border-b p-1">{entry.totalCost}</td>
                           <td className="border-b p-1">
                             <button
-                              className="bg-yellow-500 text-white rounded px-1 py-1 mr-2 hover:bg-yellow-600" // Reduced padding to px-1 py-1
+                              className="bg-yellow-500 text-white rounded px-1 py-1 mr-2 hover:bg-yellow-600"
                               onClick={() => handleEdit(index)}
                             >
                               Edit
                             </button>
                             <button
-                              className="bg-red-500 text-white rounded px-1 py-1 hover:bg-red-600" // Reduced padding to px-1 py-1
+                              className="bg-red-500 text-white rounded px-1 py-1 hover:bg-red-600"
                               onClick={() => handleDelete(index)}
                             >
                               Delete
@@ -285,8 +291,6 @@ const ProductionCostCalculator = () => {
           </div>
         </div>
       </div>
-      
-      
     </div>
   );
 };

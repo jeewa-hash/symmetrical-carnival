@@ -21,6 +21,9 @@ const MakeOrder = () => {
     };
 
     fetchSuppliers();
+
+    const today = new Date().toISOString().split('T')[0];
+    setOrderDate(today);
   }, []);
 
   const handleAddItem = () => {
@@ -69,7 +72,7 @@ console.log('orderData:',orderData)
       if (response.ok) {
         setMessage('Order created successfully!');
         setSupplierName('');
-        setOrderDate('');
+        setOrderDate(new Date().toISOString().split('T')[0]);
         setItems([{ itemName: '', quantity: 1, description: '', itemError: '' }]); 
       } else {
         setMessage('Error creating order');
@@ -80,6 +83,8 @@ console.log('orderData:',orderData)
       setLoading(false);
     }
   };
+
+  const today = new Date().toISOString().split('T')[0];
 
   return (
     <div className="make-order-container">
@@ -113,6 +118,8 @@ console.log('orderData:',orderData)
             onChange={(e) => setOrderDate(e.target.value)}
             className="form-input"
             required
+      min={today} 
+      max={today}
           />
         </div>
 

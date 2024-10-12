@@ -41,6 +41,10 @@ const LoginForm = () => {
             navigate('/supplierui');
           }else if (values.email === 'gangulr30@gmail.com') {
             navigate('/hrui');
+          } else if (values.email === 'dinupadulnith2002@gmail.com') {
+            navigate('/salesui');
+          }else if (values.email === 'sathirapramudith@gmail.com') {
+            navigate('/deliveryui');
           } else {
             message.error('User not authorized for this section.');
           }

@@ -105,6 +105,24 @@ class EmployeeController {
       res.status(500).json({ message: 'Failed to fetch employee count' });
     }
   }
+
+  // Get an employee by employeeId
+static async getEmployeeByEmployeeId(req, res) {
+  try {
+    const { employeeId } = req.params;
+    const employee = await Employee.findOne({ employeeId: employeeId });
+    
+    if (!employee) {
+      return res.status(404).json({ message: 'Employee not found.' });
+    }
+    
+    res.status(200).json(employee);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving employee details.', error });
+  }
 }
+
+}
+
 
 export default EmployeeController;

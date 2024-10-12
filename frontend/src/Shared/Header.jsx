@@ -105,10 +105,10 @@ const Header = () => {
                         Finance Manager
                       </button>
                     </li>
-                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('financeui')}>
+                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('hrui')}>
                       HR Manager
                     </li>
-                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('financeui')}>
+                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('orderandproductionui')}>
                       Order and Production Manager
                     </li>
                     <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('inventoryui')}>
@@ -116,13 +116,13 @@ const Header = () => {
                     Inventory Manager
                       </button>
                     </li>
-                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('financeui')}>
+                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('supplierui')}>
                       Supplier Manager
                     </li>
-                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('financeui')}>
+                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('deliveryui')}>
                       Delivery Manager
                     </li>
-                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('financeui')}>
+                    <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('salesui')}>
                       Sales Representative
                     </li>
                     <li className="px-4 py-2 hover:bg-[#ff6f61] hover:text-white transition-colors duration-300 ease-in-out cursor-pointer" onClick={() => handleNavigateSection('financeui')}>

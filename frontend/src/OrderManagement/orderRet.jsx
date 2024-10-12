@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import jsPDF from 'jspdf'; // Importing jsPDF library
+import 'jspdf-autotable'; // Importing autotable plugin for jsPDF
 
 import backgr from '../image/bbk.png';
+import logo from '../image/logo.png'; // Update the path as necessary
 
 const availableItems = [
-{ id: 1, name: 'Teddy Bear' },
-{ id: 2, name: 'Stuffed Elephant' },
-{ id: 3, name: 'Plush Lion' },
-{ id: 4, name: 'Bunny Rabbit' },
-{ id: 5, name: 'Dinosaur' },
-{ id: 6, name: 'Unicorn' },
+{ id: 1, name: ' Bear' },
+{ id: 2, name: 'Teddy Bear With Heart' },
+{ id: 3, name: '5 Feet' },
+{ id: 4, name: 'Dalmation' },
+{ id: 5, name: 'Dog' },
+{ id: 6, name: 'Bear With Heart' },
+{ id: 6, name: 'Bunny Rabbit' },
 ];
 
 const availableStatuses = [
@@ -194,11 +198,78 @@ const handleDelete = async (orderId) => {
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString();
+
 };
+// Function to download PDF
+const downloadPDF = () => {
+  const doc = new jsPDF();
+  doc.setFont('Helvetica', 'normal');
+
+  // Add logo
+  doc.addImage(logo, 'PNG', 14, 10, 50, 20); // Adjust position and size as necessary
+  doc.setFontSize(18);
+  doc.setTextColor(0, 51, 102); // Adjust color to match the soft toy theme
+  doc.text('Bear Works Lanka', 70, 20); // Adjust position as necessary
+  
+  // Draw Header Line
+  doc.setDrawColor(0, 0, 0); // Set line color to black
+  doc.line(14, 32, doc.internal.pageSize.width - 14, 32); // Draw line below the header
+
+  // Add title
+  doc.setFontSize(20);
+  doc.setTextColor(0, 0, 0); // Set text color back to black
+  doc.text('Soft Toy Order List', 20, 55);
+
+  // Add date
+  doc.setFontSize(12);
+  doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 65);
+
+  // Add table header
+  const headers = ['Shop Name', 'Order Date', 'Status', 'Items'];
+  const data = filteredOrders.map(order => [
+    order.shopName,
+    formatDate(order.orderDate),
+    order.status,
+    // Map items to an array, with each item in a new line
+    order.orderItems.map(item => `${item.name} (Qty: ${item.quantity})`), // No join here, let autoTable handle the array
+  ]);
+
+  // Create table
+  doc.autoTable({
+    head: [headers],
+    body: data,
+    startY: 70, // Adjust starting position of the table
+    styles: {
+      overflow: 'linebreak', // Enable line break to allow items to display on new lines
+    },
+    columnStyles: {
+      3: { cellWidth: 'wrap' }, // Ensure "Items" column wraps the text within the cell
+    },
+  });
+
+  // Draw Footer Line
+  const footerY = doc.internal.pageSize.height - 30; // Position for footer line
+  doc.line(14, footerY, doc.internal.pageSize.width - 14, footerY); // Draw line above the footer
+
+  // Add Footer
+  doc.setFontSize(12); // Set font size for footer
+  doc.setFont("helvetica", "normal"); // Set font to normal
+  doc.setTextColor(0, 0, 0); // Set color to black
+  const footerText = "Address: 123 Bear Lane, Colombo, Sri Lanka\nContact: +94 123 456 789"; // Sample footer text
+  const footerLines = doc.splitTextToSize(footerText, doc.internal.pageSize.width - 28); // Split text to fit the page
+
+  doc.text(footerLines, 14, footerY + 10); // Draw footer text below the footer line
+
+  // Save the PDF
+  doc.save('soft_toy_order_list.pdf');
+};
+
+
+
 
 return (
   <div className="purple-500 min-h-screen">
- 
+    
     <div
       className="relative min-h-screen flex flex-col justify-center"
       style={{
@@ -218,6 +289,15 @@ return (
           className="w-full p-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
         />
       </div>
+
+ {/* PDF Download Button */}
+ <button
+            onClick={downloadPDF}
+            className="mb-4 bg-green-500 text-white rounded px-4 py-2 hover:bg-green-600 transition duration-200"
+          >
+            Download PDF
+          </button>
+
       {loading ? (
         <div className="text-center text-white">Loading orders...</div>
       ) : filteredOrders.length > 0 ? (

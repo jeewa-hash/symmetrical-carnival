@@ -5,6 +5,8 @@ import jsPDF from 'jspdf'; // Import jsPDF for PDF generation
 import 'jspdf-autotable'; // Import autoTable plugin for jsPDF
 
 import backgroundImage from '../image/BR.png'; // Import the background image
+import logo from '../image/logo.png';
+
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
@@ -57,36 +59,112 @@ const EmployeeList = () => {
   // PDF generation function
   const generatePDF = () => {
     const doc = new jsPDF();
-    doc.text('Employee List', 20, 10);
-    
-    // Add table headers
-    const headers = [['First Name', 'Last Name', 'Email', 'Employee ID', 'NIC', 'Department', 'Employee Type', 'Designation', 'Base Salary', 'DOB', 'Joining Date']];
-    
-    // Map filtered employees to table data
-    const data = filteredEmployees.map(emp => [
-      emp.firstName,
-      emp.lastName,
-      emp.email,
-      emp.employeeId,
-      emp.nic,
-      emp.department,
-      emp.employeeType,
-      emp.designation,
-      emp.baseSalary,
-      new Date(emp.dateOfBirth).toLocaleDateString(),
-      new Date(emp.joiningDate).toLocaleDateString()
-    ]);
-    
-    // Generate table in PDF
-    doc.autoTable({
-      head: headers,
-      body: data,
-      startY: 20
-    });
-    
-    // Save the PDF and download
-    doc.save('Employee_List.pdf');
+  
+    // Fetch and add the logo
+    const addLogo = (img) => {
+      if (img) {
+        doc.addImage(img, 'PNG', 14, 10, 50, 20); // Adjust position and size
+      }
+    };
+  
+    // Generate the rest of the PDF content
+    const generatePDFContent = (img) => {
+      addLogo(img); // Add logo if available
+  
+      // Add Title Next to Logo
+      doc.setFontSize(18); // Set font size for the title
+      doc.setFont('helvetica', 'bold'); // Set font to bold
+      doc.setTextColor(0, 51, 102); // Set color
+      doc.text('Bear Works Lanka', 70, 20); // Position the title next to the logo
+  
+      // Draw Header Line
+      doc.setDrawColor(0, 0, 0); // Set line color to black
+      doc.line(14, 32, doc.internal.pageSize.width - 14, 32); // Draw line below the header
+  
+      // Reset font for the report title
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(14); // Set font size for report title
+      doc.setTextColor(0, 0, 0); // Set color to black
+      doc.text('Employee List Report', 14, 50); // Title of the report
+  
+      // Prepare Table Headers
+      const headers = [['First Name', 'Email', 'Employee ID', 'NIC', 'Department', 'Base Salary', 'DOB', 'Joining Date']];
+  
+      // Prepare the body for the table
+      if (filteredEmployees && filteredEmployees.length > 0) {
+        const data = filteredEmployees.map((emp) => [
+          emp.firstName,
+          
+          emp.email,
+          emp.employeeId,
+          emp.nic,
+          emp.department,
+          
+          emp.baseSalary,
+          new Date(emp.dateOfBirth).toLocaleDateString(),
+          new Date(emp.joiningDate).toLocaleDateString()
+        ]);
+  
+        // Add Table
+        doc.autoTable({
+          head: headers,
+          body: data,
+          startY: 60, // Adjust starting Y position after the title
+        });
+      } else {
+        // If no data is available
+        doc.text('No employee data available.', 14, 60);
+      }
+  
+      // Draw Footer Line
+      const footerY = doc.internal.pageSize.height - 30; // Position for footer line
+      doc.line(14, footerY, doc.internal.pageSize.width - 14, footerY); // Draw line above the footer
+  
+      // Add Footer
+      doc.setFontSize(12); // Set font size for footer
+      doc.setFont('helvetica', 'normal'); // Set font to normal
+      doc.setTextColor(0, 0, 0); // Set color to black
+      const footerText = '15 Schofield Pl, Colombo 09892 | bearworkslanka@gmail.com'; // Address and contact info
+      const footerLines = doc.splitTextToSize(footerText, doc.internal.pageSize.width - 28); // Split text to fit the page
+  
+      doc.text(footerLines, 14, footerY + 10); // Draw footer text below the footer line
+  
+      // Save the PDF
+      doc.save('Employee_List.pdf');
+    };
+  
+    // Fetch the logo image and generate the PDF
+    fetch(logo)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Logo not found');
+        }
+        return response.blob();
+      })
+      .then(blob => {
+        const img = new Image();
+        const url = URL.createObjectURL(blob);
+        img.src = url;
+  
+        img.onload = () => {
+          generatePDFContent(img); // Generate PDF content with logo
+        };
+  
+        img.onerror = () => {
+          generatePDFContent(null); // Generate PDF content without logo
+        };
+      })
+      .catch(error => {
+        console.error('Error fetching logo:', error);
+        generatePDFContent(null); // Generate PDF content without logo
+      });
   };
+  
+
+
+
+
+
 
   return (
     <div>
@@ -169,7 +247,7 @@ const EmployeeList = () => {
           </table>
         </div>
       </div>
-    
+      
     </div>
   );
 };

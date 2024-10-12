@@ -3,6 +3,7 @@ import axios from 'axios';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import logo from '../image/logo.png'; // Update the path as necessary
+import backgr from '../image/bbk.png';
 
 
 const ProductionList = () => {
@@ -234,8 +235,14 @@ const ProductionList = () => {
   if (error) return <p className="text-red-500 text-center">{error}</p>;
 
   return (
-    <div className="purple-500 min-h-screen">
-     
+    
+    <div
+    className="min-h-screen bg-cover bg-center"
+    style={{
+      // Background image added here
+      backgroundImage: `url(${backgr})`,
+    }}
+  >
       <div className="container mx-auto px-4 py-8">
         <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Production List</h2>
 

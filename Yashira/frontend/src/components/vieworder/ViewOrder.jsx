@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { jsPDF } from 'jspdf';
+import logo from '../../assets/logo.png';
 import './ViewOrder.css';
 
 const ViewOrder = ({ orderId, onClose }) => {
@@ -113,12 +114,23 @@ const ViewOrder = ({ orderId, onClose }) => {
 
     const generateBill = () => {
         const doc = new jsPDF();
+       
+        // Add Logo
+        doc.addImage(logo, 'PNG', 14, 10, 50, 20);
+        // Add Title Next to Logo
+        doc.setFontSize(18); // Set font size for the title
+        doc.setFont("helvetica", "bold"); // Set font to bold
+        doc.setTextColor(0, 51, 102); // Set color (pink to match soft toy theme)
+        doc.text("Bear Works Lanka", 70, 20); // Position the title next to the logo
+
+ // Draw Header Line
+        doc.setDrawColor(0, 0, 0); // Set line color to black
+        doc.line(14, 32, doc.internal.pageSize.width - 14, 32); // Draw line below the header
+
         doc.setFontSize(18);
-        doc.text('Order Invoice', 105, 20, { align: 'center' });
+        doc.text('Order Invoice Bill', 97, 40, { align: 'center' });
         doc.setFontSize(12);
-        doc.text('Bear Works Lanka', 20, 30);
-        doc.text('Bill', 20, 36);
-        doc.line(20, 48, 190, 48); 
+      
         doc.setFontSize(14);
         doc.text(`Order ID: ${order._id}`, 20, 60);
         doc.text(`Supplier: ${order.supplierName}`, 20, 68);
@@ -126,6 +138,8 @@ const ViewOrder = ({ orderId, onClose }) => {
         doc.line(20, 90, 190, 90); 
         doc.setFontSize(12);
         doc.text('Items:', 20, 100);
+
+
         doc.autoTable({
             startY: 105,
             head: [['Item Name', 'Quantity', 'Description']],
@@ -150,6 +164,21 @@ const ViewOrder = ({ orderId, onClose }) => {
         doc.text(`Payment Status: ${order.isPaymentDone ? 'Completed' : 'Pending'}`, 20, doc.lastAutoTable.finalY + 38);
         doc.setFontSize(10);
         doc.text('Thank you for your business!', 105, doc.lastAutoTable.finalY + 50, { align: 'center' });
+       
+         // Draw Footer Line
+    const footerY = doc.internal.pageSize.height - 30; // Position for footer line
+    doc.line(14, footerY, doc.internal.pageSize.width - 14, footerY); // Draw line above the footer
+
+    // Add Footer
+    doc.setFontSize(12); // Set font size for footer
+    doc.setFont("helvetica", "normal"); // Set font to normal
+    doc.setTextColor(0, 0, 0); // Set color to black
+    const footerText = "Address: 123 Bear Lane, Colombo, Sri Lanka\nContact: +94 123 456 789"; // Sample footer text
+    const footerLines = doc.splitTextToSize(footerText, doc.internal.pageSize.width - 28); // Split text to fit the page
+
+    doc.text(footerLines, 14, footerY + 10); // Draw footer text below the footer line
+
+       
         doc.save(`Order_${order._id}_Invoice.pdf`);
     };
 

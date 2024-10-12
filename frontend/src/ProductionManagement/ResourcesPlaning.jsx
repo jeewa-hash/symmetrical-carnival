@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-import backgroundImage from '../image/bkv.mp4'; // Adjust the path according to your folder structure
+// Import your background image
+import backgroundImage from '../image/design.png'; // Adjust the path according to your folder structure
 
 const ResourcePlanningSystem = () => {
   const [newResources, setNewResources] = useState([{ id: 0, name: '', date: '', quantity: 0 }]);
@@ -76,19 +77,7 @@ const ResourcePlanningSystem = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen relative">
-      <video
-        autoPlay
-        loop
-        muted
-        className="absolute inset-0 w-full h-full object-cover z-0" // Ensure video is behind content
-      >
-        <source src={backgroundImage} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-
-      
-      
+    <div className="flex flex-col min-h-screen relative bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
       <div className="flex-1 flex justify-center items-center z-10"> {/* Set z-index for content */}
         <div className="max-w-xl w-full bg-pink-100 rounded-lg shadow-xl p-10 border border-gray-200 space-y-6">
           <h1 className="text-4xl font-bold text-purple-600 mb-4 text-center">Resource Planning System</h1>
@@ -138,7 +127,8 @@ const ResourcePlanningSystem = () => {
                 </div>
               </div>
             ))}
-            <div className="flex justify-between">
+            {/* Add margin-top to the button container for increased gap */}
+            <div className="flex justify-between mt-6">
               <button
                 type="button"
                 className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition duration-200"
@@ -173,8 +163,6 @@ const ResourcePlanningSystem = () => {
           </button>
         </div>
       </div>
-
-      
     </div>
   );
 };

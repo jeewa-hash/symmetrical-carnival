@@ -32,6 +32,18 @@ export const addReport = async (req, res) => {
 
 }
 
+export const getReportById = async (req, res) => {
+    try {
+        const report = await ReportModule.findById(req.params.id);
+        if (!report) {
+            return res.status(404).json({message: "Report not found."});
+        }
+        res.status(200).json(report);
+        } catch (error) {
+        res.status(500).json({ error: "Internal server error." });
+    }
+}
+
 //view all reports
 export const listreport = async (req, res) => {
     try {
@@ -42,6 +54,7 @@ export const listreport = async (req, res) => {
         res.status(500).json({ error: "Internal server error." });
     }
 }
+
 
 //update a report
 export const updateReport = async (req, res) => {

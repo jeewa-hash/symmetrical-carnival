@@ -3,6 +3,7 @@ import jsPDF from 'jspdf';
 import './orderlist.css';
 import ViewOrder from '../vieworder/ViewOrder'; 
 import 'jspdf-autotable';
+import logo from '../../assets/logo.png';
 
 const OrderList = () => {
   const [orders, setOrders] = useState([]);
@@ -36,8 +37,24 @@ const OrderList = () => {
 
   const generateReport = () => {
     const doc = new jsPDF();
+
+
+    doc.addImage(logo, 'PNG', 14, 10, 50, 20); // Adjust the position and size as necessary
+
+    // Add Title Next to Logo
+    doc.setFontSize(18); // Set font size for the title
+    doc.setFont("helvetica", "bold"); // Set font to bold
+    doc.setTextColor(0, 51, 102); // Set color (pink to match soft toy theme)
+    doc.text("Bear Works Lanka", 70, 20); // Position the title next to the logo
+
+    
+ // Draw Header Line
+ doc.setDrawColor(0, 0, 0); // Set line color to black
+ doc.line(14, 32, doc.internal.pageSize.width - 14, 32); // Draw line below the header
+
+
     doc.setFontSize(18);
-    doc.text('Order List Summary', 14, 22); 
+    doc.text('Order List Summary', 100,45,{ align: 'center' }); 
 
     const tableColumnHeaders = ["Supplier", "Order Date", "Status"];
     const tableRows = filteredOrders.map(order => [
@@ -49,8 +66,21 @@ const OrderList = () => {
     doc.autoTable({
       head: [tableColumnHeaders],
       body: tableRows,
-      startY: 30, 
+      startY: 50, 
     });
+
+     // Draw Footer Line
+     const footerY = doc.internal.pageSize.height - 30; // Position for footer line
+     doc.line(14, footerY, doc.internal.pageSize.width - 14, footerY); // Draw line above the footer
+ 
+     // Add Footer
+     doc.setFontSize(12); // Set font size for footer
+     doc.setFont("helvetica", "normal"); // Set font to normal
+     doc.setTextColor(0, 0, 0); // Set color to black
+     const footerText = "Address: 123 Bear Lane, Colombo, Sri Lanka\nContact: +94 123 456 789"; // Sample footer text
+     const footerLines = doc.splitTextToSize(footerText, doc.internal.pageSize.width - 28); // Split text to fit the page
+ 
+     doc.text(footerLines, 14, footerY + 10); // Draw footer text below the footer line
 
     doc.save('order-list-summary.pdf');
   };

@@ -13,3 +13,14 @@ export const getCompletedDeliveriesCount = async (req, res) => {
         res.status(500).json({ message: "Server error", error });
     }
 };
+
+
+// Get all reports to generate the charts
+export const getDeliveryReports = async (req, res) => {
+    try {
+        const reports = await Report.find(); // Fetch all reports
+        res.status(200).json(reports);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+};

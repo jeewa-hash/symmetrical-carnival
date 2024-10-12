@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, InputNumber, DatePicker, Button, Table, Modal } from 'antd';
+import { Form, Input, InputNumber, DatePicker, Button, Table, Modal, Select } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
+import Header from '../Shared/Header';
+import Footer from '../Shared/Footer';
 import backgroundImage from '../image/design.png'; // Adjust the path according to your structure
+
+const { Option } = Select;
 
 const FinishGoods = () => {
   const [formData, setFormData] = useState([]);
@@ -33,7 +37,7 @@ const FinishGoods = () => {
   };
 
   const handleFinish = async (values) => {
-    const { productName, quantity, unitPrice, dateManufactured } = values;
+    const { productName, quantity, unitPrice, dateManufactured, unitMeasurement } = values;
     const totalValue = quantity * unitPrice;
     const newData = {
       productName,
@@ -41,6 +45,7 @@ const FinishGoods = () => {
       unitPrice,
       dateManufactured: dateManufactured.format('YYYY-MM-DD'),
       totalValue,
+      unitMeasurement, // Including unitMeasurement in form data
     };
 
     try {
@@ -68,6 +73,7 @@ const FinishGoods = () => {
       unitPrice: item.unitPrice,
       dateManufactured: moment(item.dateManufactured),
       totalValue: item.totalValue,
+      unitMeasurement: item.unitMeasurement, // Setting unitMeasurement value in form
     });
     setEditingIndex(index);
   };
@@ -147,7 +153,7 @@ const FinishGoods = () => {
         backgroundPosition: 'center',
       }}
     >
-     
+      <Header />
       <div className="flex-1 flex justify-center items-center relative">
         <div className="max-w-2xl w-full bg-pink-100 bg-opacity-80 backdrop-blur-lg rounded-lg shadow-xl p-10 border border-gray-200 space-y-6 z-10">
           <h1 className="form-heading text-4xl font-bold text-purple-600 mb-4 text-center">Finished Goods</h1>
@@ -195,11 +201,27 @@ const FinishGoods = () => {
             </Form.Item>
 
             <Form.Item
+              label="Unit Measurement"
+              name="unitMeasurement"
+              rules={[{ required: true, message: 'Please select a unit of measurement' }]}
+            >
+              <Select
+                placeholder="Select unit measurement"
+                className="w-full h-10 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                <Option value="sets">Sets</Option>
+                <Option value="pk">Packs</Option>
+                <Option value="pair">Pair</Option>
+                <Option value="each">Each</Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item
               label="Unit Price"
               name="unitPrice"
               rules={[{ required: true, message: 'Please enter the unit price' }]}
             >
-            <InputNumber
+              <InputNumber
                 min={1}
                 placeholder="Enter price"
                 style={{ width: '100%' }}
@@ -225,32 +247,21 @@ const FinishGoods = () => {
             </Form.Item>
 
             <div className="flex justify-center">
-              <Button type="primary" htmlType="submit" style={{ backgroundColor: '#ff6f61', borderColor: '#ff6f61' }} className="bg-purple-600 text-white rounded-lg px-4 py-2 hover:bg-purple-700 transition duration-200">
-                {editingIndex !== null ? 'Update' : 'Submit'}
-              </Button>
+              <Button type="primary" htmlType="submit" style={{ backgroundColor: '#ff6f61', borderColor: '#ff6f61' }} className="bg-purple-600 text-white rounded-lg px-4 py-2 hover:bg-purple-700 transition duration-300">Submit</Button>
             </div>
           </Form>
 
-          {/* Search Bar */}
           <Input
             placeholder="Search by product name"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            style={{ margin: '20px 0', width: '100%' }}
             className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
 
-          <Table
-            dataSource={filteredData}
-            columns={columns}
-            rowKey={(record) => record.productName + record.dateManufactured}
-            pagination={false}
-            className="finished-goods-table"
-            style={{ width: '100%', margin: '20px auto' }}
-          />
+          <Table columns={columns} dataSource={filteredData} rowKey="_id" />
         </div>
       </div>
-      
+      <Footer />
     </div>
   );
 };

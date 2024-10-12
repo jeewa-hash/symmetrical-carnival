@@ -3,7 +3,7 @@ import Header from '../Shared/Header';
 import Footer from '../Shared/Footer';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import backgroundImage from '../image/design.png'; 
+import backgroundImage from '../image/design.png';
 
 const departments = [
   'Production Department',
@@ -65,11 +65,10 @@ const AddEmployeeForm = () => {
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [joiningDate, setJoiningDate] = useState('');
   const [message, setMessage] = useState('');
-
   const [currentDate, setCurrentDate] = useState('');
   const navigate = useNavigate();
 
-  // Validation for employee ID - max 5 digits
+  // Validations
   const validateEmployeeId = (id) => /^[0-9]{1,5}$/.test(id);
   const validateName = (name) => /^[a-zA-Z\s]+$/.test(name);
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
@@ -77,9 +76,9 @@ const AddEmployeeForm = () => {
     const lengthValid = nic.length === 12 || (nic.length === 10 && /^[0-9]{9}[Vv]$/.test(nic));
     return lengthValid;
   };
-
   const validateSalary = (salary) => salary > 0;
 
+  // Form Submission Handler
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -133,16 +132,19 @@ const AddEmployeeForm = () => {
         designation,
         baseSalary: parseFloat(baseSalary),
         dateOfBirth,
-        joiningDate: currentDate,
+        joiningDate,
       });
 
       setMessage(response.data.msg || 'Employee added successfully!');
       resetForm();
     } catch (error) {
-      setMessage(error.response?.data?.error || 'An error occurred while adding the employee.');
+      // Improved error handling
+      const errorMessage = error.response?.data?.message || 'An error occurred while adding the employee.';
+      setMessage(errorMessage);
     }
   };
 
+  // Reset Form
   const resetForm = () => {
     setFirstName('');
     setLastName('');
@@ -154,13 +156,15 @@ const AddEmployeeForm = () => {
     setDesignation('');
     setBaseSalary('');
     setDateOfBirth('');
-    setJoiningDate(currentDate);
+    setJoiningDate(currentDate); // Reset to the initial value
+    setMessage(''); // Reset message
   };
 
-  const handleIdKeyPress = (event) => {
-    const charCode = event.charCode;
-    if (!/[0-9]/.test(String.fromCharCode(charCode))) {
-      event.preventDefault();
+  // Input Handlers
+  const handleIdChange = (event) => {
+    const value = event.target.value;
+    if (/^\d{0,5}$/.test(value)) { // Allow up to 5 digits
+      setEmployeeId(value);
     }
   };
 
@@ -188,215 +192,176 @@ const AddEmployeeForm = () => {
       .map((desig) => desig.name);
   };
 
-  // Set the current date when the component mounts and prevent joining date from changing
   useEffect(() => {
     const today = new Date();
     const formattedDate = today.toISOString().split('T')[0];
     setCurrentDate(formattedDate);
-    setJoiningDate(formattedDate); // Joining date restricted to today
+    setJoiningDate(formattedDate);
   }, [department, employeeType]);
 
   const maxDate = new Date().getFullYear() - 18;
-  const minDate = '1900-01-01';
   const restrictedMaxDate = `${maxDate}-12-31`;
 
   return (
     <div
-      className="bg-gray-100 min-h-screen"
+      className="min-h-screen bg-pink-100"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        minHeight: 'calc(100vh - 10rem)', // Adjust height for header and footer
       }}
     >
       <Header />
-      <div className="max-w-2xl mx-auto bg-white p-8 shadow-lg rounded-lg mt-10 bg-opacity-90">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">Add Employee</h2>
+      <div className="bg-white bg-opacity-90 p-10 rounded-lg shadow-lg w-full max-w-3xl mx-auto mt-8">
+        <h2 className="text-4xl font-bold text-center text-purple-600 mb-8">Add Employee</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-              First Name
-            </label>
-            <input
-              id="firstName"
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              onKeyPress={handleNameKeyPress}
-              required
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">First Name</label>
+              <input
+                type="text"
+                className="mt-1 block w-full px-4 py-2 rounded-md shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+                onKeyPress={handleNameKeyPress}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Last Name</label>
+              <input
+                type="text"
+                className="mt-1 block w-full px-4 py-2 rounded-md shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+                onKeyPress={handleNameKeyPress}
+              />
+            </div>
           </div>
           <div>
-            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-              Last Name
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Email</label>
             <input
-              id="lastName"
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              onKeyPress={handleNameKeyPress}
-              required
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
-              id="email"
               type="email"
+              className="mt-1 block w-full px-4 py-2 rounded-md shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <div>
-            <label htmlFor="nic" className="block text-sm font-medium text-gray-700 mb-1">
-              NIC
-            </label>
+            <label className="block text-sm font-medium text-gray-700">NIC</label>
             <input
-              id="nic"
               type="text"
+              className="mt-1 block w-full px-4 py-2 rounded-md shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
               value={nic}
               onChange={handleNicChange}
               required
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <div>
-            <label htmlFor="employeeId" className="block text-sm font-medium text-gray-700 mb-1">
-              Employee ID
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Employee ID</label>
             <input
-              id="employeeId"
               type="text"
+              className="mt-1 block w-full px-4 py-2 rounded-md shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
               value={employeeId}
-              onChange={(e) => setEmployeeId(e.target.value)}
-              onKeyPress={handleIdKeyPress}
+              onChange={handleIdChange}
               required
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <div>
-            <label htmlFor="department" className="block text-sm font-medium text-gray-700 mb-1">
-              Department
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Department</label>
             <select
-              id="department"
+              className="mt-1 block w-full px-4 py-2 rounded-md shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
               value={department}
-              onChange={(e) => setDepartment(e.target.value)}
-              required
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              onChange={(e) => {
+                setDepartment(e.target.value);
+                setDesignation(''); // Reset designation when department changes
+              }}
             >
               {departments.map((dept) => (
-                <option key={dept} value={dept}>
-                  {dept}
-                </option>
+                <option key={dept} value={dept}>{dept}</option>
               ))}
             </select>
           </div>
           <div>
-            <label htmlFor="designation" className="block text-sm font-medium text-gray-700 mb-1">
-              Designation
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Designation</label>
             <select
-              id="designation"
+              className="mt-1 block w-full px-4 py-2 rounded-md shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
               value={designation}
               onChange={(e) => setDesignation(e.target.value)}
               required
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             >
+              <option value="">Select Designation</option>
               {getDesignationOptions().map((desig) => (
-                <option key={desig} value={desig}>
-                  {desig}
-                </option>
+                <option key={desig} value={desig}>{desig}</option>
               ))}
             </select>
           </div>
           <div>
-            <label htmlFor="employeeType" className="block text-sm font-medium text-gray-700 mb-1">
-              Employee Type
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Employee Type</label>
             <select
-              id="employeeType"
+              className="mt-1 block w-full px-4 py-2 rounded-md shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
               value={employeeType}
-              onChange={(e) => setEmployeeType(e.target.value)}
-              required
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              onChange={(e) => {
+                setEmployeeType(e.target.value);
+                setDesignation(''); // Reset designation when employee type changes
+              }}
             >
               {employeeTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
+                <option key={type} value={type}>{type}</option>
               ))}
             </select>
           </div>
           <div>
-            <label htmlFor="baseSalary" className="block text-sm font-medium text-gray-700 mb-1">
-              Base Salary
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Base Salary</label>
             <input
-              id="baseSalary"
               type="number"
+              min="0"
+              className="mt-1 block w-full px-4 py-2 rounded-md shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
               value={baseSalary}
               onChange={(e) => setBaseSalary(e.target.value)}
               required
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          <div>
-            <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700 mb-1">
-              Date of Birth
-            </label>
-            <input
-              id="dateOfBirth"
-              type="date"
-              value={dateOfBirth}
-              onChange={(e) => setDateOfBirth(e.target.value)}
-              max={restrictedMaxDate}
-              min={minDate}
-              required
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="joiningDate" className="block text-sm font-medium text-gray-700 mb-1">
-              Joining Date
-            </label>
-            <input
-              id="joiningDate"
-              type="date"
-              value={joiningDate}
-              readOnly // The joining date is restricted to today's date
-              required
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-          <div>
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white font-semibold py-3 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-            >
-              Add Employee
-            </button>
-            <button
-              type="button"
-              onClick={handleViewEmployees}
-              className="w-full bg-gray-500 text-white font-semibold py-3 px-4 mt-3 rounded-md shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
-            >
-              View Employees
-            </button>
-          </div>
-          {message && (
-            <div className="mt-4 text-center">
-              <p className="text-red-500 font-semibold">{message}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
+              <input
+                type="date"
+                className="mt-1 block w-full px-4 py-2 rounded-md shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                value={dateOfBirth}
+                onChange={(e) => setDateOfBirth(e.target.value)}
+                required
+                max={restrictedMaxDate} // 18 years restriction
+              />
             </div>
-          )}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Joining Date</label>
+              <input
+                type="date"
+                className="mt-1 block w-full px-4 py-2 rounded-md shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                value={joiningDate}
+                onChange={(e) => setJoiningDate(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+          {message && <p className="text-red-500 text-sm">{message}</p>}
+          <button
+            type="submit"
+            className="w-full bg-purple-600 text-white font-semibold py-2 rounded-md shadow-md hover:bg-purple-700"
+          >
+            Add Employee
+          </button>
         </form>
+        <button
+          onClick={handleViewEmployees}
+          className="mt-4 w-full bg-blue-600 text-white font-semibold py-2 rounded-md shadow-md hover:bg-blue-700"
+        >
+          View Employees
+        </button>
       </div>
       <Footer />
     </div>

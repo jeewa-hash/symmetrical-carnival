@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import backgr from '../image/BR.png'; 
 const TransactionForm = () => {
   const [transactionType, setTransactionType] = useState("");
   const [description, setDescription] = useState("");
@@ -262,6 +262,7 @@ const TransactionForm = () => {
 
   return (
     <div>
+      <div className="bg-cover bg-center min-h-screen" style={{ backgroundImage: `url(${backgr})` }}>
       <form
         onSubmit={handleSubmit}
         className="bg-pink-100 shadow-lg rounded-lg p-6 max-w-7xl mx-auto my-10 text-gray-800"
@@ -360,47 +361,448 @@ const TransactionForm = () => {
         <h3 className="text-xl font-bold text-pink-700">Profit: ${calculateProfit()}</h3>
       </div>
 
-      {/* Sidebar */}
-      <button
-        onClick={toggleSidebar}
-        className="mt-4 w-full bg-pink-500 text-white p-3 rounded-lg font-semibold hover:bg-pink-600"
-      >
-        {isSidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
-      </button>
+    {/* Sidebar */}
+    <button
+  onClick={toggleSidebar}
+  className="mt-4 w-full bg-pink-500 text-white p-3 rounded-lg font-semibold hover:bg-pink-600"
+>
+  {isSidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
+</button>
 
-      {isSidebarOpen && (
-        
-        <div className="fixed right-0 top-0 h-full bg-white shadow-lg p-5">
-          <h3 className="text-xl font-semibold mb-2">Salary Details</h3>
-          <h3 className="text-xl font-semibold mb-2">Total Net Salary for {currentMonth}</h3>
-          <p className="text-xl font-semibold text-pink-700">${totalNetSalaryCurrentMonth.toFixed(2)}</p>
-          <h3 className="text-xl font-semibold mb-2">Order Bill Details</h3>
-          <h2 className="text-xl font-semibold">Total Amount for Today:</h2>
-          <h2 className="text-xl font-semibold">Rs.${totalOrderAmount.toFixed(2)}</h2>
-          <div>
-          <h3 className="text-xl font-semibold mb-2">Supplier Bill Details</h3>
-          <h2 className="text-xl font-semibold">Total Amount per Day:</h2>
-          {Object.entries(groupedOrders).map(([date, { dailyTotal }]) => (
-            <div key={date} className="mb-2">
-              <h2 className="text-lg">{date}: Rs.{dailyTotal.toFixed(2)}</h2>
-            </div>
-          ))}
-        
-        </div>
-        <div className="max-w-2xl w-full bg-white rounded-lg shadow-xl p-10 border border-gray-200">
-        <div>
-          <h3 className="text-xl font-semibold mb-2">Inventory Details</h3>
-          <h2 className="text-xl font-semibold">Total Inventory per Month:</h2>
-          {formData.map((record) => (
-            <div key={record._id} className="mb-2">
-              <h2 className="text-lg">{record.month}: {record.totalInventory.toFixed(2)} units</h2>
-            </div>
-          ))}
-        </div>
+{isSidebarOpen && (
+  <div className="fixed right-0 top-0 h-full bg-gradient-to-b from-pink-200 to-rose-400 text-rose-900 p-5 shadow-lg rounded-l-lg">
+    <h2 className="text-2xl font-bold mb-5 border-b-2 border-rose-300 pb-2">🧸 All Transaction</h2>
+
+    {/* Salary Details */}
+    <div className="bg-white bg-opacity-60 p-4 rounded-lg opacity-60">
+    <div className="mb-5">
+      
+      <h3 className="text-xl font-semibold mb-1">Total Net Salary for {currentMonth}</h3>
+      <div className="flex items-center">
+        <input type="checkbox" className="mr-2" />
+        <p className="text-xl font-semibold text-pink-700">Rs{totalNetSalaryCurrentMonth.toFixed(2)}</p>
       </div>
+    </div>
+    </div>
+    <br></br>
+    {/* Order Bill Details */}
+    <div className="bg-white bg-opacity-60 p-4 rounded-lg opacity-60">
+    <div className="mb-5">
+      <h3 className="text-xl font-semibold mb-2">Order Bill Details</h3>
+      <h2 className="text-xl font-semibold mb-1">Total Amount for Today:</h2>
+      <div className="flex items-center">
+        <input type="checkbox" className="mr-2" />
+        <h2 className="text-xl font-semibold">Rs.{totalOrderAmount.toFixed(2)}</h2>
+      </div>
+    </div>
+    </div>
+    <br></br>
+    {/* Supplier Bill Details */}
+    <div className="bg-white bg-opacity-60 p-4 rounded-lg opacity-60">
+    <div className="mb-5">
+      <h3 className="text-xl font-semibold mb-2">Supplier Bill Details</h3>
+      <h2 className="text-xl font-semibold mb-1">Total Amount per Day:</h2>
+      {Object.entries(groupedOrders).map(([date, { dailyTotal }]) => (
+        <div key={date} className="flex items-center mb-2">
+          <input type="checkbox" className="mr-2" />
+          <h2 className="text-lg">{date}: Rs.{dailyTotal.toFixed(2)}</h2>
         </div>
-        
-      )}
+      ))}
+    </div>
+    </div>
+    <br></br>
+    {/* Inventory Details */}
+    <div className="bg-white bg-opacity-60 p-4 rounded-lg opacity-60">
+    <div>
+      <h3 className="text-xl font-semibold mb-2">Inventory Details</h3>
+      <h2 className="text-xl font-semibold mb-1">Total Inventory per Month:</h2>
+      {formData.map((record) => (
+        <div key={record._id} className="flex items-center mb-2">
+          <input type="checkbox" className="mr-2" />
+          <h2 className="text-lg">{record.month}: {record.totalInventory.toFixed(2)} units</h2>
+        </div>
+      ))}
+    </div>
+    </div>
+  </div>
+)}
+
+     
+     <h3 className="text-2xl font-bold text-pink-600 text-center mb-5">Transactions Overview</h3>
+
+      
+<table className="min-w-full mb-5 border-collapse border border-pink-300">
+  <thead>
+    <tr>
+      <th className="border border-pink-300 p-2 w-24">Date</th>
+      <th className="border border-pink-300 p-2">Description</th>
+      <th className="border border-pink-300 p-2">Credit</th>
+      <th className="border border-pink-300 p-2">Debit</th>
+      <th className="border border-pink-300 p-2">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {transactions
+      .filter(transaction => transaction.transactionType !== 'assets') // Filter out assets transactions
+      .reduce((acc, transaction) => {
+        const lastTransaction = acc.length > 0 ? acc[acc.length - 1] : null;
+
+        // If the date is different from the last one, add a new date row
+        if (!lastTransaction || transaction.date !== lastTransaction.date) {
+          acc.push({ date: transaction.date, transactions: [transaction] });
+        } else {
+          // If the date is the same, push the transaction into the existing array
+          lastTransaction.transactions.push(transaction);
+        }
+        return acc;
+      }, [])
+      .map((row, index) => {
+        // Format the date
+        const dateObj = new Date(row.date);
+        const formattedDate = dateObj.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: '2-digit',
+        }).replace(',', ''); // Remove the comma after the month
+
+        return (
+          <React.Fragment key={index}>
+            <tr>
+              <td className="border border-pink-300 p-2 font-bold" rowSpan={row.transactions.length}>
+                {formattedDate} {/* Displaying the formatted date */}
+              </td>
+              <td className="border border-pink-300 p-2">{row.transactions[0].description}</td>
+              <td className="border border-pink-300 p-2">{row.transactions[0].transactionType === 'income' ? row.transactions[0].amount : '-'}</td>
+              <td className="border border-pink-300 p-2">{(row.transactions[0].transactionType === 'expenses' || row.transactions[0].transactionType === 'liabilities') ? row.transactions[0].amount : '-'}</td>
+              <td className="border border-pink-300 p-2">
+                <button onClick={() => deleteTransaction(row.transactions[0]._id)} className="text-red-500">Delete</button>
+              </td>
+            </tr>
+            {row.transactions.slice(1).map((transaction, transactionIndex) => (
+              <tr key={transactionIndex}>
+                <td className="border border-pink-300 p-2">{transaction.description}</td>
+                <td className="border border-pink-300 p-2">{transaction.transactionType === 'income' ? transaction.amount : '-'}</td>
+                <td className="border border-pink-300 p-2">{(transaction.transactionType === 'expenses' || transaction.transactionType === 'liabilities') ? transaction.amount : '-'}</td>
+                <td className="border border-pink-300 p-2">
+                  <button onClick={() => deleteTransaction(transaction._id)} className="text-red-500">Delete</button>
+                </td>
+              </tr>
+            ))}
+          </React.Fragment>
+        );
+      })}
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colSpan={2} className="border border-pink-300 p-2 font-bold">Total:</td>
+      <td className="border border-pink-300 p-2">
+        {transactions
+          .filter(transaction => transaction.transactionType === 'income')
+          .reduce((total, transaction) => total + transaction.amount, 0)}
+      </td>
+      <td className="border border-pink-300 p-2">
+        {transactions
+          .filter(transaction => transaction.transactionType === 'expenses' || transaction.transactionType === 'liabilities')
+          .reduce((total, transaction) => total + transaction.amount, 0)}
+      </td>
+      <td></td>
+    </tr>
+  </tfoot>
+</table>
+   
+   {/* Income Table */}
+<h4 className="text-xl font-semibold text-pink-500">Income</h4>
+<table className="min-w-full mb-5 border-collapse border border-pink-300">
+  <thead>
+    <tr>
+      <th className="border border-pink-300 p-2 w-24">Date</th> {/* Minimized width */}
+      <th className="border border-pink-300 p-2">Description</th>
+      <th className="border border-pink-300 p-2">Amount</th>
+      <th className="border border-pink-300 p-2">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {transactions
+      .filter(transaction => transaction.transactionType === 'income')
+      .reduce((acc, transaction) => {
+        const lastTransaction = acc.length > 0 ? acc[acc.length - 1] : null;
+
+        // If the date is different from the last one, add a new date row
+        if (!lastTransaction || transaction.date !== lastTransaction.date) {
+          acc.push({ date: transaction.date, transactions: [transaction] });
+        } else {
+          // If the date is the same, push the transaction into the existing array
+          lastTransaction.transactions.push(transaction);
+        }
+        return acc;
+      }, [])
+      .map((row, index) => {
+        // Format the date
+        const dateObj = new Date(row.date);
+        const formattedDate = dateObj.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: '2-digit',
+        }).replace(',', ''); // Remove the comma after the month
+
+        return (
+          <React.Fragment key={index}>
+            <tr>
+              <td className="border border-pink-300 p-2 font-bold w-24" rowSpan={row.transactions.length}>
+                {formattedDate} {/* Displaying the formatted date */}
+              </td>
+              <td className="border border-pink-300 p-2">{row.transactions[0].description}</td>
+              <td className="border border-pink-300 p-2">{row.transactions[0].amount}</td>
+              <td className="border border-pink-300 p-2">
+                <button onClick={() => deleteTransaction(row.transactions[0]._id)} className="text-red-500">Delete</button>
+              </td>
+            </tr>
+            {row.transactions.slice(1).map((transaction, transactionIndex) => (
+              <tr key={transactionIndex}>
+                <td className="border border-pink-300 p-2">{transaction.description}</td>
+                <td className="border border-pink-300 p-2">{transaction.amount}</td>
+                <td className="border border-pink-300 p-2">
+                  <button onClick={() => deleteTransaction(transaction._id)} className="text-red-500">Delete</button>
+                </td>
+              </tr>
+            ))}
+          </React.Fragment>
+        );
+      })}
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colSpan={2} className="border border-pink-300 p-2 font-bold">Total Income:</td>
+      <td className="border border-pink-300 p-2">
+        {transactions
+          .filter(transaction => transaction.transactionType === 'income')
+          .reduce((total, transaction) => total + transaction.amount, 0)}
+      </td>
+      <td></td>
+    </tr>
+  </tfoot>
+</table>
+
+{/* Expenses Table */}
+<h4 className="text-xl font-semibold text-pink-500">Expenses</h4>
+<table className="min-w-full mb-5 border-collapse border border-pink-300">
+  <thead>
+    <tr>
+      <th className="border border-pink-300 p-2 w-24">Date</th> {/* Minimized width */}
+      <th className="border border-pink-300 p-2">Description</th>
+      <th className="border border-pink-300 p-2">Amount</th>
+      <th className="border border-pink-300 p-2">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {transactions
+      .filter(transaction => transaction.transactionType === 'expenses')
+      .reduce((acc, transaction) => {
+        const lastTransaction = acc.length > 0 ? acc[acc.length - 1] : null;
+
+        // If the date is different from the last one, add a new date row
+        if (!lastTransaction || transaction.date !== lastTransaction.date) {
+          acc.push({ date: transaction.date, transactions: [transaction] });
+        } else {
+          // If the date is the same, push the transaction into the existing array
+          lastTransaction.transactions.push(transaction);
+        }
+        return acc;
+      }, [])
+      .map((row, index) => {
+        // Format the date
+        const dateObj = new Date(row.date);
+        const formattedDate = dateObj.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: '2-digit',
+        }).replace(',', ''); // Remove the comma after the month
+
+        return (
+          <React.Fragment key={index}>
+            <tr>
+              <td className="border border-pink-300 p-2 font-bold w-24" rowSpan={row.transactions.length}>
+                {formattedDate} {/* Displaying the formatted date */}
+              </td>
+              <td className="border border-pink-300 p-2">{row.transactions[0].description}</td>
+              <td className="border border-pink-300 p-2">{row.transactions[0].amount}</td>
+              <td className="border border-pink-300 p-2">
+                <button onClick={() => deleteTransaction(row.transactions[0]._id)} className="text-red-500">Delete</button>
+              </td>
+            </tr>
+            {row.transactions.slice(1).map((transaction, transactionIndex) => (
+              <tr key={transactionIndex}>
+                <td className="border border-pink-300 p-2">{transaction.description}</td>
+                <td className="border border-pink-300 p-2">{transaction.amount}</td>
+                <td className="border border-pink-300 p-2">
+                  <button onClick={() => deleteTransaction(transaction._id)} className="text-red-500">Delete</button>
+                </td>
+              </tr>
+            ))}
+          </React.Fragment>
+        );
+      })}
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colSpan={2} className="border border-pink-300 p-2 font-bold">Total Expenses:</td>
+      <td className="border border-pink-300 p-2">
+        {transactions
+          .filter(transaction => transaction.transactionType === 'expenses')
+          .reduce((total, transaction) => total + transaction.amount, 0)}
+      </td>
+      <td></td>
+    </tr>
+  </tfoot>
+</table>
+
+{/* Assets Table */}
+<h4 className="text-xl font-semibold text-pink-500">Assets</h4>
+<table className="min-w-full mb-5 border-collapse border border-pink-300">
+  <thead>
+    <tr>
+      <th className="border border-pink-300 p-2 w-24">Date</th> {/* Minimized width */}
+      <th className="border border-pink-300 p-2">Description</th>
+      <th className="border border-pink-300 p-2">Amount</th>
+      <th className="border border-pink-300 p-2">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {transactions
+      .filter(transaction => transaction.transactionType === 'assets')
+      .reduce((acc, transaction) => {
+        const lastTransaction = acc.length > 0 ? acc[acc.length - 1] : null;
+
+        // If the date is different from the last one, add a new date row
+        if (!lastTransaction || transaction.date !== lastTransaction.date) {
+          acc.push({ date: transaction.date, transactions: [transaction] });
+        } else {
+          // If the date is the same, push the transaction into the existing array
+          lastTransaction.transactions.push(transaction);
+        }
+        return acc;
+      }, [])
+      .map((row, index) => {
+        // Format the date
+        const dateObj = new Date(row.date);
+        const formattedDate = dateObj.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: '2-digit',
+        }).replace(',', ''); // Remove the comma after the month
+
+        return (
+          <React.Fragment key={index}>
+            <tr>
+              <td className="border border-pink-300 p-2 font-bold w-24" rowSpan={row.transactions.length}>
+                {formattedDate} {/* Displaying the formatted date */}
+              </td>
+              <td className="border border-pink-300 p-2">{row.transactions[0].description}</td>
+              <td className="border border-pink-300 p-2">{row.transactions[0].amount}</td>
+              <td className="border border-pink-300 p-2">
+                <button onClick={() => deleteTransaction(row.transactions[0]._id)} className="text-red-500">Delete</button>
+              </td>
+            </tr>
+            {row.transactions.slice(1).map((transaction, transactionIndex) => (
+              <tr key={transactionIndex}>
+                <td className="border border-pink-300 p-2">{transaction.description}</td>
+                <td className="border border-pink-300 p-2">{transaction.amount}</td>
+                <td className="border border-pink-300 p-2">
+                  <button onClick={() => deleteTransaction(transaction._id)} className="text-red-500">Delete</button>
+                </td>
+              </tr>
+            ))}
+          </React.Fragment>
+        );
+      })}
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colSpan={2} className="border border-pink-300 p-2 font-bold">Total Assets:</td>
+      <td className="border border-pink-300 p-2">
+        {transactions
+          .filter(transaction => transaction.transactionType === 'assets')
+          .reduce((total, transaction) => total + transaction.amount, 0)}
+      </td>
+      <td></td>
+    </tr>
+  </tfoot>
+</table>
+
+
+{/* Liabilities Table */}
+<h4 className="text-xl font-semibold text-pink-500">Liabilities</h4>
+<table className="min-w-full mb-5 border-collapse border border-pink-300">
+  <thead>
+    <tr>
+      <th className="border border-pink-300 p-2 w-24">Date</th> {/* Minimized width */}
+      <th className="border border-pink-300 p-2">Description</th>
+      <th className="border border-pink-300 p-2">Amount</th>
+      <th className="border border-pink-300 p-2">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {transactions
+      .filter(transaction => transaction.transactionType === 'liabilities')
+      .reduce((acc, transaction) => {
+        const lastTransaction = acc.length > 0 ? acc[acc.length - 1] : null;
+
+        // If the date is different from the last one, add a new date row
+        if (!lastTransaction || transaction.date !== lastTransaction.date) {
+          acc.push({ date: transaction.date, transactions: [transaction] });
+        } else {
+          // If the date is the same, push the transaction into the existing array
+          lastTransaction.transactions.push(transaction);
+        }
+        return acc;
+      }, [])
+      .map((row, index) => {
+        // Format the date
+        const dateObj = new Date(row.date);
+        const formattedDate = dateObj.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: '2-digit',
+        }).replace(',', ''); // Remove the comma after the month
+
+        // Calculate total amount for this date's transactions
+        const totalAmount = row.transactions.reduce((total, transaction) => total + transaction.amount, 0);
+
+        return (
+          <React.Fragment key={index}>
+            <tr>
+              <td className="border border-pink-300 p-2 font-bold w-24" rowSpan={row.transactions.length}>
+                {formattedDate} {/* Displaying the formatted date */}
+              </td>
+              <td className="border border-pink-300 p-2">{row.transactions[0].description}</td>
+              <td className="border border-pink-300 p-2">{row.transactions[0].amount}</td>
+              <td className="border border-pink-300 p-2">
+                <button onClick={() => deleteTransaction(row.transactions[0]._id)} className="text-red-500">Delete</button>
+              </td>
+            </tr>
+            {row.transactions.slice(1).map((transaction, transactionIndex) => (
+              <tr key={transactionIndex}>
+                <td className="border border-pink-300 p-2">{transaction.description}</td>
+                <td className="border border-pink-300 p-2">{transaction.amount}</td>
+                <td className="border border-pink-300 p-2">
+                  <button onClick={() => deleteTransaction(transaction._id)} className="text-red-500">Delete</button>
+                </td>
+              </tr>
+            ))}
+            {/* Display total amount row for this date */}
+            <tr>
+              <td className="border border-pink-300 p-2 font-bold" colSpan="2">Total:</td>
+              <td className="border border-pink-300 p-2 font-bold">{totalAmount}</td>
+              <td className="border border-pink-300 p-2"></td>
+            </tr>
+          </React.Fragment>
+        );
+      })}
+  </tbody>
+</table>
+
+
+</div>
     </div>
   );
 };

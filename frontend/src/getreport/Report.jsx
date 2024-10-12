@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import './Report.css';
+import './Report.css'; // Make sure this file includes the styles
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import jsPDF from 'jspdf'; // Import jsPDF for PDF generation
 import 'jspdf-autotable'; // For adding table to PDF
+
+import BR1 from '../image/BR.png'
+import image from '../image/logo.png';
+
 
 const Report = () => {
   const [listData, setData] = useState([]);
@@ -36,10 +40,20 @@ const Report = () => {
 
   const generatePDF = () => {
     const doc = new jsPDF();
-
-    // Add title to the PDF
-    doc.text('Delivery Report', 14, 10);
-
+  
+    // Add Logo (Assuming you have a logo variable)
+    doc.addImage( image, 'PNG', 14, 10, 50, 20); 
+  
+    // Add title
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(0, 51, 102);
+    doc.text('Bear Works Lanka', 70, 20); 
+  
+    // Draw line
+    doc.setDrawColor(0, 0, 0);
+    doc.line(14, 32, doc.internal.pageSize.width - 14, 32);
+  
     // Define table columns and rows
     const tableColumn = ['Delivery No', 'Driver Name', 'Vehicle No', 'Delivery Route', 'Delivery Date', 'Start Time', 'End Time', 'Delivery Status'];
     const tableRows = listData.map((list, index) => [
@@ -52,17 +66,26 @@ const Report = () => {
       list.delivery_EndTime,
       list.delivery_Status,
     ]);
-
-    // Add table to the PDF
+  
+    // Add table
     doc.autoTable({
       head: [tableColumn],
       body: tableRows,
-      startY: 20, // Adjust the starting point of the table
+      startY: 40, // Adjusted to leave space for header
     });
-
-    // Save the generated PDF
+  
+    // Footer
+    const footerY = doc.internal.pageSize.height - 30;
+    doc.line(14, footerY, doc.internal.pageSize.width - 14, footerY);
+    doc.setFontSize(12);
+    const footerText = "Address: 123 Bear Lane, Colombo, Sri Lanka\nContact: +94 123 456 789";
+    const footerLines = doc.splitTextToSize(footerText, doc.internal.pageSize.width - 28);
+    doc.text(footerLines, 14, footerY + 10);
+  
+    // Save PDF
     doc.save('DeliveryReport.pdf');
   };
+  
 
   // Filter listData based on the search term
   const filteredData = listData.filter((list) =>
@@ -70,73 +93,77 @@ const Report = () => {
   );
 
   return (
-    <div className="deliverytable">
-      <div className="search-bar mb-4">
-        <input
-          type="text"
-          placeholder="Search by Driver Name"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)} // Update search term
-          className="form-control border rounded-md p-2"
-        />
-      </div>
+  <div className='bg-cover min-h-screen bg-no-repeat' style={{backgroundImage: `url(${BR1})`}}>
+    
+    <div className="report-container"> {/* Replacing inline styles with a class */}
+    
+      
+      <div className="deliverytable bg-white bg-opacity-80 p-8 rounded-lg shadow-lg">
+        <div className="search-bar mb-4">
+          <input
+            type="text"
+            placeholder="Search by Driver Name"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)} // Update search term
+            className="form-control p-2 rounded-lg"
+          />
+        </div>
 
-      <div className="mb-4">
-        <Link to="/add" className="btn btn-primary bg-blue-500 text-white rounded-md px-4 py-2 mr-2">
-          <i className="fa-solid fa-plus"></i> Add Report
-        </Link>
-        <Link to="/dashBoard" className="btn btn-primary bg-blue-500 text-white rounded-md px-4 py-2 mr-2">
-          <i className="fa-solid fa-pen-to-square"></i> Dash Board
-        </Link>
-        <Link to="/map" className="btn btn-primary bg-blue-500 text-white rounded-md px-4 py-2">
-          <i className="fa-solid fa-map-location-dot"></i> Map View
-        </Link>
-        <button onClick={generatePDF} type="button" className="btn btn-success bg-green-500 text-white rounded-md px-4 py-2 ml-2">
-          <i className="fa-solid fa-file-pdf"></i> Generate Report
-        </button>
-      </div>
+        <div className="buttons mb-4 flex space-x-4">
 
-      <table className="min-w-full border border-gray-300">
-        <thead>
-          <tr>
-            <th scope="col" className="border-b-2 border-gray-300 p-2">Delivery No</th>
-            <th scope="col" className="border-b-2 border-gray-300 p-2">Driver Name</th>
-            <th scope="col" className="border-b-2 border-gray-300 p-2">Vehicle No</th>
-            <th scope="col" className="border-b-2 border-gray-300 p-2">Delivery Route</th>
-            <th scope="col" className="border-b-2 border-gray-300 p-2">Delivery Date</th>
-            <th scope="col" className="border-b-2 border-gray-300 p-2">Start Time</th>
-            <th scope="col" className="border-b-2 border-gray-300 p-2">End Time</th>
-            <th scope="col" className="border-b-2 border-gray-300 p-2">Delivery Status</th>
-            <th scope="col" className="border-b-2 border-gray-300 p-2">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.map((list, index) => (
-            <tr key={list._id}>
-              <th scope="row" className="border-b border-gray-200 p-2">{index + 1}</th>
-              <td className="border-b border-gray-200 p-2">{list.driver_Name}</td>
-              <td className="border-b border-gray-200 p-2">{list.vehicel_No}</td>
-              <td className="border-b border-gray-200 p-2">{list.delivery_Route}</td>
-              <td className="border-b border-gray-200 p-2">{list.delivery_Date}</td>
-              <td className="border-b border-gray-200 p-2">{list.delivery_StartTime}</td>
-              <td className="border-b border-gray-200 p-2">{list.delivery_EndTime}</td>
-              <td className="border-b border-gray-200 p-2">{list.delivery_Status}</td>
-              <td className="border-b border-gray-200 p-2">
-                <Link to={`/update/${list._id}`} className="bg-blue-500 text-white rounded-md px-2 py-1 mr-2">
-                  <i className="fa-solid fa-pen-to-square"></i> Edit
-                </Link>
-                <button
-                  onClick={() => deleteReport(list._id)}
-                  className="bg-red-500 text-white rounded-md px-2 py-1"
-                >
-                  <i className="fa-solid fa-trash"></i> Delete
-                </button>
-              </td>
+          <button onClick={generatePDF} type="button" className="btn btn-success">
+            <i className="fa-solid fa-file-pdf"></i> Generate Report
+          </button>
+        </div>
+
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Delivery No</th>
+              <th scope="col">Driver Name</th>
+              <th scope="col">Vehicle No</th>
+              <th scope="col">Delivery Route</th>
+              <th scope="col">Delivery Date</th>
+              <th scope="col">Start Time</th>
+              <th scope="col">End Time</th>
+              <th scope="col">Delivery Status</th>
+              <th scope="col">Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredData.map((list, index) => (
+              <tr key={list._id}>
+                <th scope="row">{index + 1}</th>
+                <td>{list.driver_Name}</td>
+                <td>{list.vehicel_No}</td>
+                <td>{list.delivery_Route}</td>
+                <td>{list.delivery_Date}</td>
+                <td>{list.delivery_StartTime}</td>
+                <td>{list.delivery_EndTime}</td>
+                <td>{list.delivery_Status}</td>
+                <td>
+                  <Link to={`/update/${list._id}`}  type="button" className="bg-green-500 text-white px-4 py-2 rounded mt-4">
+                  Update
+                    <i className="fa-solid fa-pen-to-square"></i>
+                  </Link>
+                  <button
+                    onClick={() => deleteReport(list._id)}
+                    type="button"
+                    className="bg-purple-500 text-white px-4 py-2 rounded mt-4"
+                  >
+                    Delet
+                    <i className="fa-solid fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      
     </div>
+   
+  </div>  
   );
 };
 

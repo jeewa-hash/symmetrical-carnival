@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import Header from '../Shared/Header';
-import Footer from '../Shared/Footer';
+
 import backgroundImage from '../image/design.png'; // Adjust the path according to your folder structure
 
 // Initialize order with today's date
@@ -19,7 +18,7 @@ const initialOrder = {
   _id: '',
 };
 
-const availableItems = ['Bear', 'Bear With Heart', 'Dog', '5 Feet', 'Dalmation'];
+const availableItems = ['Bear', 'Bear With Heart', 'Dog', '5 Feet', 'Dalmation','Bunny Rabbit'];
 
 const OrderCreation = () => {
   const [order, setOrder] = useState(initialOrder);
@@ -29,6 +28,19 @@ const OrderCreation = () => {
   const [isSlideViewOpen, setIsSlideViewOpen] = useState(false);
   const [checkedOrders, setCheckedOrders] = useState([]);
   const navigate = useNavigate();
+  
+  // Slide View Toggle Function
+  const toggleSlideView = () => {
+    setIsSlideViewOpen(!isSlideViewOpen);
+  };
+  
+  const handleCheckboxChange = (orderId) => {
+    setCheckedOrders((prevChecked) => 
+      prevChecked.includes(orderId) 
+        ? prevChecked.filter((id) => id !== orderId) 
+        : [...prevChecked, orderId]
+    );
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -42,19 +54,6 @@ const OrderCreation = () => {
 
     fetchOrders();
   }, []);
-
-  // Slide View Toggle Function
-  const toggleSlideView = () => {
-    setIsSlideViewOpen(!isSlideViewOpen);
-  };
-
-  const handleCheckboxChange = (orderId) => {
-    setCheckedOrders((prevChecked) => 
-      prevChecked.includes(orderId) 
-        ? prevChecked.filter((id) => id !== orderId) 
-        : [...prevChecked, orderId]
-    );
-  };
 
   const handleStatusChange = (event) => {
     setOrder((prevOrder) => ({ ...prevOrder, status: event.target.value }));
@@ -139,6 +138,7 @@ const OrderCreation = () => {
             setOrders([...orders, response.data]);
             setOrder(initialOrder);
             alert('Order created successfully!');
+            
           }
         }
       } catch (error) {
@@ -176,7 +176,6 @@ const OrderCreation = () => {
     return new Date(date).toLocaleDateString(undefined, options);
   };
 
- 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -204,10 +203,9 @@ const OrderCreation = () => {
     return <div className="text-red-500">{error}</div>;
   }
 
-
   return (
     <div className="flex flex-col min-h-screen relative">
-      <Header />
+      
 
       <div
         className="flex-1 flex justify-center items-center bg-cover bg-center relative"
@@ -254,6 +252,25 @@ const OrderCreation = () => {
             </div>
 
             <div>
+              <label htmlFor="status" className="block text-lg font-semibold text-gray-700">Order Status</label>
+              <select
+                id="status"
+                value={order.status}
+                onChange={handleStatusChange}
+                required
+                className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                <option value="">Select Status</option>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+              {validationErrors.status && (
+                <span className="text-red-500">{validationErrors.status}</span>
+              )}
+            </div>
+
+            <div>
               <label htmlFor="address" className="block text-lg font-semibold text-gray-700">Address</label>
               <input
                 id="address"
@@ -268,117 +285,132 @@ const OrderCreation = () => {
               )}
             </div>
 
-            <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-gray-700">Order Items</h3>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-700">Order Items</h3>
               {order.orderItems.map((item, index) => (
-                <div key={index} className="flex items-center space-x-4">
+                <div key={index} className="flex items-center space-x-4 mb-2">
                   <select
                     value={item.name}
-                    onChange={(e) => handleItemNameChange(e, index)}
-                    className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg"
+                    onChange={(event) => handleItemNameChange(event, index)}
                     required
+                    className="w-1/2 h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   >
-                    <option value="" disabled>Select Item</option>
-                    {availableItems.map((availableItem) => (
-                      <option key={availableItem} value={availableItem}>{availableItem}</option>
+                    <option value="">Select Item</option>
+                    {availableItems.map((availableItem, idx) => (
+                      <option key={idx} value={availableItem}>{availableItem}</option>
                     ))}
                   </select>
                   <input
                     type="number"
                     value={item.quantity}
-                    onChange={(e) => handleItemQuantityChange(e, index)}
                     onKeyDown={handleQuantityKeyDown}
-                    className="w-24 h-10 border border-gray-300 p-1 bg-white rounded-lg"
+                    onChange={(event) => handleItemQuantityChange(event, index)}
+                    placeholder="Quantity"
                     required
+                    className="h-10 border border-gray-300 p-1 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 w-1/4"
                   />
-                  {validationErrors.orderItems && validationErrors.orderItems[index]?.quantity && (
-                    <span className="text-red-500">{validationErrors.orderItems[index].quantity}</span>
-                  )}
-                  {validationErrors.orderItems && validationErrors.orderItems[index]?.name && (
-                    <span className="text-red-500">{validationErrors.orderItems[index].name}</span>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newOrderItems = order.orderItems.filter((_, i) => i !== index);
+                      setOrder((prevOrder) => ({ ...prevOrder, orderItems: newOrderItems }));
+                    }}
+                    className="bg-red-500 text-white h-10 px-4 rounded-lg focus:outline-none"
+                  >
+                    Remove
+                  </button>
                 </div>
               ))}
               <button
                 type="button"
                 onClick={handleAddItem}
-                className="text-white bg-purple-600 hover:bg-purple-700 rounded-lg px-4 py-2"
+                className="bg-green-500 text-white h-10 px-4 rounded-lg"
               >
                 Add Item
               </button>
             </div>
+            <div className="flex justify-between mt-4">
+  <button
+    type="button"
+    onClick={handleCancel}
+    className="bg-gray-300 h-10 px-4 rounded-lg"
+  >
+    Cancel
+  </button>
+  <button
+    type="submit" // Make sure this button is still a submit type
+    className="bg-blue-500 text-white h-10 px-4 rounded-lg"
+  >
+    {editIndex !== null ? 'Update Order' : 'Create Order'}
+  </button>
 
-            <div>
-              <label htmlFor="status" className="block text-lg font-semibold text-gray-700">Status</label>
-              <select
-                id="status"
-                value={order.status}
-                onChange={handleStatusChange}
-                required
-                className="w-full h-10 border border-gray-300 p-1 bg-white rounded-lg"
-              >
-                <option value="" disabled>Select Status</option>
-                <option value="Pending">Pending</option>
-                <option value="Processing">Processing</option>
-                <option value="Completed">Completed</option>
-              </select>
-              {validationErrors.status && (
-                <span className="text-red-500">{validationErrors.status}</span>
-              )}
-            </div>
+  {/* Remove or modify the navigation button if necessary */}
+  {/* This button is for viewing orders, keep it as needed */}
+  <button
+    type="button"
+    onClick={() => navigate('/orderret')} // Navigate to the retrieve orders route
+    className="text-white bg-blue-600 hover:bg-blue-700 rounded-lg px-4 py-2"
+  >
+    View
+  </button>
+</div>
 
-            <div className="flex justify-between">
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="text-white bg-red-600 hover:bg-red-700 rounded-lg px-4 py-2"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="text-white bg-green-600 hover:bg-green-700 rounded-lg px-4 py-2"
-              >
-                {editIndex !== null ? 'Update Order' : 'Create Order'}
-              </button>
-            </div>
           </form>
-        </div>
-      </div>
+        </div>{/* Slide Bar for Orders */}
+<div className={`fixed top-0 right-0 h-full bg-rose-200 shadow-lg transition-transform duration-300 ${isSlideViewOpen ? 'translate-x-0' : 'translate-x-full'} z-20`} style={{ width: '350px' }}>
+  <button onClick={toggleSlideView} className="absolute top-4 left-4 text-xl">✖</button>
+  <h2 className="text-2xl font-bold mb-5 border-b-2 border-rose-300 pb-2">🧸 Soft Toy Orders</h2>
 
-      {/* Slide-in view for orders */}
-      <div className={`fixed top-0 right-0 w-1/3 h-full bg-white shadow-lg transition-transform duration-300 ${isSlideViewOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <button onClick={toggleSlideView} className="p-4 text-red-600">Close</button>
-        <h2 className="text-xl font-semibold text-gray-700 p-4">Cart Orders</h2>
-        <h1 className="text-3xl font-bold mb-6 text-center">Retrieve Orders</h1>
-      {orders.length === 0 ? (
-        <p className="text-center">No orders found.</p>
-      ) : (
-        <div className="space-y-4">
-          {orders.map((order) => (
-            <div key={order._id} className="border border-gray-200 rounded-lg p-4 bg-white shadow-md">
-              <h2 className="text-xl font-semibold">Shop Name: {order.shopName || 'N/A'}</h2>
-              <p className="text-gray-700">Shop Address: {order.shopAddress || 'N/A'}</p>
-              <h3 className="font-semibold mt-2">Products:</h3>
-              <ul className="list-disc ml-5">
-                {order.products.map((product, index) => (
-                  <li key={index}>
-                    {product.name || 'Unknown Product'}: {product.quantity || 0}
-                  </li>
-                ))}
-              </ul>
-            </div>
+  {/* Container for scrollable orders */}
+  <ul className="p-4 overflow-y-auto" style={{ maxHeight: '80vh' }}>
+    {orders.map((orderItem) => (
+      <li 
+        key={orderItem._id} 
+        className={`border border-gray-300 rounded-lg p-4 bg-gray-100 shadow-md flex flex-col mb-4 ${checkedOrders.includes(orderItem._id) ? 'blur' : ''}`}
+      >
+        {/* Shop Name and Address */}
+        <div className="flex justify-between mb-2">
+          <span className="font-semibold text-lg">{orderItem.shopName || 'N/A'}</span>
+          <span className="text-gray-600">{orderItem.shopAddress || 'N/A'}</span>
+        </div>
+        
+        {/* Products Section */}
+        <h3 className="font-semibold mt-2">Products:</h3>
+        <ul className="list-disc ml-5">
+          {orderItem.products.map((product, index) => (
+            <li key={index} className="text-gray-700">
+              {product.name || 'Unknown Product'}: <span className="font-semibold">{product.quantity || 0}</span>
+            </li>
           ))}
+        </ul>
+        
+        {/* Checkbox for Selection */}
+        <div className="mt-2">
+          <input
+            type="checkbox"
+            checked={checkedOrders.includes(orderItem._id)}
+            onChange={() => handleCheckboxChange(orderItem._id)}
+          />
+          <label className="ml-2">Select</label>
         </div>
-      )}
+      </li>
+    ))}
+  </ul>
+</div>
 
+
+
+
+
+
+
+        {/* Toggle Slide Bar Button */}
+        <button onClick={toggleSlideView} className="fixed bottom-4 right-4 bg-blue-500 text-white p-3 rounded-full">
+          Orders
+        </button>
       </div>
 
-      <button onClick={toggleSlideView} className="fixed bottom-4 right-4 bg-purple-600 text-white rounded-full p-4 shadow-lg">
-        Cart
-      </button>
-
-      <Footer />
+      
     </div>
   );
 };

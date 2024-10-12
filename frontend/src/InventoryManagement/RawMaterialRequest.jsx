@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, InputNumber, Button, Table, Select, DatePicker, message, Modal } from 'antd';
 import moment from 'moment';
+
+import jsPDF from 'jspdf';
 import axios from 'axios';
 import backgroundImage from '../image/design.png'; // Adjust the path according to your structure
+import logo from '../image/logo.png';
 
 const { Option } = Select;
 
@@ -125,6 +128,58 @@ const RawMaterialRequest = () => {
     item.materialName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    
+    
+    doc.addImage(logo, 'PNG', 14, 10, 50, 20); // Adjust the position and size as necessary
+
+    // Add Title Next to Logo
+    doc.setFontSize(18); // Set font size for the title
+    doc.setFont("helvetica", "bold"); // Set font to bold
+    doc.setTextColor(0, 51, 102); // Set color (pink to match soft toy theme)
+    doc.text("Bear Works Lanka", 70, 20); // Position the title next to the logo
+
+    // Draw Header Line
+    doc.setDrawColor(0, 0, 0); // Set line color to black
+    doc.line(14, 32, doc.internal.pageSize.width - 14, 32); // Draw line below the header
+
+    // Reset font for the report title
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(14); // Set font size for report title
+    doc.setTextColor(0, 0, 0); // Set color to black
+    // doc.text(Production List for Batch: ${batch}, 14, 50); // Adjust position for batch title
+
+    const headers = [['Date', 'Material Name', 'Quantity', 'Status', 'Comments']];
+    const data = filteredData.map(item => [
+      moment(item.date).format('YYYY-MM-DD'),
+      item.materialName,
+      item.quantity,
+      item.status,
+      item.comments,
+    ]);
+    
+    doc.autoTable({
+      head: headers,
+      body: data,
+      startY: 30,
+    });
+    // Draw Footer Line
+    const footerY = doc.internal.pageSize.height - 30; // Position for footer line
+    doc.line(14, footerY, doc.internal.pageSize.width - 14, footerY); // Draw line above the footer
+
+    // Add Footer
+    doc.setFontSize(12); // Set font size for footer
+    doc.setFont("helvetica", "normal"); // Set font to normal
+    doc.setTextColor(0, 0, 0); // Set color to black
+    const footerText = "Address: 123 Bear Lane, Colombo, Sri Lanka\nContact: +94 123 456 789"; // Sample footer text
+    const footerLines = doc.splitTextToSize(footerText, doc.internal.pageSize.width - 28); // Split text to fit the page
+
+    doc.text(footerLines, 14, footerY + 10); // Draw footer text below the footer line
+    
+    doc.save('raw_material_request_report.pdf');
+  };
+
   return (
     <div
       className="flex flex-col min-h-screen relative"
@@ -134,7 +189,7 @@ const RawMaterialRequest = () => {
         backgroundPosition: 'center',
       }}
     >
-     
+      <Header />
       <div className="flex-1 flex justify-center items-center relative">
         <div className="max-w-2xl w-full bg-pink-100 bg-opacity-80 backdrop-blur-lg rounded-lg shadow-xl p-10 border border-gray-200 space-y-6 z-10">
           <h1 className="form-heading text-4xl font-bold text-purple-600 mb-4 text-center">Raw Material Request</h1>
@@ -241,6 +296,15 @@ const RawMaterialRequest = () => {
             }}
           />
 
+          {/* Generate Report Button */}
+          <Button 
+            type="primary" 
+            onClick={generatePDF} 
+            style={{ marginBottom: '20px', backgroundColor: '#ff6f61', borderColor: '#ff6f61', width: '100%' }}
+          >
+            Generate Report
+          </Button>
+
           <Table
             dataSource={filteredData}
             columns={columns}
@@ -251,7 +315,7 @@ const RawMaterialRequest = () => {
           />
         </div>
       </div>
-     
+      <Footer />
     </div>
   );
 };

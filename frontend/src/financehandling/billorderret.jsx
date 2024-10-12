@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Vieworderinvoice from './vieworderinvoice';
+import Vieworderinvoice from './vieworderinvoice'; 
+import './billoderret.css';
 import jsPDF from 'jspdf';
 import logo from '../image/logo.png';
 import backgr from '../image/BR.png';
@@ -8,25 +9,20 @@ import { useNotification } from '../notification/notificatioonContext'; // Impor
 
 const RetrieveOrders = () => {
   const [orders, setOrders] = useState([]);
-  const [filteredOrders, setFilteredOrders] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [message, setMessage] = useState('');
-  const [isDetailsModalOpen, setDetailsModalOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [totalOrderAmount, setTotalOrderAmount] = useState(0);
+  const [filteredOrders, setFilteredOrders] = useState([]); 
+  const [searchTerm, setSearchTerm] = useState(''); 
+  const [startDate, setStartDate] = useState(''); 
+  const [endDate, setEndDate] = useState(''); 
+  const [message, setMessage] = useState(''); 
+  const [isDetailsModalOpen, setDetailsModalOpen] = useState(false); 
+  const [selectedOrder, setSelectedOrder] = useState(null); 
+  const [totalOrderAmount, setTotalOrderAmount] = useState(0); 
 
   const { addNotification } = useNotification(); // Use the notification context
 
   useEffect(() => {
     fetchOrders();
   }, []);
-
-  useEffect(() => {
-    const totalAmount = filteredOrders.reduce((sum, order) => sum + order.totalAmount, 0);
-    setTotalOrderAmount(totalAmount);
-  }, [filteredOrders]);
 
   const fetchOrders = async () => {
     try {
@@ -46,14 +42,14 @@ const RetrieveOrders = () => {
   };
 
   const handleDateFilter = () => {
-    filterOrders(searchTerm, startDate, endDate);
+    filterOrders(searchTerm, startDate, endDate); 
   };
 
   const filterOrders = (term, start, end) => {
     const filtered = orders.filter(order => {
       const matchesShopName = order.shopName.toLowerCase().includes(term.toLowerCase());
-      const matchesDate = (!start || new Date(order.orderDate) >= new Date(start)) &&
-        (!end || new Date(order.orderDate) <= new Date(end));
+      const matchesDate = (!start || new Date(order.orderDate) >= new Date(start)) && 
+                          (!end || new Date(order.orderDate) <= new Date(end));
       return matchesShopName && matchesDate;
     });
     setFilteredOrders(filtered);
@@ -61,7 +57,7 @@ const RetrieveOrders = () => {
 
   const handleView = (order) => {
     setSelectedOrder(order);
-    setDetailsModalOpen(true);
+    setDetailsModalOpen(true); 
   };
 
   const handleDelete = async (orderId) => {
@@ -78,83 +74,36 @@ const RetrieveOrders = () => {
 
   const downloadPDF = async (order) => {
     const doc = new jsPDF();
-
-    // Load and add logo image in the top-left corner
     const img = await loadImage(logo);
-    doc.addImage(img, 'PNG', 10, 10, 50, 30);
-
-    // Invoice Title and Company Details
-    doc.setFontSize(20);
-    doc.text('INVOICE', 160, 20); // Title at the top-right
-
+    doc.addImage(img, 'PNG', 10, 10, 40, 40);
+    
     doc.setFontSize(12);
-    doc.text('Bear Works Lanka', 10, 50); // Company name
-    doc.text('5 Schofield Pl, Colombo 09892', 10, 58); // Address line 1
-    doc.text('Phone: +94 123 456 789', 10, 66); // Contact number
-    doc.text('Email: bearworkslanka@gmail.com', 10, 74); // Email
-
-    // Invoice Details (Order ID, Date, etc.)
+    doc.text('Bear Works Lanka', 60, 20);
+    doc.text('5 Schofield Pl, Colombo 09892', 60, 30);
+    doc.text('bearworkslanka@gmail.com', 60, 40);
+    
+    doc.setFontSize(16);
+    doc.text(`Invoice #${order._id}`, 10, 60);
     doc.setFontSize(12);
-    doc.text(`Invoice No: ${formatOrderId(order._id)}`, 160, 50);
-    doc.text(`Order Date: ${new Date(order.orderDate).toLocaleDateString()}`, 160, 58);
-    doc.text(`Due Date: ${new Date().toLocaleDateString()}`, 160, 66); // Example due date
-
-    // Customer Details
-    doc.setFontSize(14);
-    doc.text('Bill To:', 10, 90);
-    doc.setFontSize(12);
-    doc.text(order.shopName, 10, 98);
-    doc.text(order.shopAddress, 10, 106);
-
-    // Line separator
-    doc.line(10, 115, 200, 115);
-
-    // Table Headers for Order Items
-    doc.setFontSize(12);
-    doc.text('Item', 10, 123);
-    doc.text('Quantity', 80, 123);
-    doc.text('Unit Price (Rs.)', 120, 123);
-    doc.text('Total (Rs.)', 170, 123);
-
-    // Table Rows for each Order Item
-    let yPosition = 133;
+    doc.text(`Order Date: ${new Date(order.orderDate).toLocaleDateString()}`, 10, 70);
+    doc.text(`Shop Name: ${order.shopName}`, 10, 80);
+    doc.text(`Shop Address: ${order.shopAddress}`, 10, 90);
+    doc.text(`Total Amount: Rs.${order.totalAmount.toFixed(2)}`, 10, 100);
+    
+    doc.line(10, 110, 200, 110);
+    
+    let y = 120;
     order.orderItems.forEach(item => {
-      doc.text(item.name, 10, yPosition);
-      doc.text(String(item.quantity), 85, yPosition, { align: 'right' });
-      doc.text(`Rs.${item.price.toFixed(2)}`, 125, yPosition, { align: 'right' });
-      doc.text(`Rs.${item.totalPrice.toFixed(2)}`, 175, yPosition, { align: 'right' });
-      yPosition += 10;
+      doc.text(`Item: ${item.name}`, 10, y);
+      doc.text(`Quantity: ${item.quantity}`, 80, y);
+      doc.text(`Price: Rs.${item.price.toFixed(2)}`, 140, y);
+      doc.text(`Total: Rs.${item.totalPrice.toFixed(2)}`, 180, y);
+      y += 10;
     });
-
-    // Line separator
-    doc.line(10, yPosition, 200, yPosition);
-    yPosition += 10;
-
-    // Total Amount
-    doc.setFontSize(12);
-    doc.text('Total Amount:', 120, yPosition);
-    doc.text(`Rs.${order.totalAmount.toFixed(2)}`, 175, yPosition, { align: 'right' });
-
-    // Footer: Company Address (Bottom Right) and Signature (Bottom Left)
-    doc.setFontSize(10);
-    doc.text('Bear Works Lanka Pvt. Ltd.', 10, 280);
-    doc.text('5 Schofield Pl, Colombo 09892', 10, 288);
-    doc.text('Email: bearworkslanka@gmail.com | +94 123 456 789', 10, 296);
-
-    doc.text('Authorized Signature:', 160, 280);
-    doc.line(160, 285, 200, 285); // Signature line
-
-    // Save the PDF with formatted Order ID in the filename
-    doc.save(`${order.shopName}_Order_${formatOrderId(order._id)}.pdf`);
+    
+    doc.save(`${order.shopName}_Order_${order._id}.pdf`);
   };
 
-  // Updated formatOrderId function to generate "BW0001"-style IDs
-  const formatOrderId = (id) => {
-    const numericId = parseInt(id.slice(-4), 16); // Use the last part of the alphanumeric ID, converted to a number
-    return `BW${String(numericId).padStart(4, '0')}`;
-  };
-
-  // Utility to load an image for the PDF
   const loadImage = (url) => {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -183,104 +132,118 @@ const RetrieveOrders = () => {
   };
 
   const handleSendNotification = () => {
-    const message = `Total order amount: Rs.${totalOrderAmount.toFixed(2)}`;
+    const totalAmount = filteredOrders.reduce((sum, order) => sum + order.totalAmount, 0);
+    const message = `Total order amount: Rs.${totalAmount.toFixed(2)}`;
     sendNotification(message);
     addNotification(message); // Add the notification to the context
   };
 
-  // Group orders by date
-  const groupOrdersByDate = (orders) => {
-    const grouped = {};
-    orders.forEach(order => {
-      const orderDate = new Date(order.orderDate).toLocaleDateString();
-      if (!grouped[orderDate]) {
-        grouped[orderDate] = [];
-      }
-      grouped[orderDate].push(order);
-    });
-    return grouped;
-  };
+  // Grouping orders by date
+  const groupedOrders = filteredOrders.reduce((acc, order) => {
+    const date = new Date(order.orderDate).toLocaleDateString();
+    if (!acc[date]) {
+      acc[date] = [];
+    }
+    acc[date].push(order);
+    return acc;
+  }, {});
 
-  const renderOrders = () => {
-    const groupedOrders = groupOrdersByDate(filteredOrders);
-    const sortedDates = Object.keys(groupedOrders).sort((a, b) => new Date(b) - new Date(a)); // Sort dates (past first)
+  return (
+    <div className="bg-purple-500 min-h-screen">
+      <div
+        className="relative min-h-screen flex flex-col justify-center"
+        style={{
+          backgroundImage: `url(${backgr})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="container mx-auto p-4 bg-gray-50 rounded-lg shadow-lg">
+          {isDetailsModalOpen && (
+            <Vieworderinvoice
+              order={selectedOrder}
+              onClose={() => setDetailsModalOpen(false)}
+            />
+          )}
+        
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">All Orders</h2>
+          {message && <div className="bg-red-100 text-red-700 p-2 rounded-md mb-4">{message}</div>}
+          
+          <div className="flex space-x-4 mb-6">
+            <input
+              type="text"
+              placeholder="Search by shop name..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="p-2 border border-gray-300 rounded-md shadow-sm w-1/2"
+            />
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="p-2 border border-gray-300 rounded-md shadow-sm w-1/4"
+            />
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="p-2 border border-gray-300 rounded-md shadow-sm w-1/4"
+            />
+            <button onClick={handleDateFilter} className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">
+              Filter by Date
+            </button>
+          </div>
 
-    return sortedDates.map(date => {
-      const ordersForDate = groupedOrders[date];
-      const totalForDate = ordersForDate.reduce((sum, order) => sum + order.totalAmount, 0);
-
-      return (
-        <div key={date} className="order-group">
-          <h3>{date} - Total: Rs.{totalForDate.toFixed(2)}</h3>
-          {ordersForDate.map(order => (
-            <div key={order._id} className="order-card">
-              <h4>Shop: {order.shopName}</h4>
-              <p>Address: {order.shopAddress}</p>
-              <p>Total Amount: Rs.{order.totalAmount.toFixed(2)}</p>
-              <button onClick={() => handleView(order)}>View</button>
-              <button onClick={() => handleDelete(order._id)}>Delete</button>
-              <button onClick={() => downloadPDF(order)}>Download PDF</button>
+          {/* Rendering grouped orders */}
+          {Object.keys(groupedOrders).map(date => (
+            <div key={date} className="mb-6">
+              <h3 className="text-lg font-bold text-gray-700 mb-2">Date: {date}</h3>
+              <table className="min-w-full bg-white rounded-lg shadow-md overflow-hidden">
+                <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                  <tr>
+                    <th className="py-3 px-6 text-left">Shop Name</th>
+                    <th className="py-3 px-6 text-left">Shop Address</th>
+                    <th className="py-3 px-6 text-left">Order Date</th>
+                    <th className="py-3 px-6 text-right">Total Amount</th>
+                    <th className="py-3 px-6 text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-700 text-sm font-light">
+                  {groupedOrders[date].map(order => (
+                    <tr key={order._id} className="border-b border-gray-200 hover:bg-gray-100">
+                      <td className="py-3 px-6 text-left">{order.shopName}</td>
+                      <td className="py-3 px-6 text-left">{order.shopAddress}</td>
+                      <td className="py-3 px-6 text-left">{new Date(order.orderDate).toLocaleDateString()}</td>
+                      <td className="py-3 px-6 text-right">Rs.{order.totalAmount.toFixed(2)}</td>
+                      <td className="py-3 px-6 text-center">
+                        <button onClick={() => handleView(order)} className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-2 rounded-md">
+                          View
+                        </button>
+                        <button onClick={() => handleDelete(order._id)} className="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md ml-2">
+                          Delete
+                        </button>
+                        <button onClick={() => downloadPDF(order)} className="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-2 rounded-md ml-2">
+                          Download PDF
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colSpan={3} className="py-3 px-6 text-right font-bold">Total:</td>
+                    <td className="py-3 px-6 text-right">
+                      Rs.{groupedOrders[date].reduce((sum, order) => sum + order.totalAmount, 0).toFixed(2)}
+                    </td>
+                    <td className="py-3 px-6"></td>
+                  </tr>
+                </tfoot>
+              </table>
             </div>
           ))}
         </div>
-      );
-    });
-  };
-
-  return (
-    <div className="retrieve-orders min-h-screen bg-cover bg-center">
-  <div
-    className="relative min-h-screen flex flex-col justify-center"
-    style={{
-      backgroundImage: `url(${backgr})`, // Use backticks for template literals
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-    }}
-  >
-    <div className="bg-white bg-opacity-80 rounded-lg shadow-lg p-6 max-w-3xl mx-auto mt-10">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">Retrieve Orders</h1>
-      {message && <p className="error-message text-red-600 text-center mb-4">{message}</p>}
-      
-      <div className="flex flex-col space-y-4 mb-6">
-        <input
-          type="text"
-          placeholder="Search by Shop Name"
-          value={searchTerm}
-          onChange={handleSearch}
-          className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <div className="flex space-x-4">
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-          />
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-          />
-        </div>
       </div>
-      
-      <div className="flex justify-center space-x-4 mb-6">
-        <button onClick={handleDateFilter} className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition duration-200">Filter</button>
-        <button onClick={handleSendNotification} className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition duration-200">Send Total Notification</button>
-      </div>
-      
-      <div className="orders-container space-y-4">
-        {renderOrders()}
-      </div>
-      
-      {isDetailsModalOpen && selectedOrder && (
-        <Vieworderinvoice order={selectedOrder} onClose={() => setDetailsModalOpen(false)} />
-      )}
     </div>
-  </div>
-</div>
-
   );
 };
 

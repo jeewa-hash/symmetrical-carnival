@@ -386,10 +386,7 @@ const EmployeeSalaryForm = () => {
           <p>Overtime Amount: {formData.overtimeAmount}</p>
         </div>
 
-        <button type="submit" className="w-full mt-6 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
-            >Calculate Salary</button>
-        <button className="w-full mt-6 p-2 bg-pink-500 text-white rounded-md hover:bg-rose-600 focus:outline-none focus:ring focus:ring-blue-300"onClick={() => navigate('/salaryret')}>View All Salary Records</button>
-        <button className="w-full mt-6 p-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-blue-300"onClick={() => navigate('/empdetails')}>View Employee Details </button>
+        <button type="submit">Calculate Salary</button>
       </form>
     </div>
   );

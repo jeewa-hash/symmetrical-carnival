@@ -120,7 +120,7 @@ const ProductionList = () => {
     <div className="bg-pink-50 min-h-screen">
       
       <div className="container mx-auto px-4 py-8">
-        <h2 className="text-3xl font-bold mb-6 text-center text-pink-600">Production Data</h2>
+        <h2 className="text-4xl font-bold mb-6 text-center text-purple-600">Production Data</h2>
 
         {/* Charts */}
         <div className="mt-8">

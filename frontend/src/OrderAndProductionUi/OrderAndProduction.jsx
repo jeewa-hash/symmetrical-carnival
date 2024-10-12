@@ -49,12 +49,9 @@ function OrderAndProduction() {
                 Cost Management
               </button>
             </Link>
-            <Link to="orderret">
-              <button className="w-full py-1 px-4 text-lg font-semibold text-white bg-gradient-to-r from-pink-300 to-purple-300 rounded-full hover:from-pink-200 hover:to-purple-200 transform hover:scale-105 transition duration-300 ease-in-out shadow-lg">
-                Cost Management
-              </button>
-            </Link>
-
+           
+            <br></br>
+            <br></br>
             <Link to="report">
               <button className="w-full py-1 px-4 text-lg font-semibold text-white bg-gradient-to-r from-pink-300 to-purple-300 rounded-full hover:from-pink-200 hover:to-purple-200 transform hover:scale-105 transition duration-300 ease-in-out shadow-lg">
                 report

@@ -1,152 +1,191 @@
-import React, { useState, useEffect } from 'react';
-import { LineChart, XAxis, YAxis, Line, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell } from 'recharts';
-import './fireport.css'; // Import the CSS file
-import Header from "../Shared/Header";
-import Footer from "../Shared/Footer";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Line, Bar, Doughnut } from "react-chartjs-2";
+import 'chart.js/auto';
 
-// Sample data
-const orderBillData = [
-  { name: 'Jan', bills: 1000, orders: 1200 },
-  { name: 'Feb', bills: 1500, orders: 1600 },
-  { name: 'Mar', bills: 1200, orders: 1300 },
-  { name: 'Apr', bills: 1700, orders: 1800 },
-  { name: 'May', bills: 1600, orders: 1900 },
-  { name: 'Jun', bills: 2000, orders: 2200 },
-];
+// Utility function to format dates
+const formatDate = (dateStr) => {
+  const options = { year: "numeric", month: "short", day: "numeric" };
+  return new Date(dateStr).toLocaleDateString("en-US", options);
+};
 
-const salaryData = [
-  { name: 'Jan', salary: 5000 },
-  { name: 'Feb', salary: 5200 },
-  { name: 'Mar', salary: 5300 },
-  { name: 'Apr', salary: 5500 },
-  { name: 'May', salary: 5600 },
-  { name: 'Jun', salary: 5800 },
-];
+// Profit line chart component
+const ProfitLineChart = ({ transactions, timeFrame }) => {
+  const filteredTransactions = transactions.filter((transaction) => {
+    const transactionDate = new Date(transaction.date);
+    const today = new Date();
+    if (timeFrame === "daily") {
+      return transactionDate.toDateString() === today.toDateString();
+    } else if (timeFrame === "monthly") {
+      return (
+        transactionDate.getMonth() === today.getMonth() &&
+        transactionDate.getFullYear() === today.getFullYear()
+      );
+    } else if (timeFrame === "yearly") {
+      return transactionDate.getFullYear() === today.getFullYear();
+    }
+    return false;
+  });
 
-const profitData = [
-  { name: 'Profit', value: 40000 },
-  { name: 'Expenses', value: 25000 },
-  { name: 'Other', value: 15000 },
-];
+  const labels = filteredTransactions.map(tx => formatDate(tx.date));
+  const data = filteredTransactions.map(tx => tx.amount);
 
-const COLORS = ['#00C49F', '#FFBB28', '#FF8042'];
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: `${timeFrame.charAt(0).toUpperCase() + timeFrame.slice(1)} Profit`,
+        data,
+        borderColor: "rgb(75, 192, 192)",
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        fill: true,
+      },
+    ],
+  };
 
-const FinanceManagementReport = () => {
-  const [orders, setOrders] = useState(orderBillData);
-  const [salaries, setSalaries] = useState(salaryData);
+  return <Line data={chartData} height={100} />;
+};
+
+// Credit and Profit Bar Chart
+const CreditProfitBarChart = ({ transactions }) => {
+  const totalCredit = transactions
+    .filter(tx => tx.transactionType === "income")
+    .reduce((total, tx) => total + tx.amount, 0);
+
+  const totalProfit = transactions
+    .filter(tx => tx.transactionType === "income" || tx.transactionType === "expenses")
+    .reduce((total, tx) => total + tx.amount, 0);
+
+  const chartData = {
+    labels: ["Total Credit", "Total Profit"],
+    datasets: [
+      {
+        label: "Amount",
+        data: [totalCredit, totalProfit],
+        backgroundColor: ["#4caf50", "#ff9800"],
+      },
+    ],
+  };
+
+  return <Bar data={chartData} height={100} />;
+};
+
+// Detailed Assets and Liabilities Overview Chart
+const FinancialOverviewChart = ({ transactions }) => {
+  const income = transactions
+    .filter(tx => tx.transactionType === "income")
+    .reduce((total, tx) => total + tx.amount, 0);
+
+  const expenses = transactions
+    .filter(tx => tx.transactionType === "expenses")
+    .reduce((total, tx) => total + tx.amount, 0);
+
+  const assets = transactions
+    .filter(tx => tx.category === "assets")
+    .reduce((total, tx) => total + tx.amount, 0);
+
+  const liabilities = transactions
+    .filter(tx => tx.category === "liabilities")
+    .reduce((total, tx) => total + tx.amount, 0);
+
+  const chartData = {
+    labels: ["Income", "Expenses", "Assets", "Liabilities"],
+    datasets: [
+      {
+        label: "Financial Overview",
+        data: [income, expenses, assets, liabilities],
+        backgroundColor: ["#4caf50", "#ff9800", "#2196f3", "#f44336"],
+      },
+    ],
+  };
+
+  return <Doughnut data={chartData} height={100} />;
+};
+
+// Main TransactionForm Component
+const TransactionForm = () => {
+  const [transactions, setTransactions] = useState([]);
+  const [timeFrame, setTimeFrame] = useState("daily");
+
+  // Fetch transactions from the API
+  const fetchTransactions = async () => {
+    try {
+      const response = await axios.get("/api/finance-manager");
+      setTransactions(response.data);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setOrders(prevOrders =>
-        prevOrders.map(order => ({
-          ...order,
-          bills: Math.floor(Math.random() * 3000) + 500,
-        }))
-      );
-      setSalaries(prevSalaries =>
-        prevSalaries.map(salary => ({
-          ...salary,
-          salary: Math.floor(Math.random() * 6000) + 5000,
-        }))
-      );
-    }, 2000);
-
-    return () => clearInterval(interval);
+    fetchTransactions();
   }, []);
 
   return (
-    <div>
-        <Header/>
-    <div className="report-container">
-      <h1 className="report-title">Finance Management Report</h1>
-      <div className="charts-container">
-        <div className="chart-wrapper">
-          <LineChart width={400} height={250} data={orders}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="bills" stroke="#8884d8" activeDot={{ r: 8 }} />
-            <Line type="monotone" dataKey="orders" stroke="#82ca9d" />
-          </LineChart>
-          <h2 className="chart-title">Order Bill Report</h2>
-        </div>
-        <div className="chart-wrapper">
-          <LineChart width={400} height={250} data={salaries}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="salary" stroke="#8884d8" activeDot={{ r: 8 }} />
-          </LineChart>
-          <h2 className="chart-title">Salary Report</h2>
-        </div>
-        <div className="chart-wrapper">
-          <PieChart width={400} height={250}>
-            <Pie
-              data={profitData}
-              dataKey="value"
-              outerRadius={100}
-              fill="#8884d8"
-              label
-            >
-              {profitData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-          <h2 className="chart-title">Company Profit</h2>
+    <div className="container mx-auto p-4">
+      <h2 className="text-2xl font-semibold text-center mb-4">Transaction Form</h2>
+
+      <div className="mt-8">
+        <h3 className="text-xl font-semibold text-center">Profit Analysis</h3>
+        <select
+          onChange={(e) => setTimeFrame(e.target.value)}
+          value={timeFrame}
+          className="form-select mt-2 mx-auto block w-1/2"
+        >
+          <option value="daily">Daily</option>
+          <option value="monthly">Monthly</option>
+          <option value="yearly">Yearly</option>
+        </select>
+        <div className="max-w-3xl mx-auto mt-4">
+          <ProfitLineChart transactions={transactions} timeFrame={timeFrame} />
         </div>
       </div>
-      <div className="tables-container">
-        <div className="report-table">
-          <h3 className="table-title">Salary Details</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Salary</th>
-              </tr>
-            </thead>
-            <tbody>
-              {salaries.map((salary, index) => (
-                <tr key={index}>
-                  <td>{salary.name}</td>
-                  <td>{salary.salary}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="report-table">
-          <h3 className="table-title">Order Bill Details</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Bills</th>
-                <th>Orders</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order, index) => (
-                <tr key={index}>
-                  <td>{order.name}</td>
-                  <td>{order.bills}</td>
-                  <td>{order.orders}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+      <div className="mt-8">
+        <h3 className="text-xl font-semibold text-center">Credit vs. Profit Analysis</h3>
+        <div className="max-w-3xl mx-auto mt-4">
+          <CreditProfitBarChart transactions={transactions} />
         </div>
       </div>
-    </div>
-    <Footer/>
+
+      <div className="mt-8">
+        <h3 className="text-xl font-semibold text-center">Financial Overview</h3>
+        <div className="max-w-3xl mx-auto mt-4">
+          <FinancialOverviewChart transactions={transactions} />
+        </div>
+      </div>
+
+      <div className="mt-8">
+        <h3 className="text-xl font-semibold text-center">Assets & Liabilities</h3>
+        <div className="max-w-3xl mx-auto mt-4 grid grid-cols-2 gap-4">
+          <div className="p-4 bg-blue-100 rounded shadow-md">
+            <h4 className="text-lg font-semibold text-center">Assets</h4>
+            <ul className="space-y-2 mt-2">
+              {transactions
+                .filter(tx => tx.category === "assets")
+                .map(tx => (
+                  <li key={tx.id} className="text-center">
+                    {formatDate(tx.date)}: ${tx.amount.toFixed(2)}
+                  </li>
+                ))}
+            </ul>
+          </div>
+          <div className="p-4 bg-red-100 rounded shadow-md">
+            <h4 className="text-lg font-semibold text-center">Liabilities</h4>
+            <ul className="space-y-2 mt-2">
+              {transactions
+                .filter(tx => tx.category === "liabilities")
+                .map(tx => (
+                  <li key={tx.id} className="text-center">
+                    {formatDate(tx.date)}: ${tx.amount.toFixed(2)}
+                  </li>
+                ))}
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default FinanceManagementReport;
+export default TransactionForm;

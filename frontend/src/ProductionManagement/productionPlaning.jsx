@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { message } from 'antd'; // Only importing message from antd
+import { useNavigate } from 'react-router-dom';
+import backgroundImage from '../image/design.png'; // Adjust the path according to your folder structure
 
 // Utility function to get today's date in YYYY-MM-DD format
 const getTodayDate = () => {
@@ -30,7 +32,7 @@ const BatchSelection = ({ selectedBatch, onBatchSelect }) => (
 
 // Production planning form component
 const ProductionPlanningForm = ({ isEditing, newProduction, products, onInputChange, onStatusChange, onSubmit }) => {
-  const productNames = ['Bear', 'Bear With Heart', 'Dog', '5 Feet', 'Dalmation'];
+  const productNames = ['Bear', 'Bear With Heart', 'Dog', '5 Feet', 'Dalmation', 'Teddy', 'Doll'];
 
   return (
     <div className="max-w-xl mx-auto p-10 bg-pink-100 border border-gray-200 rounded-lg shadow-xl space-y-6">
@@ -109,45 +111,46 @@ const ProductionManagementSystem = () => {
   const [products, setProducts] = useState([{ name: '', quantity: '' }]);
   const [isEditing, setIsEditing] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  const [isSlideViewOpen, setIsSlideViewOpen] = useState(false);
-  const [formData, setFormData] = useState([]);
-  const [groupedRequests, setGroupedRequests] = useState({});
-  const [checkedOrders, setCheckedOrders] = useState([]); // State for checked items
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for slide-out sidebar
+  const [loading, setLoading] = useState(false); // Loading state
+  const [formData, setFormData] = useState([]); // State for production request data
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Using navigate function from react-router-dom
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProductions = async () => {
+      try {
+        const response = await axios.get('/api/products');
+        const filteredProductions = response.data.filter(
+          (production) => production.batch === selectedBatch
+        );
+        setProductions(filteredProductions);
+      } catch (error) {
+        console.error('Error fetching production data!', error);
+      }
+    };
+
+    fetchProductions();
+  }, [selectedBatch]);
+
+  // Fetch production requests
+  useEffect(() => {
+    const fetchProductionRequests = async () => {
+      setLoading(true); // Set loading to true before fetching
       try {
         const response = await axios.get('http://localhost:4000/api/productionRequest');
         setFormData(response.data);
       } catch (error) {
-        console.error('Failed to fetch data', error);
+        message.error('Failed to fetch data');
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
-    fetchData();
-  }, []);
 
-  useEffect(() => {
-    const groupRequests = () => {
-      const grouped = formData.reduce((acc, request) => {
-        const date = new Date(request.date).toLocaleDateString('en-GB', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-        });
-
-        if (!acc[date]) {
-          acc[date] = [];
-        }
-        acc[date].push(request);
-        return acc;
-      }, {});
-
-      setGroupedRequests(grouped);
-    };
-    groupRequests();
-  }, [formData]);
+    if (isSidebarOpen) {
+      fetchProductionRequests(); // Fetch requests when the sidebar is opened
+    }
+  }, [isSidebarOpen]);
 
   const handleBatchSelect = (batch) => {
     setSelectedBatch(batch);
@@ -155,6 +158,12 @@ const ProductionManagementSystem = () => {
 
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
+    if (name === 'quantity') {
+      const isValidQuantity = /^[1-9][0-9]*$/.test(value) || value === '';
+      if (!isValidQuantity) {
+        return;
+      }
+    }
     const updatedProducts = [...products];
     updatedProducts[index][name] = value;
     setProducts(updatedProducts);
@@ -170,7 +179,27 @@ const ProductionManagementSystem = () => {
   const handleProductionSubmit = async (e) => {
     e.preventDefault();
     if (products.length > 0) {
-      resetForm();
+      try {
+        const productionData = {
+          name: products.map((p) => p.name).join(', '),
+          quantity: products.reduce((acc, p) => acc + Number(p.quantity), 0),
+          productionDate: getTodayDate(),
+          status: newProduction.status,
+          batch: selectedBatch,
+          products,
+        };
+
+        if (isEditing) {
+          await axios.put(`/api/products/${newProduction.id}`, productionData);
+        } else {
+          await axios.post('/api/products', productionData);
+        }
+
+        setSuccessMessage('Production planned successfully!');
+        resetForm();
+      } catch (error) {
+        console.error('Error submitting production data!', error);
+      }
     } else {
       setSuccessMessage('Please add at least one product to the production plan.');
     }
@@ -183,31 +212,25 @@ const ProductionManagementSystem = () => {
   };
 
   const handleViewProductions = () => {
-    navigate('/productret');
+    navigate('/productret'); // Navigate to the /productret page
   };
 
-  const handleSlideView = () => {
-    setIsSlideViewOpen(!isSlideViewOpen);
+  // New function to handle slide-out sidebar
+  const handleSidebarToggle = () => {
+    setIsSidebarOpen((prev) => !prev);
   };
 
-  const handleCheckboxChange = (id) => {
-    setCheckedOrders((prevChecked) =>
-      prevChecked.includes(id) ? prevChecked.filter((item) => item !== id) : [...prevChecked, id]
-    );
-  };
-  
-  const separateAndCombineOrders = (filteredOrders, checkedOrders) => {
-    const uncheckedOrders = filteredOrders.filter((order) => !checkedOrders.includes(order._id));
-    const checkedOrdersList = filteredOrders.filter((order) => checkedOrders.includes(order._id));
-    
-    return [...uncheckedOrders, ...checkedOrdersList];
+  const handleSelectRequest = (request) => {
+    // Auto-fill the fields with the selected request data
+    setProducts([{ name: request.productName, quantity: request.quantity }]);
+    // Note: Do not close the sidebar
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      <div className="flex-1 flex justify-center items-center">
-        <div className="w-full max-w-3xl p-10 bg-pink-100 rounded-lg shadow-xl">
-          <h1 className="text-4xl font-bold text-purple-600 text-center mb-6 -mt8">Production Management System</h1>
+    <div>
+      <div className="relative h-screen flex items-center justify-center" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}>
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-xl">
+          <h1 className="text-3xl font-bold text-purple-600 mb-4 text-center">Production Management System</h1>
           <BatchSelection selectedBatch={selectedBatch} onBatchSelect={handleBatchSelect} />
           <ProductionPlanningForm
             isEditing={isEditing}
@@ -217,81 +240,60 @@ const ProductionManagementSystem = () => {
             onStatusChange={handleStatusChange}
             onSubmit={handleProductionSubmit}
           />
-          <div className="flex justify-between mt-6">
-            <button
-              onClick={handleViewProductions}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
-            >
-              View Productions
-            </button>
-            <button
-              onClick={handleSlideView}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200"
-            >
-              View Orders
-            </button>
-          </div>
-          {successMessage && <div className="mt-4 text-green-600">{successMessage}</div>}
+          <button
+            onClick={handleViewProductions}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            View Production List
+          </button>
+          <button
+            onClick={handleSidebarToggle}
+            className="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+          >
+            Production Requests
+          </button>
+          {successMessage && <div className="mt-4 text-green-500">{successMessage}</div>}
         </div>
       </div>
 
-      {/* Slide-in View */}
-<div
-  className={`fixed inset-y-0 right-0 w-80 bg-gradient-to-b from-pink-200 to-rose-400 text-rose-900 transition-transform duration-300 transform ${isSlideViewOpen ? 'translate-x-0' : 'translate-x-full'}`}
->
-  <div className="p-4">
-    <h2 className="text-2xl font-bold">Orders</h2>
-    <ul className="mt-2 space-y-2">
-      {/* Separate and combine orders */}
-      {Object.keys(groupedRequests).map((date) => {
-        const filteredOrders = groupedRequests[date]; // Get the orders for the specific date
-        const combinedOrders = separateAndCombineOrders(filteredOrders, checkedOrders);
-        
-        // Separate checked and unchecked orders
-        const uncheckedOrders = combinedOrders.filter((order) => !checkedOrders.includes(order._id));
-        const checkedOrdersList = combinedOrders.filter((order) => checkedOrders.includes(order._id));
+     {/* Slide view for production requests */}
+{isSidebarOpen && (
+  <div className="fixed inset-0 flex justify-end z-50">
+    <div className="bg-gradient-to-t from-pink-200 to-rose-300 text-rose-700 w-96 h-full shadow-lg p-6 transition-transform transform translate-x-0 overflow-y-auto">
+      <h2 className="text-2xl font-bold mb-5 border-b-2 border-rose-700 pb-2">🧸 Production Request</h2>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <ul className="max-h-80 overflow-y-auto"> {/* Add max height and scrolling */}
+          {formData.map((request) => (
+            <li key={request.id} className="flex items-center p-2 border-b hover:bg-gray-100">
+              <input
+                type="checkbox"
+                className="mr-2"
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    handleSelectRequest(request); // Auto-fill when checkbox is checked
+                  }
+                }}
+              />
+              <span>{request.productName}</span>
+              <span className="ml-auto">{request.quantity}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+  
 
-        return (
-          <li key={date} className="border-b py-2">
-            <h3 className="font-semibold">{date}</h3>
-            <ul>
-              {/* Render unchecked orders first */}
-              {uncheckedOrders.map((request) => (
-                <li key={request._id} className={`text-sm`}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={checkedOrders.includes(request._id)}
-                      onChange={() => handleCheckboxChange(request._id)}
-                      className="mr-2"
-                    />
-                    {request.productName}: {request.quantity} pcs
-                  </label>
-                </li>
-              ))}
 
-              {/* Render checked orders at the bottom */}
-              {checkedOrdersList.map((request) => (
-                <li key={request._id} className={`text-sm blur-sm opacity-50`}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={checkedOrders.includes(request._id)}
-                      onChange={() => handleCheckboxChange(request._id)}
-                      className="mr-2"
-                    />
-                    {request.productName}: {request.quantity} pcs
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </li>
-        );
-      })}
-    </ul>
-  </div>
-</div>
-
+            <button
+              onClick={handleSidebarToggle}
+              className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

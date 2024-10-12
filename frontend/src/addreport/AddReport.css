@@ -1,41 +1,62 @@
-.addReport{
-    background-color: rgb(203, 197, 197);
+.addReport {
+    background-color: rgba(203, 197, 201, 0.8); /* Use a semi-transparent background color */
+    background-size: cover; /* Ensure the background image covers the entire area */
+    background-position: center; /* Center the background image */
     width: 25%;
     margin: 50px auto;
     padding: 40px;
     border-radius: 5px;
-    box-shadow: 1px 1px 8px rgb(0,0,0,0.065);
+    box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.065);
 }
-.addReport .inputGroup{
-    width: 100;
-    display: flex;
+
+.addReport .inputGroup {
+    width: 100%; /* Add percentage sign to make it work */
+    display: flex;  
     flex-direction: column;
     margin: 10px 0;
 }
-.addReport .inputGroup input{
+
+.addReport .inputGroup input {
     padding: 10px;
-    border: 1px solid grey;
+    border: 1px solid rgb(180, 30, 130);
     border-radius: 5px;
 }
-.addReport h3{
+
+.addReport h3 {
     font-weight: bold;
     text-align: center;
-    color: black;
+    color: rgb(117, 52, 222);
     margin-bottom: 30px;
-    text-shadow: 1px 1px 2px rgb(0,0,0,0.7);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
-.addReport .inputGroup label{
-    color: black;
+
+.addReport .inputGroup label {
+    color: rgb(117, 52, 222);
     margin-bottom: 5px;
 }
-.addReport button{
+
+.addReport button {
     margin-top: 8px;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #49abbc;
+    background-color: #090909;
     color: white;
     font-weight: bold;
     cursor: pointer;
-}   
+}
+
+
+.bg-cover {
+    background-size: cover; /* Ensures the background image covers the entire element */
+    background-position: center; /* Centers the image */
+}
+
+.min-h-screen {
+    min-height: 100vh; /* Makes sure the height is at least the height of the viewport */
+}
+
+.bg-no-repeat {
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+}
 

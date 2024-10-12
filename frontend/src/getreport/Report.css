@@ -1,57 +1,53 @@
-.deliverytable{
-    width: 100%;
-    background-color: rgb(203, 197, 197);
-    font-family: Arial, sans-serif;
-    margin: 50px auto;
-    padding: 50px;
-    border-radius: 10px;
-    box-shadow: 1px 1px 8px rgb(0,0,0,0.065);
-}
-.deliverytable table{
-    border-collapse: collapse;
-    width: 100%;
-    margin-top: 30px;
-}
-.deliverytable table thead th{
-    padding: 10px;
-    text-align: center;
-    vertical-align: middle;
-    background-color: #49abbc;
-    color: black;
-}
-.deliverytable table tbody th{
-    padding: 10px;
-    text-align: center;
-    vertical-align: middle;
-}
-.deliverytable button{
-    margin: 0 10px;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.search-bar {
-    width: 100%;
-    margin: 20px 0;
+.report-container {
     display: flex;
-    justify-content: flex-end; /* Align the search bar to the right */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    
+  }
+  
+  .deliverytable {
+    background-color: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for a clean look */
+  }
+  
+  .search-bar input {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+  }
+  
+  .buttons {
+    margin-bottom: 1rem;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  table th, table td {
+    padding: 1rem;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+
+  .bg-cover {
+    background-size: cover; /* Ensures the background image covers the entire element */
+    background-position: center; /* Centers the image */
 }
 
-.search-bar input {
-    width: 300px; /* Adjust the width to fit nicely */
-    padding: 10px;
-    border: 1px solid #ccc; /* Light border */
-    border-radius: 5px; /* Rounded corners */
-    font-size: 16px;
-    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    transition: box-shadow 0.3s ease; /* Smooth transition */
+.min-h-screen {
+    min-height: 100vh; /* Makes sure the height is at least the height of the viewport */
 }
 
-.search-bar input:focus {
-    outline: none;
-    box-shadow: 0 0 8px rgba(73, 171, 188, 0.7); /* Highlight border on focus */
-    border-color: #49abbc; /* Color change on focus */
+.bg-no-repeat {
+    background-repeat: no-repeat; /* Prevents the image from repeating */
 }
-

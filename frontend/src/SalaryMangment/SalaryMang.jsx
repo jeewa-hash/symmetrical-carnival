@@ -133,7 +133,7 @@ const EmployeeSalaryDetailsForm = () => {
         className="flex flex-col min-h-screen bg-cover bg-center relative" 
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
-        <div className="flex-1 flex justify-center items-center p-4 bg-black bg-opacity-50">
+        <div className="flex-1 flex justify-center items-center p-4 bg-black bg-opacity-10">
           <div className="max-w-xl w-full bg-white bg-opacity-80 backdrop-blur-lg rounded-lg shadow-xl p-10 border border-gray-200 space-y-6 z-10">
             <h2 className="text-4xl font-bold text-purple-600 mb-4 text-center">
               {editMode ? 'Edit Salary Details' : 'Submit Salary Details'}

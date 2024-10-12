@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import './UpdateReport.css';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import {  useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import DeliveryDetailsPopup from  "../deliveryDetailsPop/DeliveryDetailsPopup" // Import the popup component
+import BR1 from '../image/design.png';
 
 const UpdateReport = () => {
     const Report = {
@@ -21,15 +22,26 @@ const UpdateReport = () => {
     const navigate = useNavigate();
     const { id } = useParams();
 
+    console.log("id: " , id )
+
     const inputHandler = (event) => {
         const { name, value } = event.target;
-        setReport({ ...report, [name]: value });
+    
+        // Only allow letters and spaces for driver_Name and delivery_Route
+        if (name === "driver_Name" || name === "delivery_Route") {
+            const validValue = value.replace(/[^A-Za-z\s]/g, ''); // Remove any non-letter or space
+            setReport({ ...report, [name]: validValue });
+        } else {
+            setReport({ ...report, [name]: value });
+        }
     };
+    
 
     useEffect(() => {
-        axios.get(`/api/Report/list/${id}`)
+        axios.get(`/api/Report/getreportbyid/${id}`)
             .then((response) => {
                 setReport(response.data);
+                console.log( "response data", response.data);
             })
             .catch((error) => {
                 console.log(error);
@@ -70,14 +82,14 @@ const UpdateReport = () => {
 
     const closePopup = () => {
         setShowPopup(false);
-        navigate("/deliveryui"); // Navigate to the home page after closing the popup
+        navigate("/"); // Navigate to the home page after closing the popup
     };
 
     return (
+        <div className='bg-cover min-h-screen bg-no-repeat' style={{backgroundImage: `url(${BR1})`}}>
+            
         <div className="addReport">
-            <Link to="/" type="button" className="btn btn-secondary">
-                <i className="fa-solid fa-backward"></i> Back
-            </Link>
+            
             <h3>Update Report</h3>
             <form className="addReportForm" onSubmit={SubmitForm}>
                 <div className="inputGroup">
@@ -90,6 +102,7 @@ const UpdateReport = () => {
                         onChange={inputHandler}
                         autoComplete='off'
                         placeholder="Driver Name"
+                        required
                     />
                 </div>
 
@@ -103,6 +116,7 @@ const UpdateReport = () => {
                         onChange={inputHandler}
                         autoComplete='off'
                         placeholder="Vehicle No"
+                        required
                     />
                 </div>
 
@@ -116,6 +130,7 @@ const UpdateReport = () => {
                         onChange={inputHandler}
                         autoComplete='off'
                         placeholder="Delivery Route"
+                        required
                     />
                 </div>
 
@@ -141,6 +156,7 @@ const UpdateReport = () => {
                         value={report.delivery_StartTime}
                         onChange={inputHandler}
                         autoComplete='off'
+                        required
                     />
                     {errors.delivery_StartTime && <p className="error">{errors.delivery_StartTime}</p>}
                 </div>
@@ -154,6 +170,7 @@ const UpdateReport = () => {
                         value={report.delivery_EndTime}
                         onChange={inputHandler}
                         autoComplete='off'
+                        required
                     />
                     {errors.delivery_EndTime && <p className="error">{errors.delivery_EndTime}</p>}
                 </div>
@@ -166,6 +183,7 @@ const UpdateReport = () => {
                         onChange={inputHandler}
                         autoComplete='off'
                         id="delivery_Status"
+                        required
                     >
                         <option value="Pending">Pending</option>
                         <option value="Inprogress">Inprogress</option>
@@ -185,6 +203,8 @@ const UpdateReport = () => {
 
             {showPopup && <DeliveryDetailsPopup details={report} onClose={closePopup} />} {/* Show the popup */}
         </div>
+       
+    </div>
     );
 };
 

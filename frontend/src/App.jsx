@@ -66,15 +66,19 @@ import PromotionManagement from '/../symmetrical-carnival-main/frontend/src/Prom
 import ShopRegistration from '/../symmetrical-carnival-main/frontend/src/ShopReqestration/ShopRegistration';
 import ShopList from '/../symmetrical-carnival-main/frontend/src/ShopReqestration/ShopRegRet';
 import ReportPage from '/../symmetrical-carnival-main/frontend/src/Report/ReportPage';
+import Hrreport from './HRreport/HRreport.jsx';
+import Freport from './financehandling/financereport.jsx'
+import Empdetails from './viewslidebar/viewtashorder.jsx'
+import Deli from './updatereport/interface.jsx'
 const App = () => {
   return (
     <NotificationProvider> 
       <Router>
         <div>
           <Header />
-          <View />
+          
         <div>
-          <NotificationDropdown />
+          
           </div>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -86,10 +90,11 @@ const App = () => {
               <Route path="/financeui/orderbillinterface" element={<Orderbillinterface />} />
               <Route path="/salaryret" element={<Salaryret />} />
               <Route path="/financeui/ftable" element={<FIMainTable />} />
+              <Route path="/financeui/freport" element={<Freport />} />
               <Route path="/orders" element={<Billorderret />} />
               <Route path="/salary-update/:employeeId" element={<Salaryupdate />} />
               <Route path="/orderandproductionui/order" element={<OrderManagementSystem />} />
-              <Route path="/orderandproductionui/orderret" element={<OrderRet/>} />
+              <Route path="/orderret" element={<OrderRet/>} />
               <Route path="/orderandproductionui/resources" element={<ResourcePlanningSystem />} />
               <Route path="/Resourcetret" element={<ResourceRetriew/>} />
               <Route path="/productret" element={<ProductionRet/>} />
@@ -120,7 +125,7 @@ const App = () => {
               <Route path="/attendance" element={<AttendanceForm />} />
               <Route path="/leavetable" element={<LeaveRet/>} />
               <Route path="/edit-employee/:id" element={<EditEmployee />} />
-              <Route path="/deliveryui" element={<Report  />} />
+              <Route path="/list" element={<Report  />} />
               <Route path="/add" element={<AddReport />} />
               <Route path="/dashboard" element={<DashBoard />} />
               <Route path="/update/:id" element={<UpdateReport />} />
@@ -133,6 +138,9 @@ const App = () => {
               <Route path="/salesui/shop" element={<ShopRegistration/>}/>
               <Route path="/salesui/shoplist" element={<ShopList/>}/>
               <Route path="/salesui/report" element={<ReportPage/>}/>
+              <Route path="/hrui/hr-report" element={<Hrreport/>}/>
+              <Route path="/empdetails" element={<Empdetails/>}/>
+              <Route path="/deliveryui" element={<Deli  />} />
             </Routes>
             
             <div>
